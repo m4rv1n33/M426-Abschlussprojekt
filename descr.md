@@ -42,7 +42,6 @@ Als [Rolle] möchte ich [Funktion] weil [Grund].
   - Score wird zur Persisting-Statistik hinzugefügt
   - Alle aktuellen Ressourcen/Formen werden zurückgesetzt
   - Spieler erhält Prestige-Bonuse (z.B. +5% Basis-Currency-Produktion)
-  - Dimension wird auf 2D zurückgesetzt
   - Fortschritt wird korrekt gespeichert
 
 ### US2: Strategische Entscheidungen
@@ -52,7 +51,6 @@ Als [Rolle] möchte ich [Funktion] weil [Grund].
   - Mind. 2 verschiedene Upgrade-Pfade stehen zur Verfügung
   - Kosten und Nutzen sind klar erkennbar
   - Entscheidungen wirken sich langfristig aus
-  - Kein Upgrade-Pfad ist dominant (Balance)
 
 ### US3: Formen upgraden
 - **Gegeben:** Spieler hat genug Currency
