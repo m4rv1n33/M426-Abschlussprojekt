@@ -26,6 +26,39 @@ Projektidee / Grundstruktur:
 - Java
 - Automated backend tests
 
+## Core Mechanics:
+
+**Shape Evolution System:**
+- Single active shape that evolves through upgrade levels (0-2 per shape type)
+- Shape progression: Triangle (3) → Square (4) → Pentagon (5) → Hexagon (6) → Heptagon (7) → Octagon (8)
+- Each shape has 3 upgrade levels before evolving to the next shape
+- Upgrades cost more as level increases (cost = 10 × 1.15^level)
+- Level-up: +20% production per level
+
+**Currency Production:**
+- Passive generation: `baseRate × vertices × (1 + level × 0.2) × prestigeBonus`
+- Active generation: Click for immediate currency gain
+- Production rate displayed in real-time
+
+**Prestige Mechanic:**
+- Reset entire progression to Triangle level 0
+- Unlock +5% permanent production bonus per prestige
+- Players accumulate prestige levels over runs
+- Strategic decision: when to prestige vs push further
+
+**Game Loop:**
+- Click or wait for passive production
+- Earn currency
+- Upgrade shape when you have enough
+- Watch vertices increase and production skyrocket
+- Eventually prestige to start fresh with a boost
+- Repeat endlessly with increasing bonuses
+
+**Persistence:**
+- Game saves to local JSON file
+- Automatic saves on every state change
+- Load on startup - seamless progression
+
 ---
 
 User stories:
