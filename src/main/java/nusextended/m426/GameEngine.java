@@ -5,8 +5,9 @@ import javafx.animation.AnimationTimer;
 public class GameEngine extends AnimationTimer {
     private GameState gameState;
     private CurrencyListener currencyListener;
-    private int saveCounter = 0;
-    private static final int SAVE_INTERVAL = 300; // save every 5 seconds buh
+    private long lastUpdateTime = -1;
+    private long saveAccumulator = 0;
+    private static final long SAVE_INTERVAL = 5_000_000_000L; // save every 5 seconds in nanoseconds (yes, nanoseconds)
 
     public GameEngine(GameState gameState) {
         this.gameState = gameState;
@@ -18,20 +19,30 @@ public class GameEngine extends AnimationTimer {
 
     @Override
     public void handle(long now) {
-        // number go brrr
+        if (lastUpdateTime == -1) {
+            lastUpdateTime = now;
+            return;
+        }
+
+        // calculate delta time in seconds
+        long deltaTime = now - lastUpdateTime;
+        double deltaSeconds = deltaTime / 1_000_000_000.0;
+        lastUpdateTime = now;
+
+        // number go up (not fps dependent anymore)
         Shape activeShape = gameState.getActiveShape();
-        double production = activeShape.getCurrentProductionRate() * gameState.getPrestigeBonus() / 60.0;
+        double production = activeShape.getCurrentProductionRate() * gameState.getPrestigeBonus() * deltaSeconds;
         gameState.addCurrency(production);
 
         if (currencyListener != null) {
             currencyListener.onCurrencyChanged(gameState.getCurrency(), activeShape, gameState.getPrestigeLevel());
         }
 
-        // save periodically
-        saveCounter++;
-        if (saveCounter >= SAVE_INTERVAL) {
+        // save periodically every 5 seconds
+        saveAccumulator += deltaTime;
+        if (saveAccumulator >= SAVE_INTERVAL) {
             gameState.save();
-            saveCounter = 0;
+            saveAccumulator = 0;
         }
     }
 

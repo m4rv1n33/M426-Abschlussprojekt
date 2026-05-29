@@ -28,7 +28,7 @@ public class HelloApplication extends Application {
         gameEngine.setCurrencyListener(controller::updateDisplay);
         gameEngine.start();
 
-        stage.setTitle("Nusian Clicker");
+        stage.setTitle("Nusian somethingburger");
         stage.setScene(scene);
         stage.setOnCloseRequest(event -> {
             gameState.save();
