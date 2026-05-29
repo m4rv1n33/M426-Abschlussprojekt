@@ -11,8 +11,8 @@ public class GameState {
     private double currency;
     private int prestigeLevel;
     private ShapeData activeShapeData;
-    private static final String SAVE_DIR = System.getProperty("user.home") + "/.m426game";
-    private static final String SAVE_FILE = SAVE_DIR + "/game.json";
+    private static final String SAVE_DIR = System.getenv("LOCALAPPDATA") + "\\nusExtended\\M426";
+    private static final String SAVE_FILE = SAVE_DIR + "\\game.json";
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public GameState() {

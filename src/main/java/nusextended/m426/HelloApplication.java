@@ -8,12 +8,32 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class HelloApplication extends Application {
+    private GameState gameState;
+    private GameEngine gameEngine;
+
     @Override
     public void start(Stage stage) throws IOException {
+        // load game state from file or create new
+        gameState = GameState.load();
+
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Game");
+        Scene scene = new Scene(fxmlLoader.load(), 600, 400);
+        
+        // inject game state into controller
+        HelloController controller = fxmlLoader.getController();
+        controller.setGameState(gameState);
+
+        // start game engine
+        gameEngine = new GameEngine(gameState);
+        gameEngine.setCurrencyListener(controller::updateDisplay);
+        gameEngine.start();
+
+        stage.setTitle("Nusian Clicker");
         stage.setScene(scene);
+        stage.setOnCloseRequest(event -> {
+            gameState.save();
+            gameEngine.stop();
+        });
         stage.show();
     }
 
