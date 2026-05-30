@@ -9,8 +9,8 @@
   <Label fx:id="productionLabel" text="0.00 per second"/>
   <Label fx:id="shapeLabel" text="Triangle Level 0"/>
   <Label fx:id="upgradeCostLabel" text="Next: 10 Nusians"/>
-  <Button fx:id="upgradeButton" text="Upgrade" onAction="#onUpgradeClick" prefWidth="60"/>
-  <Button fx:id="prestigeButton" text="Prestige" onAction="#onPrestigeClick" prefWidth="60"/>
+  <Button fx:id="upgradeButton" text="Upgrade" onAction="#onUpgradeClick" prefWidth="300"/>
+  <Button fx:id="prestigeButton" text="Prestige" onAction="#onPrestigeClick" prefWidth="300"/>
 </VBox>
 
 
