@@ -25,6 +25,15 @@ public class HelloController {
     @FXML
     private Button prestigeButton;
 
+    @FXML
+    private Label prestigePointsLabel;
+
+    @FXML
+    private Label vertexMultiplierLabel;
+
+    @FXML
+    private Button buyVertexMultiplierButton;
+
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
         updateDisplay(gameState.getCurrency(), gameState.getActiveShape(), gameState.getPrestigeLevel());
@@ -51,6 +60,19 @@ public class HelloController {
         // update prestige button
         double bonus = (prestigeLevel + 1) * 5.0;
         prestigeButton.setText("Prestige (+" + bonus + "%) Level " + prestigeLevel);
+
+        // update prestige currency display
+        double prestigePoints = gameState.getPrestigePoints();
+        prestigePointsLabel.setText(NumberFormatter.formatCurrencyWithLabel(prestigePoints) + " Prestige");
+
+        // update vertex multiplier display
+        PrestigeUpgrades upgrades = gameState.getPrestigeUpgrades();
+        vertexMultiplierLabel.setText(String.format("Vertex Multiplier: x%.2f", upgrades.getVertexMultiplier()));
+
+        // update vertex upgrade button
+        double vertexUpgradeCost = upgrades.getVertexMultiplierCost();
+        buyVertexMultiplierButton.setText("Buy Vertex x1.1 (" + NumberFormatter.formatCurrency(vertexUpgradeCost) + ")");
+        buyVertexMultiplierButton.setDisable(prestigePoints < vertexUpgradeCost);
     }
 
     @FXML
@@ -66,5 +88,13 @@ public class HelloController {
         gameState.prestige();
         gameState.save();
         updateDisplay(gameState.getCurrency(), gameState.getActiveShape(), gameState.getPrestigeLevel());
+    }
+
+    @FXML
+    protected void onBuyVertexMultiplierClick() {
+        if (gameState.purchaseVertexMultiplier()) {
+            gameState.save();
+            updateDisplay(gameState.getCurrency(), gameState.getActiveShape(), gameState.getPrestigeLevel());
+        }
     }
 }
