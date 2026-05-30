@@ -14,6 +14,7 @@ public class GameState {
     private int prestigeLevel;
     private ShapeData activeShapeData;
     private PrestigeUpgrades prestigeUpgrades;
+    private double lifetimeCurrencyEarned;
     private static final String OS = System.getProperty("os.name").toUpperCase();
     private static final String OUR_DIRECTORY = "/nusExtended/M426/";
     private static final String SAVE_DIR;
@@ -40,6 +41,7 @@ public class GameState {
         this.currency = 0;
         this.prestigePoints = 0;
         this.prestigeLevel = 0;
+        this.lifetimeCurrencyEarned = 0;
         this.activeShapeData = new ShapeData(0, ShapeType.TRIANGLE.getVertices(), 0);
         this.prestigeUpgrades = new PrestigeUpgrades();
     }
@@ -92,6 +94,7 @@ public class GameState {
 
     public void addCurrency(double amount) {
         this.currency += amount;
+        this.lifetimeCurrencyEarned += amount;
     }
 
     public int getPrestigeLevel() {
@@ -108,6 +111,10 @@ public class GameState {
 
     public PrestigeUpgrades getPrestigeUpgrades() {
         return prestigeUpgrades;
+    }
+
+    public double getLifetimeCurrencyEarned() {
+        return lifetimeCurrencyEarned;
     }
 
     public boolean purchaseVertexMultiplier() {

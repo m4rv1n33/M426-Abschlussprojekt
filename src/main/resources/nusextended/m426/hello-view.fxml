@@ -6,6 +6,7 @@
 
 <VBox spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="nusextended.m426.HelloController">
   <Label fx:id="currencyLabel" text="0 Nusians"/>
+  <Label fx:id="lifetimeCurrencyLabel" text="Lifetime: 0 Nusians"/>
   <Label fx:id="productionLabel" text="0.00 per second"/>
   <Label fx:id="shapeLabel" text="Triangle Level 0"/>
   <Label fx:id="upgradeCostLabel" text="Next: 10 Nusians"/>
