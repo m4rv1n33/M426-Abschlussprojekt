@@ -6,6 +6,7 @@ public class Shape {
     private int vertices;
     private double baseProductionRate;
     private double upgradeBaseCost;
+    private double vertexMultiplier;
     private ShapeType currentType;
     private static final int UPGRADES_PER_SHAPE = 3;
 
@@ -16,6 +17,7 @@ public class Shape {
         this.currentType = startType;
         this.baseProductionRate = baseProductionRate;
         this.upgradeBaseCost = upgradeBaseCost;
+        this.vertexMultiplier = 1.0;
     }
 
     public Shape(Shape other) {
@@ -53,7 +55,7 @@ public class Shape {
 
     public double getCurrentProductionRate() {
         double levelBonus = 1.0 + (level * 0.2);
-        return baseProductionRate * vertices * levelBonus;
+        return baseProductionRate * vertices * vertexMultiplier * levelBonus;
     }
 
     public double getNextUpgradeCost() {
@@ -104,6 +106,10 @@ public class Shape {
 
     public void setVertices(int vertices) {
         this.vertices = vertices;
+    }
+
+    public void setVertexMultiplier(double vertexMultiplier) {
+        this.vertexMultiplier = vertexMultiplier;
     }
 
     @Override

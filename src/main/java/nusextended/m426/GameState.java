@@ -10,8 +10,10 @@ import java.io.IOException;
 
 public class GameState {
     private double currency;
+    private double prestigePoints;
     private int prestigeLevel;
     private ShapeData activeShapeData;
+    private PrestigeUpgrades prestigeUpgrades;
     private static final String OS = System.getProperty("os.name").toUpperCase();
     private static final String OUR_DIRECTORY = "/nusExtended/M426/";
     private static final String SAVE_DIR;
@@ -36,8 +38,10 @@ public class GameState {
 
     public GameState() {
         this.currency = 0;
+        this.prestigePoints = 0;
         this.prestigeLevel = 0;
         this.activeShapeData = new ShapeData(0, ShapeType.TRIANGLE.getVertices(), 0);
+        this.prestigeUpgrades = new PrestigeUpgrades();
     }
 
     public Shape getActiveShape() {
@@ -45,6 +49,7 @@ public class GameState {
         shape.setLevel(activeShapeData.level);
         shape.setCurrentType(activeShapeData.getCurrentType());
         shape.setVertices(activeShapeData.vertices);
+        shape.setVertexMultiplier(prestigeUpgrades.getVertexMultiplier());
         return shape;
     }
 
@@ -97,7 +102,26 @@ public class GameState {
         return 1.0 + (prestigeLevel * 0.05);
     }
 
+    public double getPrestigePoints() {
+        return prestigePoints;
+    }
+
+    public PrestigeUpgrades getPrestigeUpgrades() {
+        return prestigeUpgrades;
+    }
+
+    public boolean purchaseVertexMultiplier() {
+        if (prestigePoints >= prestigeUpgrades.getVertexMultiplierCost()) {
+            prestigePoints -= prestigeUpgrades.getVertexMultiplierCost();
+            prestigeUpgrades.purchaseVertexMultiplier(Double.MAX_VALUE);
+            return true;
+        }
+        return false;
+    }
+
     public void prestige() {
+        double prestigePointsGained = Math.floor(Math.sqrt(currency));
+        this.prestigePoints += prestigePointsGained;
         this.prestigeLevel++;
         this.currency = 0;
         this.activeShapeData = new ShapeData(0, ShapeType.TRIANGLE.getVertices(), 0);
