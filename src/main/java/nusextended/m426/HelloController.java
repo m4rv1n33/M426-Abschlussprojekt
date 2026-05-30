@@ -34,6 +34,9 @@ public class HelloController {
     @FXML
     private Button buyVertexMultiplierButton;
 
+    @FXML
+    private Label lifetimeCurrencyLabel;
+
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
         updateDisplay(gameState.getCurrency(), gameState.getActiveShape(), gameState.getPrestigeLevel());
@@ -73,6 +76,9 @@ public class HelloController {
         double vertexUpgradeCost = upgrades.getVertexMultiplierCost();
         buyVertexMultiplierButton.setText("Buy Vertex x1.1 (" + NumberFormatter.formatCurrency(vertexUpgradeCost) + ")");
         buyVertexMultiplierButton.setDisable(prestigePoints < vertexUpgradeCost);
+
+        // update lifetime currency
+        lifetimeCurrencyLabel.setText("Lifetime: " + NumberFormatter.formatCurrencyWithLabel(gameState.getLifetimeCurrencyEarned()));
     }
 
     @FXML
