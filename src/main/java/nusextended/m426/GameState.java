@@ -42,14 +42,13 @@ public class GameState {
         this.prestigePoints = 0;
         this.prestigeLevel = 0;
         this.lifetimeCurrencyEarned = 0;
-        this.activeShapeData = new ShapeData(0, ShapeType.TRIANGLE.getVertices(), 0);
+        this.activeShapeData = new ShapeData(0, 1, 0);
         this.prestigeUpgrades = new PrestigeUpgrades();
     }
 
     public Shape getActiveShape() {
-        Shape shape = new Shape(0, ShapeType.TRIANGLE, 1.0, 10.0);
+        Shape shape = new Shape(0, 1.0, 10.0);
         shape.setLevel(activeShapeData.level);
-        shape.setCurrentType(activeShapeData.getCurrentType());
         shape.setVertices(activeShapeData.vertices);
         shape.setVertexMultiplier(prestigeUpgrades.getVertexMultiplier());
         return shape;
@@ -131,21 +130,19 @@ public class GameState {
         this.prestigePoints += prestigePointsGained;
         this.prestigeLevel++;
         this.currency = 0;
-        this.activeShapeData = new ShapeData(0, ShapeType.TRIANGLE.getVertices(), 0);
+        this.activeShapeData = new ShapeData(0, 1, 0);
     }
 
     public static class ShapeData {
         public int id;
         public int vertices;
         public int level;
-        public int shapeTypeIndex;
         private static final int UPGRADES_PER_SHAPE = 3;
 
         public ShapeData(int id, int vertices, int level) {
             this.id = id;
             this.vertices = vertices;
             this.level = level;
-            this.shapeTypeIndex = 0;
         }
 
         public double getCurrentProductionRate(double baseRate) {
@@ -159,23 +156,8 @@ public class GameState {
         }
 
         public void upgrade() {
+            vertices++;
             level++;
-            if (level >= UPGRADES_PER_SHAPE) {
-                evolveToNextShape();
-            }
-        }
-
-        private void evolveToNextShape() {
-            ShapeType[] types = ShapeType.values();
-            if (shapeTypeIndex < types.length - 1) {
-                shapeTypeIndex++;
-                vertices = types[shapeTypeIndex].getVertices();
-                level = 0;
-            }
-        }
-
-        public ShapeType getCurrentType() {
-            return ShapeType.values()[shapeTypeIndex];
         }
     }
 }

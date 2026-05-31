@@ -7,26 +7,14 @@ public class Shape {
     private double baseProductionRate;
     private double upgradeBaseCost;
     private double vertexMultiplier;
-    private ShapeType currentType;
-    private static final int UPGRADES_PER_SHAPE = 3;
 
-    public Shape(int id, ShapeType startType, double baseProductionRate, double upgradeBaseCost) {
+    public Shape(int id, double baseProductionRate, double upgradeBaseCost) {
         this.id = id;
         this.level = 0;
-        this.vertices = startType.getVertices();
-        this.currentType = startType;
+        this.vertices = 1;
         this.baseProductionRate = baseProductionRate;
         this.upgradeBaseCost = upgradeBaseCost;
         this.vertexMultiplier = 1.0;
-    }
-
-    public Shape(Shape other) {
-        this.id = other.id;
-        this.level = 0;
-        this.vertices = other.currentType.getVertices();
-        this.currentType = other.currentType;
-        this.baseProductionRate = other.baseProductionRate;
-        this.upgradeBaseCost = other.upgradeBaseCost;
     }
 
     public int getId() {
@@ -34,7 +22,7 @@ public class Shape {
     }
 
     public ShapeType getType() {
-        return currentType;
+        return ShapeType.fromVertices(vertices);
     }
 
     public int getLevel() {
@@ -65,43 +53,12 @@ public class Shape {
     // this is basically shapez 3
     public boolean upgrade() {
         level++;
-        if (level >= UPGRADES_PER_SHAPE) {
-            evolveToNextShape();
-        }
+        vertices++;
         return true;
-    }
-
-    private void evolveToNextShape() {
-        ShapeType nextType = getNextShapeType(currentType);
-        if (nextType != null && nextType != currentType) {
-            currentType = nextType;
-            vertices = nextType.getVertices();
-            level = 0;
-        }
-    }
-
-    private ShapeType getNextShapeType(ShapeType current) {
-        ShapeType[] types = ShapeType.values();
-        for (int i = 0; i < types.length - 1; i++) {
-            if (types[i] == current) {
-                return types[i + 1];
-            }
-        }
-        return current;
-    }
-
-    public void reset() {
-        this.level = 0;
-        this.currentType = ShapeType.TRIANGLE;
-        this.vertices = ShapeType.TRIANGLE.getVertices();
     }
 
     public void setLevel(int level) {
         this.level = level;
-    }
-
-    public void setCurrentType(ShapeType currentType) {
-        this.currentType = currentType;
     }
 
     public void setVertices(int vertices) {
@@ -114,7 +71,7 @@ public class Shape {
 
     @Override
     public String toString() {
-        return String.format("%s Level %d (Vertices: %d, Rate: %.2f/s)",
-                currentType.getDisplayName(), level, vertices, getCurrentProductionRate());
+        return String.format("Shape Level %d (Vertices: %d, Rate: %.2f/s)",
+                level, vertices, getCurrentProductionRate());
     }
 }
