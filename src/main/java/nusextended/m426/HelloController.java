@@ -51,7 +51,7 @@ public class HelloController {
         productionLabel.setText(NumberFormatter.formatProductionRate(production));
 
         // update shape info
-        shapeLabel.setText(activeShape.getType().getDisplayName() + " Level " + activeShape.getLevel());
+        shapeLabel.setText(activeShape.getDisplayName() + " Level " + activeShape.getLevel());
 
         // update upgrade cost
         double nextCost = activeShape.getNextUpgradeCost();

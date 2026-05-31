@@ -25,6 +25,10 @@ public class Shape {
         return ShapeType.fromVertices(vertices);
     }
 
+    public String getDisplayName() {
+        return ShapeType.getPolygonName(vertices);
+    }
+
     public int getLevel() {
         return level;
     }
