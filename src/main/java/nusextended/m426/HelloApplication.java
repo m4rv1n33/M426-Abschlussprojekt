@@ -4,6 +4,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import nusextended.m426.game.GameState;
+import nusextended.m426.game.GameEngine;
 
 import java.io.IOException;
 

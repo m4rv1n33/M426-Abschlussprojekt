@@ -1,4 +1,4 @@
-package nusextended.m426;
+package nusextended.m426.model;
 
 public class PrestigeUpgrades {
     private int vertexMultiplierLevel;

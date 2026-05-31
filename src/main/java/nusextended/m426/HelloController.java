@@ -3,6 +3,10 @@ package nusextended.m426;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import nusextended.m426.game.GameState;
+import nusextended.m426.game.NumberFormatter;
+import nusextended.m426.model.Shape;
+import nusextended.m426.model.PrestigeUpgrades;
 
 public class HelloController {
     private GameState gameState;

@@ -1,7 +1,9 @@
-package nusextended.m426;
+package nusextended.m426.game;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import nusextended.m426.model.PrestigeUpgrades;
+import nusextended.m426.model.Shape;
 
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
