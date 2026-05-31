@@ -1,107 +1,119 @@
 package nusextended.m426;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
+import nusextended.m426.game.GameState;
+import nusextended.m426.game.NumberFormatter;
+import nusextended.m426.model.Shape;
 import nusextended.m426.model.PrestigeUpgrades;
 
 public class HelloController {
+    private final Point2D shapeOrigin = new Point2D(407.5, 250);
+    private final double shapeRadius = 225;
+    private final double vertexSize = 16;
+    private final double lineWidth = 6;
+    private final double spinSpeed = 0.1; // radii per second
+
+    private double lastFrame;
+    private double delta;
+    private double time = 0;
+
+    private double spinOffset;
+
     private GameState gameState;
+    private GraphicsContext shapeG2D;
+    private GraphicsContext upgradesG2D;
 
     @FXML
-    private Label currencyLabel;
+    public Text currencyDisplay;
 
     @FXML
-    private Label productionLabel;
+    public HBox prestigeCurrencyContainer;
 
     @FXML
-    private Label shapeLabel;
+    private Canvas shapeCanvas;
 
     @FXML
-    private Label upgradeCostLabel;
-
-    @FXML
-    private Button upgradeButton;
+    private Text prestigeCurrencyDisplay;
 
     @FXML
     private Button prestigeButton;
 
     @FXML
-    private Label prestigePointsLabel;
+    private Canvas upgradesCanvas;
 
     @FXML
-    private Label vertexMultiplierLabel;
+    protected void initialize() {
+        shapeG2D = shapeCanvas.getGraphicsContext2D();
+        upgradesG2D = upgradesCanvas.getGraphicsContext2D();
 
-    @FXML
-    private Button buyVertexMultiplierButton;
-
-    @FXML
-    private Label lifetimeCurrencyLabel;
+        lastFrame = System.currentTimeMillis();
+        shapeG2D.setLineWidth(lineWidth);
+        shapeG2D.setStroke(Paint.valueOf("white"));
+    }
 
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
-        updateDisplay(gameState.getCurrency(), gameState.getActiveShape(), gameState.getPrestigeLevel());
     }
 
-    public void updateDisplay(double currency, Shape activeShape, int prestigeLevel) {
-        // update currency
-        currencyLabel.setText(NumberFormatter.formatCurrencyWithLabel(currency));
+    public void updateCurrencyDisplay(double currency, Shape shape, int prestigeLevel) {
+        delta = System.currentTimeMillis() - lastFrame;
+        lastFrame = System.currentTimeMillis();
+        time += delta / 1000.0;
 
-        // update production rate
-        double production = activeShape.getCurrentProductionRate() * gameState.getPrestigeBonus();
-        productionLabel.setText(NumberFormatter.formatProductionRate(production));
+        currencyDisplay.setText(NumberFormatter.formatCurrency(currency));
 
-        // update shape info
-        shapeLabel.setText(activeShape.getDisplayName() + " Level " + activeShape.getLevel());
-
-        // update upgrade cost
-        double nextCost = activeShape.getNextUpgradeCost();
-        upgradeCostLabel.setText("Next: " + NumberFormatter.formatCurrency(nextCost) + " Nusians");
-
-        // enable/disable upgrade button
-        upgradeButton.setDisable(currency < nextCost);
-
-        // update prestige button
-        double bonus = (prestigeLevel + 1) * 5.0;
-        prestigeButton.setText("Prestige (+" + bonus + "%) Level " + prestigeLevel);
-
-        // update prestige currency display
-        double prestigePoints = gameState.getPrestigePoints();
-        prestigePointsLabel.setText(NumberFormatter.formatCurrencyWithLabel(prestigePoints) + " Prestige");
-
-        // update vertex multiplier display
-        PrestigeUpgrades upgrades = gameState.getPrestigeUpgrades();
-        vertexMultiplierLabel.setText(String.format("Vertex Multiplier: x%.2f", upgrades.getVertexMultiplier()));
-
-        // update vertex upgrade button
-        double vertexUpgradeCost = upgrades.getVertexMultiplierCost();
-        buyVertexMultiplierButton.setText("Buy Vertex x1.1 (" + NumberFormatter.formatCurrency(vertexUpgradeCost) + ")");
-        buyVertexMultiplierButton.setDisable(prestigePoints < vertexUpgradeCost);
-
-        // update lifetime currency
-        lifetimeCurrencyLabel.setText("Lifetime: " + NumberFormatter.formatCurrencyWithLabel(gameState.getLifetimeCurrencyEarned()));
-    }
-
-    @FXML
-    protected void onUpgradeClick() {
-        if (gameState.getCurrency() >= gameState.getActiveShape().getNextUpgradeCost()) {
-            gameState.upgradeShape();
-            gameState.save();
+        if (prestigeLevel < 1) {
+            prestigeCurrencyContainer.setVisible(false);
+        } else {
+            prestigeCurrencyContainer.setVisible(true);
+            prestigeCurrencyDisplay.setText(NumberFormatter.formatCurrency(prestigeLevel));
         }
-    }
 
-    @FXML
-    protected void onPrestigeClick() {
-        gameState.prestige();
-        gameState.save();
-        updateDisplay(gameState.getCurrency(), gameState.getActiveShape(), gameState.getPrestigeLevel());
-    }
+        shapeG2D.clearRect(0, 0, shapeCanvas.getWidth(), shapeCanvas.getHeight());
+        shapeG2D.setFill(Paint.valueOf("#999999"));
+        shapeG2D.fillRect(0, 0, shapeCanvas.getWidth(), shapeCanvas.getHeight());
 
-    @FXML
-    protected void onBuyVertexMultiplierClick() {
-        if (gameState.purchaseVertexMultiplier()) {
-            gameState.save();
-            updateDisplay(gameState.getCurrency(), gameState.getActiveShape(), gameState.getPrestigeLevel());
+        int vertexCount = gameState.getActiveShape().getVertices();
+        double anglePerVertex = Math.TAU / vertexCount;
+        Point2D[] points = new Point2D[vertexCount];
+
+        spinOffset += Math.TAU * spinSpeed * delta / 1000.0;
+
+        if (vertexCount > 1) {
+            for (int i = 0; i < vertexCount; i++) {
+                Point2D p = new Point2D(
+                        Math.cos((anglePerVertex * i) + spinOffset),
+                        Math.sin((anglePerVertex * i) + spinOffset)
+                ).multiply(shapeRadius);
+
+                points[i] = p.add(shapeOrigin);
+            }
+        } else {
+            points[0] = shapeOrigin;
+        }
+
+        shapeG2D.setFill(Paint.valueOf("white"));
+        for (Point2D p : points) {
+            shapeG2D.fillOval(
+                    p.getX() - vertexSize / 2, p.getY() - vertexSize / 2,
+                    vertexSize, vertexSize);
+        }
+
+        for (int i = 0; i < vertexCount; i++) {
+            Point2D p1 = points[i];
+            Point2D p2;
+
+            if (i == vertexCount - 1) { p2 = points[0]; }
+            else { p2 = points[i + 1]; }
+
+            shapeG2D.strokeLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
         }
     }
 }
