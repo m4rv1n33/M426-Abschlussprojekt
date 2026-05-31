@@ -1,4 +1,6 @@
-package nusextended.m426;
+package nusextended.m426.model;
+
+import nusextended.m426.game.UpgradeCost;
 
 public class PrestigeUpgrades {
     private int vertexMultiplierLevel;
@@ -16,19 +18,16 @@ public class PrestigeUpgrades {
     }
 
     public double getVertexMultiplierCost() {
-        return 100.0 * Math.pow(1.5, vertexMultiplierLevel);
+        return UpgradeCost.getPrestigeUpgradeCost(vertexMultiplierLevel);
     }
 
-    public boolean purchaseVertexMultiplier(double prestigePoints) {
-        double cost = getVertexMultiplierCost();
-        if (prestigePoints >= cost) {
-            vertexMultiplierLevel++;
-            return true;
-        }
-        return false;
+    // Called by the owning code after currency/prestige deduction
+    public void applyVertexMultiplierPurchase() {
+        vertexMultiplierLevel++;
     }
 
     public void reset() {
+        this.vertexMultiplierLevel = 0;
     }
 
     @Override
