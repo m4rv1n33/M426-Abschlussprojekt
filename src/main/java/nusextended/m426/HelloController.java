@@ -1,110 +1,69 @@
 package nusextended.m426;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
 import nusextended.m426.game.GameState;
 import nusextended.m426.game.NumberFormatter;
 import nusextended.m426.model.Shape;
-import nusextended.m426.model.PrestigeUpgrades;
 
 public class HelloController {
     private GameState gameState;
+    private GraphicsContext shapeG2D;
+    private GraphicsContext upgradesG2D;
 
     @FXML
-    private Label currencyLabel;
+    public Text currencyDisplay;
 
     @FXML
-    private Label productionLabel;
+    public HBox prestigeCurrencyContainer;
 
     @FXML
-    private Label shapeLabel;
+    private Canvas shapeCanvas;
 
     @FXML
-    private Label upgradeCostLabel;
-
-    @FXML
-    private Button upgradeButton;
+    private Text prestigeCurrencyDisplay;
 
     @FXML
     private Button prestigeButton;
 
     @FXML
-    private Label prestigePointsLabel;
+    private Canvas upgradesCanvas;
 
     @FXML
-    private Label vertexMultiplierLabel;
-
-    @FXML
-    private Button buyVertexMultiplierButton;
-
-    @FXML
-    private Label lifetimeCurrencyLabel;
+    protected void initialize() {
+        shapeG2D = shapeCanvas.getGraphicsContext2D();
+        upgradesG2D = upgradesCanvas.getGraphicsContext2D();
+    }
 
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
-        updateDisplay(gameState.getCurrency(), gameState.getActiveShape(), gameState.getPrestigeLevel());
     }
 
-    public void updateDisplay(double currency, Shape activeShape, int prestigeLevel) {
-        // update currency
-        currencyLabel.setText(NumberFormatter.formatCurrencyWithLabel(currency));
+    public void updateCurrencyDisplay(double currency, Shape shape, int prestigeLevel) {
+        currencyDisplay.setText(NumberFormatter.formatCurrency(currency));
 
-        // update production rate
-        double production = activeShape.getCurrentProductionRate() * gameState.getPrestigeBonus();
-        productionLabel.setText(NumberFormatter.formatProductionRate(production));
-
-        // update shape info
-        shapeLabel.setText(activeShape.getDisplayName() + " Level " + activeShape.getLevel());
-
-        // update upgrade cost
-        double nextCost = activeShape.getNextUpgradeCost();
-        upgradeCostLabel.setText("Next: " + NumberFormatter.formatCurrency(nextCost) + " Nusians");
-
-        // enable/disable upgrade button
-        upgradeButton.setDisable(currency < nextCost);
-
-        // update prestige button
-        double bonus = (prestigeLevel + 1) * 5.0;
-        prestigeButton.setText("Prestige (+" + bonus + "%) Level " + prestigeLevel);
-
-        // update prestige currency display
-        double prestigePoints = gameState.getPrestigePoints();
-        prestigePointsLabel.setText(NumberFormatter.formatCurrencyWithLabel(prestigePoints) + " Prestige");
-
-        // update vertex multiplier display
-        PrestigeUpgrades upgrades = gameState.getPrestigeUpgrades();
-        vertexMultiplierLabel.setText(String.format("Vertex Multiplier: x%.2f", upgrades.getVertexMultiplier()));
-
-        // update vertex upgrade button
-        double vertexUpgradeCost = upgrades.getVertexMultiplierCost();
-        buyVertexMultiplierButton.setText("Buy Vertex x1.1 (" + NumberFormatter.formatCurrency(vertexUpgradeCost) + ")");
-        buyVertexMultiplierButton.setDisable(prestigePoints < vertexUpgradeCost);
-
-        // update lifetime currency
-        lifetimeCurrencyLabel.setText("Lifetime: " + NumberFormatter.formatCurrencyWithLabel(gameState.getLifetimeCurrencyEarned()));
-    }
-
-    @FXML
-    protected void onUpgradeClick() {
-        if (gameState.getCurrency() >= gameState.getActiveShape().getNextUpgradeCost()) {
-            gameState.upgradeShape();
-            gameState.save();
+        if (prestigeLevel < 1) {
+            prestigeCurrencyContainer.setVisible(false);
+        } else {
+            prestigeCurrencyContainer.setVisible(true);
+            prestigeCurrencyDisplay.setText(NumberFormatter.formatCurrency(prestigeLevel));
         }
-    }
 
-    @FXML
-    protected void onPrestigeClick() {
-        gameState.prestige();
-        gameState.save();
-        updateDisplay(gameState.getCurrency(), gameState.getActiveShape(), gameState.getPrestigeLevel());
-    }
+        shapeG2D.clearRect(0, 0, shapeCanvas.getWidth(), shapeCanvas.getHeight());
+        shapeG2D.setFill(Paint.valueOf("#999999"));
+        shapeG2D.fillRect(0, 0, shapeCanvas.getWidth(), shapeCanvas.getHeight());
 
-    @FXML
-    protected void onBuyVertexMultiplierClick() {
-        if (gameState.purchaseVertexMultiplier()) {
-            gameState.save();
-            updateDisplay(gameState.getCurrency(), gameState.getActiveShape(), gameState.getPrestigeLevel());
+        int vertexCount = gameState.getActiveShape().getVertices();
+        Point2D[] points = new Point2D[vertexCount];
+
+        for (int i = 0; i < vertexCount; i++) {
+
         }
     }
 }

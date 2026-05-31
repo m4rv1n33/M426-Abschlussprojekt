@@ -8,6 +8,7 @@ import nusextended.m426.game.GameState;
 import nusextended.m426.game.GameEngine;
 
 import java.io.IOException;
+import java.util.concurrent.ConcurrentNavigableMap;
 
 public class HelloApplication extends Application {
     private GameState gameState;
@@ -19,7 +20,7 @@ public class HelloApplication extends Application {
         gameState = GameState.load();
 
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 600, 400);
+        Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
         
         // inject game state into controller
         HelloController controller = fxmlLoader.getController();
@@ -27,7 +28,7 @@ public class HelloApplication extends Application {
 
         // start game engine
         gameEngine = new GameEngine(gameState);
-        gameEngine.setCurrencyListener(controller::updateDisplay);
+        gameEngine.setCurrencyListener(controller::updateCurrencyDisplay);
         gameEngine.start();
 
         stage.setTitle("Nusian somethingburger");
