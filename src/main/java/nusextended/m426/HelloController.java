@@ -16,10 +16,14 @@ public class HelloController {
     private final Point2D shapeOrigin = new Point2D(407.5, 250);
     private final double shapeRadius = 225;
     private final double vertexSize = 16;
+    private final double lineWidth = 6;
+    private final double spinSpeed = 0.1; // radii per second
 
     private double lastFrame;
     private double delta;
     private double time = 0;
+
+    private double spinOffset;
 
     private GameState gameState;
     private GraphicsContext shapeG2D;
@@ -49,6 +53,8 @@ public class HelloController {
         upgradesG2D = upgradesCanvas.getGraphicsContext2D();
 
         lastFrame = System.currentTimeMillis();
+        shapeG2D.setLineWidth(lineWidth);
+        shapeG2D.setStroke(Paint.valueOf("white"));
     }
 
     public void setGameState(GameState gameState) {
@@ -57,7 +63,8 @@ public class HelloController {
 
     public void updateCurrencyDisplay(double currency, Shape shape, int prestigeLevel) {
         delta = System.currentTimeMillis() - lastFrame;
-        time += delta;
+        lastFrame = System.currentTimeMillis();
+        time += delta / 1000.0;
 
         currencyDisplay.setText(NumberFormatter.formatCurrency(currency));
 
@@ -73,14 +80,16 @@ public class HelloController {
         shapeG2D.fillRect(0, 0, shapeCanvas.getWidth(), shapeCanvas.getHeight());
 
         int vertexCount = gameState.getActiveShape().getVertices();
-        double anglePerVertex = Math.PI * 2f / vertexCount;
+        double anglePerVertex = Math.TAU / vertexCount;
         Point2D[] points = new Point2D[vertexCount];
+
+        spinOffset += Math.TAU * spinSpeed * delta / 1000.0;
 
         if (vertexCount > 1) {
             for (int i = 0; i < vertexCount; i++) {
                 Point2D p = new Point2D(
-                        Math.cos(anglePerVertex * i),
-                        Math.sin(anglePerVertex * i)
+                        Math.cos((anglePerVertex * i) + spinOffset),
+                        Math.sin((anglePerVertex * i) + spinOffset)
                 ).multiply(shapeRadius);
 
                 points[i] = p.add(shapeOrigin);
@@ -94,6 +103,16 @@ public class HelloController {
             shapeG2D.fillOval(
                     p.getX() - vertexSize / 2, p.getY() - vertexSize / 2,
                     vertexSize, vertexSize);
+        }
+
+        for (int i = 0; i < vertexCount; i++) {
+            Point2D p1 = points[i];
+            Point2D p2;
+
+            if (i == vertexCount - 1) { p2 = points[0]; }
+            else { p2 = points[i + 1]; }
+
+            shapeG2D.strokeLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
         }
     }
 }
