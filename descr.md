@@ -169,13 +169,13 @@ End: 03/06/2026
 
 #### Backend Tasks (Supervisor: Marvin)
 
-- [ ] Currency-Production-System implementieren (Marvin) - 5 SP - **[Lead-Aufgabe]**
-- [ ] Upgrade-Kosten-Berechnung mit Tests (Marvin + Gabriela Codereview) - 3 SP - **[Marvin Lead]**
-- [ ] Shape-Datenmodell & Entity erstellen (Gabriela unter Marvins Guidance) - 2 SP - **[Lightwork]**
-- [ ] Shape-Vertices-Logik (Laura unter Marvins Guidance) - 2 SP - **[Lightwork]**
-- [ ] Prestige-System & Score-Speicherung (Marvin) - 5 SP - **[Lead-Aufgabe]**
+- [x] Currency-Production-System implementieren (Marvin) - 5 SP - **[Lead-Aufgabe]**
+- [x] Upgrade-Kosten-Berechnung mit Tests (Marvin + Gabriela Codereview) - 3 SP - **[Marvin Lead]**
+- [x] Shape-Datenmodell & Entity erstellen (Gabriela unter Marvins Guidance) - 2 SP - **[Lightwork]**
+- [x] Shape-Vertices-Logik (Laura unter Marvins Guidance) - 2 SP - **[Lightwork]**
+- [x] Prestige-System & Score-Speicherung (Marvin) - 5 SP - **[Lead-Aufgabe]**
 - [ ] Balance-Parameter & Tweaking (Marvin) - 3 SP - **[Lead-Aufgabe]**
-- [ ] Unit-Tests Template & Struktur (Marvin + Laura) - 2 SP - **[Laura: einfache Tests]**
+- [x] Unit-Tests Template & Struktur (Marvin + Laura) - 2 SP - **[Laura: einfache Tests]**
 - [ ] Upgrade-State Manager (Gabriela unter Marvins Guidance) - 2 SP - **[Lightwork]**
 
 ### Definition of Done

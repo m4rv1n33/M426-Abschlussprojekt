@@ -11,6 +11,7 @@ import javafx.scene.text.Text;
 import nusextended.m426.game.GameState;
 import nusextended.m426.game.NumberFormatter;
 import nusextended.m426.model.Shape;
+import nusextended.m426.model.PrestigeUpgrades;
 
 public class HelloController {
     private final Point2D shapeOrigin = new Point2D(407.5, 250);

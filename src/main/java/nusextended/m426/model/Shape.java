@@ -1,5 +1,8 @@
 package nusextended.m426.model;
 
+import nusextended.m426.ShapeType;
+import nusextended.m426.game.UpgradeCost;
+
 public class Shape {
     private final int id;
     private int level;
@@ -51,14 +54,13 @@ public class Shape {
     }
 
     public double getNextUpgradeCost() {
-        return upgradeBaseCost * Math.pow(1.15, level);
+        return UpgradeCost.getShapeUpgradeCost(level);
     }
 
     // this is basically shapez 3
-    public boolean upgrade() {
+    public void applyUpgrade() {
         level++;
         vertices++;
-        return true;
     }
 
     public void setLevel(int level) {

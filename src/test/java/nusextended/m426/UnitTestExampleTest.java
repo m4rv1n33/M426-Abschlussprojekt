@@ -1,5 +1,8 @@
 package nusextended.m426;
 
+/*
+package nusextended.m426;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -63,3 +66,15 @@ public class UnitTestExampleTest {
         assertFalse(result, "Validation should fail for empty input");
     }
 }
+*/
+
+/**
+ * Template kept as a reference copy of the original example test.
+ *
+ * The runnable upgrade-cost checks live in:
+ * src/test/java/nusextended/m426/game/UpgradeCostCalculationTest.java
+ *
+ * This file stays in the project so the template still exists, but the
+ * original example is commented out so it does not depend on missing
+ * placeholder classes.
+ */

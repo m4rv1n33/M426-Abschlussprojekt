@@ -2,6 +2,7 @@ package nusextended.m426.game;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import nusextended.m426.game.UpgradeCost;
 import nusextended.m426.model.PrestigeUpgrades;
 import nusextended.m426.model.Shape;
 
@@ -119,9 +120,10 @@ public class GameState {
     }
 
     public boolean purchaseVertexMultiplier() {
-        if (prestigePoints >= prestigeUpgrades.getVertexMultiplierCost()) {
-            prestigePoints -= prestigeUpgrades.getVertexMultiplierCost();
-            prestigeUpgrades.purchaseVertexMultiplier(Double.MAX_VALUE);
+        double cost = prestigeUpgrades.getVertexMultiplierCost();
+        if (prestigePoints >= cost) {
+            prestigePoints -= cost;
+            prestigeUpgrades.applyVertexMultiplierPurchase();
             return true;
         }
         return false;
@@ -153,8 +155,7 @@ public class GameState {
         }
 
         public double getNextUpgradeCost() {
-            double baseCost = 10.0;
-            return baseCost * Math.pow(1.15, level);
+            return UpgradeCost.getShapeUpgradeCost(level);
         }
 
         public void upgrade() {
