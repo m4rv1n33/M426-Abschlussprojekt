@@ -1,6 +1,7 @@
-package nusextended.m426;
+package nusextended.m426.game;
 
 import javafx.animation.AnimationTimer;
+import nusextended.m426.model.Shape;
 
 public class GameEngine extends AnimationTimer {
     private GameState gameState;

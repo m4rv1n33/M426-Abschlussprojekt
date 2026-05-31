@@ -1,4 +1,4 @@
-package nusextended.m426;
+package nusextended.m426.game;
 
 public class NumberFormatter {
     public static String formatCurrency(double amount) {

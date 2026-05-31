@@ -1,4 +1,4 @@
-package nusextended.m426;
+package nusextended.m426.model;
 
 public class Shape {
     private final int id;
