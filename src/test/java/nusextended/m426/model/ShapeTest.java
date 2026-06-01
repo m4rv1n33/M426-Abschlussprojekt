@@ -34,11 +34,11 @@ public class ShapeTest {
     @Test
     @DisplayName("getNextUpgradeCost should delegate to UpgradeCost")
     void getNextUpgradeCostShouldDelegateToUpgradeCost() {
-        assertEquals(50.0, shape.getNextUpgradeCost(), 0.0001);
+        assertEquals(10.0, shape.getNextUpgradeCost(), 0.0001);
 
         shape.applyUpgrade();
 
-        assertEquals(75.0, shape.getNextUpgradeCost(), 0.0001);
+        assertEquals(12.0, shape.getNextUpgradeCost(), 0.0001);
     }
 
     @Test

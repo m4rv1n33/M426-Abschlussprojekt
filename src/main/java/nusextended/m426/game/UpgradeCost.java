@@ -3,11 +3,11 @@ package nusextended.m426.game;
 public final class UpgradeCost {
     private UpgradeCost() {}
 
-    private static final double SHAPE_BASE_COST = 50.0;
-    private static final double SHAPE_MULTIPLIER = 1.5;
+    private static final double SHAPE_BASE_COST = 10.0;
+    private static final double SHAPE_MULTIPLIER = 1.2;
 
     private static final double PRESTIGE_BASE_COST = 100.0;
-    private static final double PRESTIGE_MULTIPLIER = 2.0;
+    private static final double PRESTIGE_MULTIPLIER = 1.6;
 
     public static double getShapeUpgradeCost(int level) {
         return getCurrentCost(SHAPE_BASE_COST, SHAPE_MULTIPLIER, level);

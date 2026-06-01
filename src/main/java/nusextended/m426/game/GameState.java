@@ -104,7 +104,7 @@ public class GameState {
     }
     
     public double getPrestigeBonus() {
-        return 1.0 + (prestigeLevel * 0.05);
+        return 1.0 + (prestigeLevel * 0.10);
     }
 
     public double getPrestigePoints() {
@@ -130,7 +130,7 @@ public class GameState {
     }
 
     public void prestige() {
-        double prestigePointsGained = Math.floor(Math.sqrt(currency));
+        double prestigePointsGained = Math.floor(Math.pow(currency, 0.45));
         this.prestigePoints += prestigePointsGained;
         this.prestigeLevel++;
         this.currency = 0;
