@@ -7,15 +7,13 @@ public class Shape {
     private int level;
     private int vertices;
     private double baseProductionRate;
-    private double upgradeBaseCost;
     private double vertexMultiplier;
 
-    public Shape(int id, double baseProductionRate, double upgradeBaseCost) {
+    public Shape(int id, double baseProductionRate) {
         this.id = id;
         this.level = 0;
         this.vertices = 1;
         this.baseProductionRate = baseProductionRate;
-        this.upgradeBaseCost = upgradeBaseCost;
         this.vertexMultiplier = 1.0;
     }
 
@@ -41,10 +39,6 @@ public class Shape {
 
     public double getBaseProductionRate() {
         return baseProductionRate;
-    }
-
-    public double getUpgradeBaseCost() {
-        return upgradeBaseCost;
     }
 
     public double getCurrentProductionRate() {
