@@ -1,6 +1,5 @@
 package nusextended.m426.model;
 
-import nusextended.m426.ShapeType;
 import nusextended.m426.game.UpgradeCost;
 
 public class Shape {

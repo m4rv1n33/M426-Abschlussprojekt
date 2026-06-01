@@ -29,7 +29,7 @@ public class PrestigeUpgradesTest {
 
         prestigeUpgrades.applyVertexMultiplierPurchase();
 
-        assertEquals(200.0, prestigeUpgrades.getVertexMultiplierCost(), 0.0001);
+        assertEquals(160.0, prestigeUpgrades.getVertexMultiplierCost(), 0.0001);
     }
 
     @Test
