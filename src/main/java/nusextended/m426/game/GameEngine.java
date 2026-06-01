@@ -34,6 +34,7 @@ public class GameEngine extends AnimationTimer {
         Shape activeShape = gameState.getActiveShape();
         double production = activeShape.getCurrentProductionRate() * gameState.getPrestigeBonus() * deltaSeconds;
         gameState.addCurrency(production);
+        gameState.autoBuyVertexGrowth();
 
         if (currencyListener != null) {
             currencyListener.onCurrencyChanged(gameState.getCurrency(), activeShape, gameState.getPrestigeLevel());

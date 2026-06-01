@@ -2,9 +2,9 @@ package nusextended.m426.game;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import nusextended.m426.game.UpgradeCost;
 import nusextended.m426.model.PrestigeUpgrades;
 import nusextended.m426.model.Shape;
+import nusextended.m426.model.ShapeType;
 
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -17,6 +17,7 @@ public class GameState {
     private int prestigeLevel;
     private ShapeData activeShapeData;
     private PrestigeUpgrades prestigeUpgrades;
+    private UpgradeTree upgradeTree;
     private double lifetimeCurrencyEarned;
     private static final String OS = System.getProperty("os.name").toUpperCase();
     private static final String OUR_DIRECTORY = "/nusExtended/M426/";
@@ -47,10 +48,11 @@ public class GameState {
         this.lifetimeCurrencyEarned = 0;
         this.activeShapeData = new ShapeData(0, 1, 0);
         this.prestigeUpgrades = new PrestigeUpgrades();
+        this.upgradeTree = UpgradeTree.createDefaultTree();
     }
 
     public Shape getActiveShape() {
-        Shape shape = new Shape(0, 1.0, 10.0);
+        Shape shape = new Shape(0, 1.0);
         shape.setLevel(activeShapeData.level);
         shape.setVertices(activeShapeData.vertices);
         shape.setVertexMultiplier(prestigeUpgrades.getVertexMultiplier());
@@ -58,11 +60,42 @@ public class GameState {
     }
 
     public void upgradeShape() {
-        double cost = activeShapeData.getNextUpgradeCost();
-        if (currency >= cost) {
+        UpgradeNode vertexGrowth = getUpgradeTree().getNode("vertex-growth");
+        if (vertexGrowth == null) {
+            return;
+        }
+
+        ShapeType currentShapeType = ShapeType.fromVertices(activeShapeData.vertices);
+        double cost = vertexGrowth.getCurrentCost();
+        if (currency >= cost && vertexGrowth.canPurchase(currentShapeType, currency)) {
             currency -= cost;
+            vertexGrowth.recordPurchase();
             activeShapeData.upgrade();
         }
+    }
+
+    public int autoBuyVertexGrowth() {
+        UpgradeNode shapeFocus = getUpgradeTree().getNode("shape-focus");
+        UpgradeNode vertexGrowth = getUpgradeTree().getNode("vertex-growth");
+
+        if (shapeFocus == null || vertexGrowth == null || !shapeFocus.isPurchased()) {
+            return 0;
+        }
+
+        int purchases = 0;
+        ShapeType currentShapeType = ShapeType.fromVertices(activeShapeData.vertices);
+
+        while (vertexGrowth.canPurchase(currentShapeType, currency)) {
+            double cost = vertexGrowth.getCurrentCost();
+            currency -= cost;
+            vertexGrowth.recordPurchase();
+            activeShapeData.upgrade();
+            purchases++;
+
+            currentShapeType = ShapeType.fromVertices(activeShapeData.vertices);
+        }
+
+        return purchases;
     }
 
     public void save() {
@@ -115,6 +148,14 @@ public class GameState {
         return prestigeUpgrades;
     }
 
+    public UpgradeTree getUpgradeTree() {
+        if (upgradeTree == null) {
+            upgradeTree = UpgradeTree.createDefaultTree();
+            upgradeTree.syncShapeGrowthLevel(activeShapeData.level);
+        }
+        return upgradeTree;
+    }
+
     public double getLifetimeCurrencyEarned() {
         return lifetimeCurrencyEarned;
     }
@@ -135,6 +176,7 @@ public class GameState {
         this.prestigeLevel++;
         this.currency = 0;
         this.activeShapeData = new ShapeData(0, 1, 0);
+        getUpgradeTree().reset();
     }
 
     public static class ShapeData {

@@ -12,7 +12,7 @@ public class ShapeTest {
 
     @BeforeEach
     void setUp() {
-        shape = new Shape(7, 10.0, 50.0);
+        shape = new Shape(7, 10.0);
     }
 
     @Test
