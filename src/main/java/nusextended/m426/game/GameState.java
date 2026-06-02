@@ -25,6 +25,8 @@ public class GameState {
     private static final String SAVE_FILE;
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
+    private UpgradeStateManager upgradeStateManager;
+
     static {
         StringBuilder saveDirBuilder = new StringBuilder();
 
@@ -49,6 +51,7 @@ public class GameState {
         this.activeShapeData = new ShapeData(0, 1, 0);
         this.prestigeUpgrades = new PrestigeUpgrades();
         this.upgradeTree = UpgradeTree.createDefaultTree();
+        this.upgradeStateManager = new UpgradeStateManager(this);
     }
 
     public Shape getActiveShape() {
@@ -119,6 +122,10 @@ public class GameState {
         return new GameState();
     }
 
+    public UpgradeStateManager getUpgradeStateManager() {
+        return upgradeStateManager;
+    }
+
     public double getCurrency() {
         return currency;
     }
@@ -130,6 +137,10 @@ public class GameState {
     public void addCurrency(double amount) {
         this.currency += amount;
         this.lifetimeCurrencyEarned += amount;
+    }
+
+    public void advanceShape() {
+        activeShapeData.upgrade();
     }
 
     public int getPrestigeLevel() {
