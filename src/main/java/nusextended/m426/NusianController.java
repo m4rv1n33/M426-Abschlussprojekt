@@ -4,31 +4,27 @@ import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import nusextended.m426.game.GameState;
 import nusextended.m426.game.NumberFormatter;
+import nusextended.m426.game.UpgradeStateManager;
 import nusextended.m426.model.Shape;
-import nusextended.m426.model.PrestigeUpgrades;
 
-public class HelloController {
+public class NusianController {
     private final Point2D shapeOrigin = new Point2D(407.5, 250);
     private final double shapeRadius = 225;
     private final double vertexSize = 16;
     private final double lineWidth = 6;
-    private final double spinSpeed = 0.1; // radii per second
+    private final double spinSpeed = 0.1;
 
     private double lastFrame;
     private double delta;
-    private double time = 0;
-
     private double spinOffset;
 
     private GameState gameState;
     private GraphicsContext shapeG2D;
-    private GraphicsContext upgradesG2D;
 
     @FXML
     public Text currencyDisplay;
@@ -43,16 +39,8 @@ public class HelloController {
     private Text prestigeCurrencyDisplay;
 
     @FXML
-    private Button prestigeButton;
-
-    @FXML
-    private Canvas upgradesCanvas;
-
-    @FXML
     protected void initialize() {
         shapeG2D = shapeCanvas.getGraphicsContext2D();
-        upgradesG2D = upgradesCanvas.getGraphicsContext2D();
-
         lastFrame = System.currentTimeMillis();
         shapeG2D.setLineWidth(lineWidth);
         shapeG2D.setStroke(Paint.valueOf("white"));
@@ -62,10 +50,12 @@ public class HelloController {
         this.gameState = gameState;
     }
 
+    public void setUpgradeManager(UpgradeStateManager upgradeManager) {
+    }
+
     public void updateCurrencyDisplay(double currency, Shape shape, int prestigeLevel) {
         delta = System.currentTimeMillis() - lastFrame;
         lastFrame = System.currentTimeMillis();
-        time += delta / 1000.0;
 
         currencyDisplay.setText(NumberFormatter.formatCurrency(currency));
 

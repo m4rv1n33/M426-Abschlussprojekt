@@ -12,19 +12,20 @@ public class GameStateAutoBuyTest {
     @DisplayName("shape-focus should unlock auto-buying vertex-growth")
     void shapeFocusShouldUnlockAutoBuyingVertexGrowth() {
         GameState gameState = new GameState();
+        UpgradeStateManager manager = new UpgradeStateManager(gameState);
         gameState.setCurrency(100.0);
 
-        gameState.upgradeShape();
-        gameState.upgradeShape();
+        manager.attemptPurchase("vertex-growth");
+        manager.attemptPurchase("vertex-growth");
 
         UpgradeNode shapeFocus = gameState.getUpgradeTree().getNode("shape-focus");
-        assertTrue(shapeFocus.canPurchase(gameState.getActiveShape().getType(), gameState.getCurrency()));
+        assertTrue(manager.canPurchase(shapeFocus));
 
         shapeFocus.recordPurchase();
 
         gameState.setCurrency(20.0);
 
-        int autoPurchased = gameState.autoBuyVertexGrowth();
+        int autoPurchased = manager.performAutoPurchases();
 
         assertEquals(1, autoPurchased);
         assertEquals(4, gameState.getActiveShape().getVertices());

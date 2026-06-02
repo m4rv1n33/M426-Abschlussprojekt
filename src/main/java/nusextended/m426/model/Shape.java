@@ -1,7 +1,5 @@
 package nusextended.m426.model;
 
-import nusextended.m426.game.UpgradeCost;
-
 public class Shape {
     private final int id;
     private int level;

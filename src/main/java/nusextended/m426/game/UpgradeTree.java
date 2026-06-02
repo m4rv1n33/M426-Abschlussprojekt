@@ -1,10 +1,13 @@
 package nusextended.m426.game;
 
 import nusextended.m426.model.ShapeType;
+import nusextended.m426.model.UpgradeCost;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class UpgradeTree {
     private List<UpgradeNode> nodes;
@@ -77,6 +80,16 @@ public class UpgradeTree {
             }
         }
         return Collections.unmodifiableList(purchasedNodes);
+    }
+
+    public void resolveReferences() {
+        Map<String, UpgradeNode> nodeMap = new HashMap<>();
+        for (UpgradeNode node : nodes) {
+            nodeMap.put(node.getName(), node);
+        }
+        for (UpgradeNode node : nodes) {
+            node.resolveReferences(nodeMap);
+        }
     }
 
     public void reset() {

@@ -1,4 +1,4 @@
-package nusextended.m426.game;
+package nusextended.m426.model;
 
 public final class UpgradeCost {
     private static final UpgradeCost SHAPE_UPGRADE = new UpgradeCost(10.0, 1.2);
