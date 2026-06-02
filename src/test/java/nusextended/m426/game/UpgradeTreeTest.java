@@ -1,6 +1,8 @@
 package nusextended.m426.game;
 
 import nusextended.m426.model.ShapeType;
+import nusextended.m426.model.UpgradeNode;
+import nusextended.m426.model.UpgradeTree;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
