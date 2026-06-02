@@ -63,9 +63,3 @@ End: 03/06/2026
 | UI-Verzögerungen bei Real-time Updates | Niedrig            | Mittel | Optimization Sprint geplant                         |
 | Balance-Issues                         | Hoch               | Mittel | Weekly Balance-Review, Daten-getriebene Anpassungen |
 
-## Daily Standup Format (15 min)
-
-- Was habe ich gestern getan?
-- Was werde ich heute tun?
-- Welche Hindernisse gibt es?
-- Aktualisierung des Burndown-Charts

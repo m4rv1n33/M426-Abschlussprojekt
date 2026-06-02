@@ -63,9 +63,3 @@ End: 03/06/2026
 | UI lag with real-time updates            | Low         | Medium | Optimization sprint planned                         |
 | Balance issues                           | High        | Medium | Weekly balance review, data-driven adjustments      |
 
-## Daily Standup Format (15 min)
-
-- What did I do yesterday?
-- What will I do today?
-- Are there any obstacles?
-- Burndown chart update
