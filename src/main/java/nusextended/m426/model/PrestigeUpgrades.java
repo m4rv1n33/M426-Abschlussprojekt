@@ -1,7 +1,5 @@
 package nusextended.m426.model;
 
-import nusextended.m426.game.UpgradeCost;
-
 public class PrestigeUpgrades {
     private int vertexMultiplierLevel;
 

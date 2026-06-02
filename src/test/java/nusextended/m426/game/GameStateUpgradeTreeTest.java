@@ -12,9 +12,10 @@ public class GameStateUpgradeTreeTest {
     @DisplayName("upgradeShape should buy the vertex growth node and advance the shape")
     void upgradeShapeShouldBuyTheVertexGrowthNodeAndAdvanceTheShape() {
         GameState gameState = new GameState();
+        UpgradeStateManager manager = new UpgradeStateManager(gameState);
         gameState.setCurrency(100.0);
 
-        gameState.upgradeShape();
+        manager.attemptPurchase("vertex-growth");
 
         Shape shape = gameState.getActiveShape();
         UpgradeNode vertexGrowth = gameState.getUpgradeTree().getNode("vertex-growth");
@@ -29,8 +30,9 @@ public class GameStateUpgradeTreeTest {
     @DisplayName("prestige should reset the upgrade tree progress")
     void prestigeShouldResetTheUpgradeTreeProgress() {
         GameState gameState = new GameState();
+        UpgradeStateManager manager = new UpgradeStateManager(gameState);
         gameState.setCurrency(100.0);
-        gameState.upgradeShape();
+        manager.attemptPurchase("vertex-growth");
         gameState.setCurrency(10000.0);
 
         gameState.prestige();

@@ -6,28 +6,27 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import nusextended.m426.game.GameState;
 import nusextended.m426.game.GameEngine;
+import nusextended.m426.game.UpgradeStateManager;
 
 import java.io.IOException;
-import java.util.concurrent.ConcurrentNavigableMap;
 
-public class HelloApplication extends Application {
+public class NusianApplication extends Application {
     private GameState gameState;
     private GameEngine gameEngine;
 
     @Override
     public void start(Stage stage) throws IOException {
-        // load game state from file or create new
         gameState = GameState.load();
+        UpgradeStateManager upgradeManager = new UpgradeStateManager(gameState);
 
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(NusianApplication.class.getResource("nusian-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
-        
-        // inject game state into controller
-        HelloController controller = fxmlLoader.getController();
-        controller.setGameState(gameState);
 
-        // start game engine
-        gameEngine = new GameEngine(gameState);
+        NusianController controller = fxmlLoader.getController();
+        controller.setGameState(gameState);
+        controller.setUpgradeManager(upgradeManager);
+
+        gameEngine = new GameEngine(gameState, upgradeManager);
         gameEngine.setCurrencyListener(controller::updateCurrencyDisplay);
         gameEngine.start();
 

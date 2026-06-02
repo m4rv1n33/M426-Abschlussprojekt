@@ -1,5 +1,6 @@
 package nusextended.m426.game;
 
+import nusextended.m426.model.UpgradeCost;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

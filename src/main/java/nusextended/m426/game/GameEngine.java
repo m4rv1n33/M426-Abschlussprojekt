@@ -5,13 +5,15 @@ import nusextended.m426.model.Shape;
 
 public class GameEngine extends AnimationTimer {
     private GameState gameState;
+    private UpgradeStateManager upgradeManager;
     private CurrencyListener currencyListener;
     private long lastUpdateTime = -1;
     private long saveAccumulator = 0;
     private static final long SAVE_INTERVAL = 5_000_000_000L; // save every 5 seconds in nanoseconds (yes, nanoseconds)
 
-    public GameEngine(GameState gameState) {
+    public GameEngine(GameState gameState, UpgradeStateManager upgradeManager) {
         this.gameState = gameState;
+        this.upgradeManager = upgradeManager;
     }
 
     public void setCurrencyListener(CurrencyListener listener) {
@@ -34,7 +36,7 @@ public class GameEngine extends AnimationTimer {
         Shape activeShape = gameState.getActiveShape();
         double production = activeShape.getCurrentProductionRate() * gameState.getPrestigeBonus() * deltaSeconds;
         gameState.addCurrency(production);
-        gameState.autoBuyVertexGrowth();
+        upgradeManager.performAutoPurchases();
 
         if (currencyListener != null) {
             currencyListener.onCurrencyChanged(gameState.getCurrency(), activeShape, gameState.getPrestigeLevel());

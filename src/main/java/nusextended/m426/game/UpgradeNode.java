@@ -1,10 +1,12 @@
 package nusextended.m426.game;
 
 import nusextended.m426.model.ShapeType;
+import nusextended.m426.model.UpgradeCost;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class UpgradeNode {
     private String name;
@@ -12,11 +14,13 @@ public class UpgradeNode {
     private UpgradeCost cost;
     private boolean infinitelyPurchaseable;
     private ShapeType requiredShapeType;
-    private List<UpgradeNode> previousNodes;
+    private transient List<UpgradeNode> previousNodes;
+    private List<String> previousNodeNames;
     private int purchaseCount;
 
     public UpgradeNode() {
         this.previousNodes = new ArrayList<>();
+        this.previousNodeNames = new ArrayList<>();
         this.purchaseCount = 0;
     }
 
@@ -34,6 +38,9 @@ public class UpgradeNode {
         this.requiredShapeType = requiredShapeType;
         if (previousNodes != null) {
             Collections.addAll(this.previousNodes, previousNodes);
+            for (UpgradeNode prev : previousNodes) {
+                this.previousNodeNames.add(prev.getName());
+            }
         }
     }
 
@@ -67,6 +74,21 @@ public class UpgradeNode {
 
     public List<UpgradeNode> getPreviousNodes() {
         return Collections.unmodifiableList(previousNodes);
+    }
+
+    public List<String> getPreviousNodeNames() {
+        return previousNodeNames;
+    }
+
+    public void resolveReferences(Map<String, UpgradeNode> nodeMap) {
+        if (previousNodeNames == null) return;
+        this.previousNodes = new ArrayList<>();
+        for (String name : previousNodeNames) {
+            UpgradeNode ref = nodeMap.get(name);
+            if (ref != null) {
+                this.previousNodes.add(ref);
+            }
+        }
     }
 
     public int getPurchaseCount() {
