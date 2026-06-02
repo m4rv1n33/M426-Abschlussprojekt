@@ -1,6 +1,7 @@
-package nusextended.m426.game;
+package nusextended.m426.model;
 
-import nusextended.m426.model.ShapeType;
+import javafx.geometry.Point2D;
+import nusextended.m426.game.UpgradeCost;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,6 +15,11 @@ public class UpgradeNode {
     private ShapeType requiredShapeType;
     private List<UpgradeNode> previousNodes;
     private int purchaseCount;
+
+    private double visualX;
+    private double visualY;
+    private double visualSize;
+    private String icon;
 
     public UpgradeNode() {
         this.previousNodes = new ArrayList<>();
@@ -44,6 +50,21 @@ public class UpgradeNode {
                        UpgradeNode... previousNodes) {
         this(name, description, cost, infinitelyPurchaseable, null, previousNodes);
     }
+
+    public double getVisualSize() { return visualSize; }
+
+    public void setVisualSize(double visualSize) { this.visualSize = visualSize; }
+
+    public Point2D getLocation() { return new Point2D(visualX, visualY); }
+
+    public void setLocation(double x, double y) {
+        this.visualX = x;
+        this.visualY = y;
+    }
+
+    public String getIcon() { return icon; }
+
+    public void setIcon(String icon) { this.icon = icon; }
 
     public String getName() {
         return name;

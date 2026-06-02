@@ -1,6 +1,7 @@
-package nusextended.m426.game;
+package nusextended.m426.model;
 
-import nusextended.m426.model.ShapeType;
+import javafx.geometry.Point2D;
+import nusextended.m426.game.UpgradeCost;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,6 +26,10 @@ public class UpgradeTree {
             true
         );
 
+        vertexGrowth.setLocation(0, 0);
+        vertexGrowth.setIcon("V");
+        vertexGrowth.setVisualSize(65);
+
         UpgradeNode shapeFocus = new UpgradeNode(
             "shape-focus",
             "Improve production once triangle-era shapes are reached.",
@@ -34,6 +39,10 @@ public class UpgradeTree {
             vertexGrowth
         );
 
+        shapeFocus.setLocation(0, 150);
+        shapeFocus.setIcon("///");
+        shapeFocus.setVisualSize(40);
+
         UpgradeNode squareAutomation = new UpgradeNode(
             "square-something",
             ":thumbs_up:",
@@ -42,6 +51,10 @@ public class UpgradeTree {
             ShapeType.SQUARE,
             shapeFocus
         );
+
+        squareAutomation.setLocation(0, 300);
+        squareAutomation.setIcon("Q");
+        squareAutomation.setVisualSize(40);
 
         return new UpgradeTree(List.of(vertexGrowth, shapeFocus, squareAutomation));
     }

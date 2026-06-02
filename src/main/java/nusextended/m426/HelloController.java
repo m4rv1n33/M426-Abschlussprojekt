@@ -54,8 +54,14 @@ public class HelloController {
         upgradesG2D = upgradesCanvas.getGraphicsContext2D();
 
         lastFrame = System.currentTimeMillis();
+
         shapeG2D.setLineWidth(lineWidth);
         shapeG2D.setStroke(Paint.valueOf("white"));
+
+        shapeG2D.setFill(Paint.valueOf("#000000"));
+        shapeG2D.fillRect(0, 0, 5, shapeCanvas.getHeight());
+
+        spawnUpgradeTree();
     }
 
     public void setGameState(GameState gameState) {
@@ -76,10 +82,20 @@ public class HelloController {
             prestigeCurrencyDisplay.setText(NumberFormatter.formatCurrency(prestigeLevel));
         }
 
-        shapeG2D.clearRect(0, 0, shapeCanvas.getWidth(), shapeCanvas.getHeight());
+        shapeG2D.clearRect(4, 0, shapeCanvas.getWidth(), shapeCanvas.getHeight());
         shapeG2D.setFill(Paint.valueOf("#999999"));
-        shapeG2D.fillRect(0, 0, shapeCanvas.getWidth(), shapeCanvas.getHeight());
+        shapeG2D.fillRect(4, 0, shapeCanvas.getWidth(), shapeCanvas.getHeight());
 
+        renderShape();
+    }
+
+    private void spawnUpgradeTree() {
+        upgradesG2D.clearRect(0, 0, upgradesCanvas.getWidth(), upgradesCanvas.getHeight());
+        upgradesG2D.setFill(Paint.valueOf("#999999"));
+        upgradesG2D.fillRect(0, 0, upgradesCanvas.getWidth(), upgradesCanvas.getHeight());
+    }
+
+    private void renderShape() {
         int vertexCount = gameState.getActiveShape().getVertices();
         double anglePerVertex = Math.TAU / vertexCount;
         Point2D[] points = new Point2D[vertexCount];
