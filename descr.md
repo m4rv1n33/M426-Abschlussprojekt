@@ -159,7 +159,7 @@ End: 03/06/2026
 
 #### Frontend Tasks (Supervisor: Finn)
 
-- [ ] HUD-Layout mit Currency-Anzeige erstellen (Finn) - 3 SP - **[Lead-Aufgabe]**
+- [x] HUD-Layout mit Currency-Anzeige erstellen (Finn) - 3 SP - **[Lead-Aufgabe]**
 - [ ] Shape-Upgrade Button UI implementieren (Lea, Fenia unter Finns Anleitung) - 3 SP - **[Lightwork]**
 - [ ] Upgrades-Panel designen und programmieren (Finn + Fenia Assistance) - 3 SP - **[Finn Lead]**
 - [ ] Tutorial-Flow & State Management (Finn) - 3 SP - **[Lead-Aufgabe]**
@@ -174,9 +174,9 @@ End: 03/06/2026
 - [x] Shape-Datenmodell & Entity erstellen (Gabriela unter Marvins Guidance) - 2 SP - **[Lightwork]**
 - [x] Shape-Vertices-Logik (Laura unter Marvins Guidance) - 2 SP - **[Lightwork]**
 - [x] Prestige-System & Score-Speicherung (Marvin) - 5 SP - **[Lead-Aufgabe]**
-- [ ] Balance-Parameter & Tweaking (Marvin) - 3 SP - **[Lead-Aufgabe]**
+- [x] Balance-Parameter & Tweaking (Marvin) - 3 SP - **[Lead-Aufgabe]**
 - [x] Unit-Tests Template & Struktur (Marvin + Laura) - 2 SP - **[Laura: einfache Tests]**
-- [ ] Upgrade-State Manager (Gabriela unter Marvins Guidance) - 2 SP - **[Lightwork]**
+- [x] Upgrade-State Manager (Gabriela unter Marvins Guidance) - 2 SP - **[Lightwork]**
 
 ### Definition of Done
 
