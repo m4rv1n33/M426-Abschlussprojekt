@@ -2,16 +2,18 @@ package nusextended.m426;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
+import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import nusextended.m426.game.GameState;
 import nusextended.m426.game.NumberFormatter;
 import nusextended.m426.model.Shape;
-import nusextended.m426.model.PrestigeUpgrades;
+import nusextended.m426.model.UpgradeNode;
 
 public class HelloController {
     private final Point2D shapeOrigin = new Point2D(407.5, 250);
@@ -29,6 +31,7 @@ public class HelloController {
     private GameState gameState;
     private GraphicsContext shapeG2D;
     private GraphicsContext upgradesG2D;
+    private Point2D upgradeTreeOffset;
 
     @FXML
     public Text currencyDisplay;
@@ -58,10 +61,12 @@ public class HelloController {
         shapeG2D.setLineWidth(lineWidth);
         shapeG2D.setStroke(Paint.valueOf("white"));
 
-        shapeG2D.setFill(Paint.valueOf("#000000"));
-        shapeG2D.fillRect(0, 0, 5, shapeCanvas.getHeight());
+        upgradesG2D.setStroke(Paint.valueOf("white"));
+        upgradesG2D.setTextAlign(TextAlignment.CENTER);
+        upgradesG2D.setTextBaseline(VPos.CENTER);
 
-        spawnUpgradeTree();
+        shapeG2D.setFill(Paint.valueOf("black"));
+        shapeG2D.fillRect(0, 0, 5, shapeCanvas.getHeight());
     }
 
     public void setGameState(GameState gameState) {
@@ -87,12 +92,44 @@ public class HelloController {
         shapeG2D.fillRect(4, 0, shapeCanvas.getWidth(), shapeCanvas.getHeight());
 
         renderShape();
+        renderUpgradeTree();
     }
 
-    private void spawnUpgradeTree() {
+    private void renderUpgradeTree() {
         upgradesG2D.clearRect(0, 0, upgradesCanvas.getWidth(), upgradesCanvas.getHeight());
         upgradesG2D.setFill(Paint.valueOf("#999999"));
         upgradesG2D.fillRect(0, 0, upgradesCanvas.getWidth(), upgradesCanvas.getHeight());
+
+        upgradesG2D.setFill(Paint.valueOf("#ffffff"));
+
+        upgradeTreeOffset = new Point2D(
+                upgradesCanvas.getWidth() / 2, upgradesCanvas.getHeight() / 2);
+
+        // do this in two steps so the lines actually look nice
+
+        upgradesG2D.setLineWidth(1);
+        for (UpgradeNode upgrade : gameState.getUpgradeTree().getNodes()) {
+            Point2D transformed = upgrade.getLocation().add(upgradeTreeOffset);
+
+
+            for (UpgradeNode dep : upgrade.getPreviousNodes()) {
+                Point2D p = dep.getLocation().add(upgradeTreeOffset);
+                upgradesG2D.strokeLine(transformed.getX(), transformed.getY(), p.getX(), p.getY());
+            }
+        }
+
+        upgradesG2D.setLineWidth(3);
+        for (UpgradeNode upgrade : gameState.getUpgradeTree().getNodes()) {
+            double radius = upgrade.getVisualSize();
+            Point2D transformed = upgrade.getLocation().add(upgradeTreeOffset);
+
+            upgradesG2D.setFill(Paint.valueOf("#999999"));
+            upgradesG2D.fillOval(transformed.getX() - radius / 2, transformed.getY() - radius / 2, radius, radius);
+
+            upgradesG2D.setFill(Paint.valueOf("white"));
+            upgradesG2D.strokeOval(transformed.getX() - radius / 2, transformed.getY() - radius / 2, radius, radius);
+            upgradesG2D.fillText(upgrade.getIcon(), transformed.getX(), transformed.getY());
+        }
     }
 
     private void renderShape() {
