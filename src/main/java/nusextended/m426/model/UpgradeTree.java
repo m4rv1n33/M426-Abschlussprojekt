@@ -33,7 +33,7 @@ public class UpgradeTree {
 
         vertexGrowth.setLocation(0, 0);
         vertexGrowth.setIcon("V");
-        vertexGrowth.setVisualSize(65);
+        vertexGrowth.setVisualSize(90);
 
         UpgradeNode shapeFocus = new UpgradeNode(
             "shape-focus",
@@ -44,9 +44,9 @@ public class UpgradeTree {
             vertexGrowth
         );
 
-        shapeFocus.setLocation(0, 150);
+        shapeFocus.setLocation(0, 110);
         shapeFocus.setIcon("///");
-        shapeFocus.setVisualSize(40);
+        shapeFocus.setVisualSize(55);
 
         UpgradeNode squareAutomation = new UpgradeNode(
             "square-something",
@@ -57,9 +57,9 @@ public class UpgradeTree {
             shapeFocus
         );
 
-        squareAutomation.setLocation(0, 300);
+        squareAutomation.setLocation(0, 220);
         squareAutomation.setIcon("Q");
-        squareAutomation.setVisualSize(40);
+        squareAutomation.setVisualSize(55);
 
         return new UpgradeTree(List.of(vertexGrowth, shapeFocus, squareAutomation));
     }
