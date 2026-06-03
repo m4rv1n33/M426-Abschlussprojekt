@@ -51,7 +51,7 @@ Write in English, keep it short but descriptive.
 2. **Work and commit** regularly with small commits.
 3. **Push** the branch.
 4. **Open a Pull Request** on GitHub once the task is complete.
-5. **Add a reviewer**: **Marvin** or **Finn** (depending on who is responsible for the area).
+5. **Add a reviewer**: **Marvin** or **Finn** (depending on who is responsible for the area, they will be notified automatically).
 6. **Do not merge yourself** - Pull Requests may **only be merged by the reviewer**.
 7. After merging: delete the branch both locally and remotely.
 
@@ -112,8 +112,6 @@ git pull
 git branch -d feature/my-feature
 ```
 
-> **Note:** All of the above can also be done using the **GitHub Desktop** app instead of the command line.
-
 ### Link your branch to an issue
 
 It is recommended to link your branch to the issue you are working on. This makes tracking progress easier.
@@ -147,9 +145,41 @@ git push -u origin feature/my-task
 #    and add Marvin or Finn as reviewer
 ```
 
+## Undoing Mistakes
+
+### Fix the last commit message
+```bash
+git commit --amend -m "feat: correct commit message"
+```
+
+### Unstage a file (keep changes)
+```bash
+git reset <file>
+```
+
+### Discard unstaged changes in a file
+```bash
+git restore <file>
+```
+
+### Undo the last commit (keep changes staged)
+```bash
+git reset --soft HEAD~1
+```
+
+### Undo the last commit (discard changes)
+```bash
+git reset --hard HEAD~1
+```
+
+> **Warning:** `--hard` permanently deletes changes.
+
+> **Note:** All of the above can also be done using the **GitHub Desktop** app instead of the command line.
+
 ## Important Rules
 
 - Never commit directly to `main`.
+- **Never commit `.env` files, passwords, API keys, or any credentials.** Add `.env` to `.gitignore` immediately. If secrets are committed, rotate them right away.
 - Always have someone review your Pull Request.
 - **Never merge your own Pull Request** - always let the reviewer do it.
 - For merge conflicts: resolve them together with the reviewer.
