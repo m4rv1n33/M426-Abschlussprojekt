@@ -29,14 +29,12 @@ Following the retrospective, juniors were swapped:
 
 - [ ] Implement shape upgrade button UI (Gabriela under Finn's guidance) - 3 SP - **[Lightwork]**
 - [ ] Design and program upgrades panel (Finn + Laura Assistance) - 3 SP - **[Finn Lead]**
-- [ ] Real-time currency update & backend integration (Finn) - 3 SP - **[Lead task]**
+- [x] Real-time currency update & backend integration (Finn) - 3 SP - **[Lead task]**
 - [ ] Create prestige UI & button (Laura under Finn's guidance) - 2 SP - **[Lightwork]**
 - [ ] Tutorial flow & state management (Gabriela, Laura - pair programming with Finn) - 3 SP - **[Minor]**
 - [ ] Tutorial texts, images & content (Gabriela, Laura) - 2 SP - **[Lightwork]**
 - [ ] Button styling & UI polish (Laura) - 2 SP - **[Lightwork]**
-- [ ] Format currency display (K/M format) (Gabriela) - 1 SP - **[Lightwork]**
-
-**Frontend Total: 19 SP**
+- [x] Format currency display (K/M format) (Gabriela) - 1 SP - **[Lightwork]**
 
 ### Backend Tasks (Supervisor: Marvin)
 
@@ -44,13 +42,10 @@ Following the retrospective, juniors were swapped:
 
 - [ ] Refine balance parameters & data-driven adjustments (Marvin) - 3 SP - **[Lead task]**
 - [ ] Write integration tests for the full game loop (Marvin + Lea) - 3 SP - **[Minor]**
-- [ ] Provide API endpoint for frontend currency requests (Marvin + Fenia) - 2 SP - **[Minor]**
 - [ ] Document prestige endpoint for frontend integration (Fenia) - 1 SP - **[Lightwork]**
 - [ ] Prepare and run Git workshop (Marvin) - 2 SP - **[Team goal]**
 - [ ] Increase unit test coverage for existing features (Lea, Fenia under Marvin's guidance) - 3 SP - **[Lightwork]**
 - [ ] Prepare load testing for shape production (Fenia) - 2 SP - **[Lightwork]**
-
-**Backend Total: 16 SP**
 
 ---
 
@@ -66,7 +61,7 @@ Following the retrospective, juniors were swapped:
 
 ## Definition of Done
 
-- [ ] Code review conducted (per new checklist)
+- [ ] Code review conducted
 - [ ] Unit tests written & passing
 - [ ] Integration tests passed
 - [ ] Pull request created, Marvin or Finn assigned as reviewer

@@ -29,14 +29,12 @@ Nach dem Retrospective wurden die Juniors getauscht:
 
 - [ ] Shape-Upgrade Button UI implementieren (Gabriela unter Finns Guidance) - 3 SP - **[Lightwork]**
 - [ ] Upgrades-Panel designen und programmieren (Finn + Laura Assistance) - 3 SP - **[Finn Lead]**
-- [ ] Real-time Currency-Update & Backend-Integration (Finn) - 3 SP - **[Lead-Aufgabe]**
+- [x] Real-time Currency-Update & Backend-Integration (Finn) - 3 SP - **[Lead-Aufgabe]**
 - [ ] Prestige-UI & Button erstellen (Laura unter Finns Guidance) - 2 SP - **[Lightwork]**
 - [ ] Tutorial-Flow & State Management (Gabriela, Laura - Pair Programming mit Finn) - 3 SP - **[Minor]**
 - [ ] Tutorial-Texte, Bilder & Content (Gabriela, Laura) - 2 SP - **[Lightwork]**
 - [ ] Button Styling & UI Polish (Laura) - 2 SP - **[Lightwork]**
-- [ ] Currency-Anzeige formatieren (K/M-Format) (Gabriela) - 1 SP - **[Lightwork]**
-
-**Frontend Total: 19 SP**
+- [x] Currency-Anzeige formatieren (K/M-Format) (Gabriela) - 1 SP - **[Lightwork]**
 
 ### Backend Tasks (Supervisor: Marvin)
 
@@ -44,13 +42,10 @@ Nach dem Retrospective wurden die Juniors getauscht:
 
 - [ ] Balance-Parameter verfeinern & Daten-getriebene Anpassungen (Marvin) - 3 SP - **[Lead-Aufgabe]**
 - [ ] Integration-Tests für gesamten Game-Loop schreiben (Marvin + Lea) - 3 SP - **[Minor]**
-- [ ] API-Endpunkt für Frontend-Currency-Abfrage bereitstellen (Marvin + Fenia) - 2 SP - **[Minor]**
 - [ ] Prestige-Endpunkt für Frontend-Integration dokumentieren (Fenia) - 1 SP - **[Lightwork]**
 - [ ] Git-Workshop vorbereiten & durchführen (Marvin) - 2 SP - **[Team goal]**
 - [ ] Unit-Test-Abdeckung für bestehende Features erhöhen (Lea, Fenia unter Marvins Guidance) - 3 SP - **[Lightwork]**
 - [ ] Load-Testing für Shape-Produktion vorbereiten (Fenia) - 2 SP - **[Lightwork]**
-
-**Backend Total: 16 SP**
 
 ---
 
@@ -66,7 +61,7 @@ Nach dem Retrospective wurden die Juniors getauscht:
 
 ## Definition of Done
 
-- [ ] Code-Review durchgeführt (nach neuer Checkliste)
+- [ ] Code-Review durchgeführt 
 - [ ] Unit-Tests geschrieben & grün
 - [ ] Integration-Tests bestanden
 - [ ] Pullrequest erstellt, Marvin oder Finn als reviewer zugewiesen
