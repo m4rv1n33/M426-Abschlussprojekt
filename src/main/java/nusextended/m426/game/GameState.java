@@ -2,7 +2,6 @@ package nusextended.m426.game;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import nusextended.m426.model.PrestigeUpgrades;
 import nusextended.m426.model.Shape;
 import nusextended.m426.model.ShapeType;
 import nusextended.m426.model.UpgradeCost;
@@ -17,7 +16,7 @@ public class GameState {
     private double prestigePoints;
     private int prestigeLevel;
     private ShapeData activeShapeData;
-    private PrestigeUpgrades prestigeUpgrades;
+    private PrestigeTree prestigeTree;
     private UpgradeTree upgradeTree;
     private double lifetimeCurrencyEarned;
     private static final String OS = System.getProperty("os.name").toUpperCase();
@@ -50,7 +49,7 @@ public class GameState {
         this.prestigeLevel = 0;
         this.lifetimeCurrencyEarned = 0;
         this.activeShapeData = new ShapeData(1, 0);
-        this.prestigeUpgrades = new PrestigeUpgrades();
+        this.prestigeTree = PrestigeTree.createDefaultTree();
         this.upgradeTree = UpgradeTree.createDefaultTree();
         this.upgradeStateManager = new UpgradeStateManager(this);
     }
@@ -59,7 +58,9 @@ public class GameState {
         Shape shape = new Shape(0, 1.0);
         shape.setLevel(activeShapeData.level);
         shape.setVertices(activeShapeData.vertices);
-        shape.setVertexMultiplier(prestigeUpgrades.getVertexMultiplier());
+        UpgradeNode vertexMultiplier = prestigeTree.getNode("vertex-multiplier");
+        double multiplier = 1.0 + (vertexMultiplier.getPurchaseCount() * 0.10);
+        shape.setVertexMultiplier(multiplier);
         return shape;
     }
 
@@ -77,6 +78,11 @@ public class GameState {
             if (Files.exists(Paths.get(SAVE_FILE))) {
                 String json = new String(Files.readAllBytes(Paths.get(SAVE_FILE)));
                 GameState loaded = gson.fromJson(json, GameState.class);
+                if (loaded.prestigeTree == null) {
+                    loaded.prestigeTree = PrestigeTree.createDefaultTree();
+                } else {
+                    loaded.prestigeTree.resolveReferences();
+                }
                 if (loaded.upgradeTree != null) {
                     loaded.upgradeTree.resolveReferences();
                 }
@@ -121,8 +127,15 @@ public class GameState {
         return prestigePoints;
     }
 
-    public PrestigeUpgrades getPrestigeUpgrades() {
-        return prestigeUpgrades;
+    public PrestigeTree getPrestigeTree() {
+        if (prestigeTree == null) {
+            prestigeTree = PrestigeTree.createDefaultTree();
+        }
+        return prestigeTree;
+    }
+
+    public void spendPrestigePoints(double cost) {
+        this.prestigePoints -= cost;
     }
 
     public UpgradeTree getUpgradeTree() {
@@ -135,16 +148,6 @@ public class GameState {
 
     public double getLifetimeCurrencyEarned() {
         return lifetimeCurrencyEarned;
-    }
-
-    public boolean purchaseVertexMultiplier() {
-        double cost = prestigeUpgrades.getVertexMultiplierCost();
-        if (prestigePoints >= cost) {
-            prestigePoints -= cost;
-            prestigeUpgrades.applyVertexMultiplierPurchase();
-            return true;
-        }
-        return false;
     }
 
     public void prestige() {
