@@ -1,11 +1,13 @@
 package nusextended.m426;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
@@ -32,6 +34,10 @@ public class HelloController {
     private GraphicsContext shapeG2D;
     private GraphicsContext upgradesG2D;
     private Point2D upgradeTreeOffset;
+
+    private Point2D mouseDragStartPos;
+    private Point2D mouseDragStartOffset;
+    private boolean upgradeTreeBeingDragged = false;
 
     @FXML
     public Text currencyDisplay;
@@ -67,6 +73,31 @@ public class HelloController {
 
         shapeG2D.setFill(Paint.valueOf("black"));
         shapeG2D.fillRect(0, 0, 5, shapeCanvas.getHeight());
+
+        upgradeTreeOffset = new Point2D(
+                upgradesCanvas.getWidth() / 2, upgradesCanvas.getHeight() / 2);
+
+        upgradesCanvas.setOnMousePressed(ev -> {
+            upgradeTreeBeingDragged = true;
+            mouseDragStartPos = new Point2D(
+                    ev.getX(),
+                    ev.getY());
+            mouseDragStartOffset = upgradeTreeOffset;
+        });
+
+        upgradesCanvas.setOnMouseMoved(ev -> {
+            if (upgradeTreeBeingDragged) {
+                Point2D diff = mouseDragStartPos.subtract(
+                        ev.getX(),
+                        ev.getY());
+
+                upgradeTreeOffset = mouseDragStartOffset.add(diff);
+            }
+        });
+
+        upgradesCanvas.setOnMouseReleased(ev -> {
+            upgradeTreeBeingDragged = false;
+        });
     }
 
     public void setGameState(GameState gameState) {
@@ -102,15 +133,11 @@ public class HelloController {
 
         upgradesG2D.setFill(Paint.valueOf("#ffffff"));
 
-        upgradeTreeOffset = new Point2D(
-                upgradesCanvas.getWidth() / 2, upgradesCanvas.getHeight() / 2);
-
         // do this in two steps so the lines actually look nice
 
         upgradesG2D.setLineWidth(1);
         for (UpgradeNode upgrade : gameState.getUpgradeTree().getNodes()) {
             Point2D transformed = upgrade.getLocation().add(upgradeTreeOffset);
-
 
             for (UpgradeNode dep : upgrade.getPreviousNodes()) {
                 Point2D p = dep.getLocation().add(upgradeTreeOffset);
