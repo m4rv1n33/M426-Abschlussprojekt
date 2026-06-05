@@ -24,6 +24,7 @@ public class NusianController {
     private double spinOffset;
 
     private GameState gameState;
+    private UpgradeStateManager upgradeManager;
     private GraphicsContext shapeG2D;
 
     @FXML
@@ -51,9 +52,10 @@ public class NusianController {
     }
 
     public void setUpgradeManager(UpgradeStateManager upgradeManager) {
+        this.upgradeManager = upgradeManager;
     }
 
-    public void updateCurrencyDisplay(double currency, Shape shape, int prestigeLevel) {
+    public void updateCurrencyDisplay(double currency, Shape shape, int prestigeLevel, double prestigePoints) {
         delta = System.currentTimeMillis() - lastFrame;
         lastFrame = System.currentTimeMillis();
 
@@ -63,7 +65,7 @@ public class NusianController {
             prestigeCurrencyContainer.setVisible(false);
         } else {
             prestigeCurrencyContainer.setVisible(true);
-            prestigeCurrencyDisplay.setText(NumberFormatter.formatCurrency(prestigeLevel));
+            prestigeCurrencyDisplay.setText(NumberFormatter.formatCurrency(prestigePoints));
         }
 
         shapeG2D.clearRect(0, 0, shapeCanvas.getWidth(), shapeCanvas.getHeight());
@@ -100,8 +102,11 @@ public class NusianController {
             Point2D p1 = points[i];
             Point2D p2;
 
-            if (i == vertexCount - 1) { p2 = points[0]; }
-            else { p2 = points[i + 1]; }
+            if (i == vertexCount - 1) {
+                p2 = points[0];
+            } else {
+                p2 = points[i + 1];
+            }
 
             shapeG2D.strokeLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
         }

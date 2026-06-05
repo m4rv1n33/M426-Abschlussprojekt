@@ -22,14 +22,18 @@ public class UpgradeStateManager {
     }
 
     public boolean canPurchase(UpgradeNode node) {
-        if (node == null) return false;
+        if (node == null) {
+            return false;
+        }
         ShapeType currentType = gameState.getActiveShape().getType();
         return node.canPurchase(currentType, gameState.getCurrency());
     }
 
     public boolean attemptPurchase(String nodeName) {
         UpgradeNode node = gameState.getUpgradeTree().getNode(nodeName);
-        if (node == null) return false;
+        if (node == null) {
+            return false;
+        }
 
         if (canPurchase(node)) {
             double cost = node.getCurrentCost();

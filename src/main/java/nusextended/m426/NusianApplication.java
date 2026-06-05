@@ -17,7 +17,7 @@ public class NusianApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         gameState = GameState.load();
-        UpgradeStateManager upgradeManager = new UpgradeStateManager(gameState);
+        UpgradeStateManager upgradeManager = gameState.getUpgradeStateManager();
 
         FXMLLoader fxmlLoader = new FXMLLoader(NusianApplication.class.getResource("nusian-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
