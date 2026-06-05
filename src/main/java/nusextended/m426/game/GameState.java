@@ -56,11 +56,14 @@ public class GameState {
     }
 
     public Shape getActiveShape() {
-        Shape shape = new Shape(0, 1.0);
+        BalanceConfig cfg = BalanceConfig.get();
+        Shape shape = new Shape(0, cfg.shapeBaseProductionRate);
         shape.setLevel(activeShapeData.level);
         shape.setVertices(activeShapeData.vertices);
         UpgradeNode vertexMultiplier = getPrestigeTree().getNode("vertex-multiplier");
-        double multiplier = vertexMultiplier != null ? 1.0 + (vertexMultiplier.getPurchaseCount() * 0.10) : 1.0;
+        double multiplier = vertexMultiplier != null
+            ? 1.0 + (vertexMultiplier.getPurchaseCount() * cfg.vertexMultiplierPerPurchase)
+            : 1.0;
         shape.setVertexMultiplier(multiplier);
         return shape;
     }
@@ -124,7 +127,7 @@ public class GameState {
     }
 
     public double getPrestigeBonus() {
-        return 1.0 + (prestigeLevel * 0.10);
+        return 1.0 + (prestigeLevel * BalanceConfig.get().prestigeBonusPerLevel);
     }
 
     public double getPrestigePoints() {
@@ -155,7 +158,7 @@ public class GameState {
     }
 
     public void prestige() {
-        double prestigePointsGained = Math.floor(Math.pow(currency, 0.45));
+        double prestigePointsGained = Math.floor(Math.pow(currency, BalanceConfig.get().prestigeFormulaExponent));
         this.prestigePoints += prestigePointsGained;
         this.prestigeLevel++;
         this.currency = 0;
@@ -173,7 +176,7 @@ public class GameState {
         }
 
         public double getCurrentProductionRate(double baseRate) {
-            double levelBonus = 1.0 + (level * 0.2);
+            double levelBonus = 1.0 + (level * BalanceConfig.get().levelBonusPerLevel);
             return baseRate * vertices * levelBonus;
         }
 

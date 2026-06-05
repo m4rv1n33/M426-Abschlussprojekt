@@ -21,6 +21,8 @@ public class UpgradeTree {
     }
 
     public static UpgradeTree createDefaultTree() {
+        BalanceConfig cfg = BalanceConfig.get();
+
         UpgradeNode vertexGrowth = new UpgradeNode(
             "vertex-growth",
             "Increase the active shape by one vertex.",
@@ -31,7 +33,7 @@ public class UpgradeTree {
         UpgradeNode shapeFocus = new UpgradeNode(
             "shape-focus",
             "Improve production once triangle-era shapes are reached.",
-            new UpgradeCost(35.0, 1.25),
+            new UpgradeCost(cfg.shapeFocusBaseCost, cfg.shapeFocusScaling),
             false,
             ShapeType.TRIANGLE,
             vertexGrowth
@@ -40,7 +42,7 @@ public class UpgradeTree {
         UpgradeNode squareAutomation = new UpgradeNode(
             "square-something",
             ":thumbs_up:",
-            new UpgradeCost(120.0, 1.35),
+            new UpgradeCost(cfg.squareSomethingBaseCost, cfg.squareSomethingScaling),
             false,
             ShapeType.SQUARE,
             shapeFocus
