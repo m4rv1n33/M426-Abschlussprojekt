@@ -3,8 +3,13 @@
 ## Branching Strategy
 
 - **`main`** - Production-ready code. Only merged via Pull Request after review.
-- **`feature/<short-description>`** - For new features (e.g. `feature/currency-display`, `feature/prestige-system`).
-- **`fix/<short-description>`** - For bugfixes (e.g. `fix/upgrade-cost-calculation`).
+- **`feature/<short-description>`** - New features (e.g. `feature/currency-display`, `feature/prestige-system`).
+- **`fix/<short-description>`** - Bugfixes (e.g. `fix/upgrade-cost-calculation`).
+- **`refactor/<short-description>`** - Code cleanup or restructuring (e.g. `refactor/prestige-system`).
+- **`docs/<short-description>`** - Documentation changes (e.g. `docs/api-documentation`).
+- **`test/<short-description>`** - Adding or updating tests.
+- **`chore/<short-description>`** - Tooling, dependencies, config changes.
+- **`balancing/<short-description>`** - Game balance parameter tuning (e.g. `balancing/refine-balance-params`).
 
 Branches are created from `main` and merged back into `main` via Pull Request.
 
@@ -53,7 +58,7 @@ Write in English, keep it short but descriptive.
 4. **Open a Pull Request** on GitHub once the task is complete.
 5. **Add a reviewer**: **Marvin** or **Finn** (depending on who is responsible for the area, they will be notified automatically).
 6. **Do not merge yourself** - Pull Requests may **only be merged by the reviewer**.
-7. After merging: delete the branch both locally and remotely.
+7. After merging: delete the branch both locally and remotely (see commands below).
 
 ## Common Git Commands
 
@@ -87,6 +92,8 @@ git add .
 git commit -m "feat: add currency display to HUD"
 ```
 
+> **Note:** `git add .` stages everything in the working directory. Double-check with `git status` beforehand to avoid accidentally committing config files, credentials, or generated files.
+
 ### Pushing your branch
 ```bash
 git push -u origin feature/my-feature
@@ -107,9 +114,13 @@ git merge main
 
 ### Deleting a branch after merging
 ```bash
+# Delete locally
 git checkout main
 git pull
 git branch -d feature/my-feature
+
+# Delete remotely
+git push origin --delete feature/my-feature
 ```
 
 ### Link your branch to an issue
@@ -151,6 +162,8 @@ git push -u origin feature/my-task
 ```bash
 git commit --amend -m "feat: correct commit message"
 ```
+
+> **Warning:** Only amend commits that have **not been pushed** yet. Amending a pushed commit rewrites history and causes problems for anyone else who has pulled the branch.
 
 ### Unstage a file (keep changes)
 ```bash
