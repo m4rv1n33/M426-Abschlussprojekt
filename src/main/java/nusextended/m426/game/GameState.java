@@ -30,9 +30,6 @@ public class GameState {
 
         if (OS.contains("WIN")) {
             saveDirBuilder.append(System.getenv("LOCALAPPDATA"));
-        } else if (OS.contains("MAC")) {
-            saveDirBuilder.append(System.getProperty("user.home"))
-                    .append("/Library/Application Support");
         } else {
             saveDirBuilder.append(System.getProperty("user.home"))
                     .append("/.local/share");
@@ -92,8 +89,6 @@ public class GameState {
                 }
                 loaded.upgradeStateManager = new UpgradeStateManager(loaded);
                 return loaded;
-            } else {
-                return new GameState();
             }
         } catch (IOException e) {
             e.printStackTrace();
