@@ -4,7 +4,9 @@ import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import nusextended.m426.game.GameState;
@@ -38,6 +40,15 @@ public class NusianController {
 
     @FXML
     private Text prestigeCurrencyDisplay;
+
+    @FXML
+    private VBox prestigeUpgradesContainer;
+
+    @FXML
+    public Canvas upgradesCanvas;
+
+    @FXML
+    public Button prestigeButton;
 
     @FXML
     protected void initialize() {
