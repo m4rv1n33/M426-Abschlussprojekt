@@ -1,5 +1,6 @@
 package nusextended.m426;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
@@ -13,6 +14,9 @@ import nusextended.m426.game.GameState;
 import nusextended.m426.game.NumberFormatter;
 import nusextended.m426.game.UpgradeStateManager;
 import nusextended.m426.model.Shape;
+import nusextended.m426.game.PrestigeStateManager;
+import nusextended.m426.game.UpgradeNode;
+
 
 public class NusianController {
     private final Point2D shapeOrigin = new Point2D(407.5, 250);
@@ -28,6 +32,7 @@ public class NusianController {
     private GameState gameState;
     private UpgradeStateManager upgradeManager;
     private GraphicsContext shapeG2D;
+    private PrestigeStateManager prestigeManager;
 
     @FXML
     public Text currencyDisplay;
@@ -66,7 +71,50 @@ public class NusianController {
         this.upgradeManager = upgradeManager;
     }
 
-    public void updateCurrencyDisplay(double currency, Shape shape, int prestigeLevel, double prestigePoints) {
+    public void setPrestigeManager(PrestigeStateManager prestigeManager) {
+        this.prestigeManager = prestigeManager;
+
+        prestigeButton.setOnAction(e -> {
+            gameState.prestige();
+            refreshPrestigeUpgradeButtons();
+        });
+        refreshPrestigeUpgradeButtons();
+    }
+
+    private void refreshPrestigeUpgradeButtons() {
+        prestigeUpgradesContainer.getChildren().removeIf(
+            node -> node instanceof Button && node != prestigeButton
+        );
+        for (UpgradeNode node : gameState.getPrestigeTree().getNodes()) {
+            Button btn = new Button();
+            updatePrestigeButton(btn, node);
+
+            btn.setPrefWidth(446);
+            btn.setPrefHeight(40);
+            btn.setStyle("-fx-font-size: 16px;");
+
+            btn.setOnAction(e -> {
+                prestigeManager.attemptPurchase(node.getName());
+                updatePrestigeButton(btn, node);
+                
+            });
+            prestigeUpgradesContainer.getChildren().add(btn);
+        }
+    }
+
+    private void updatePrestigeButton(Button btn, UpgradeNode node) {
+        double cost = node.getCurrentCost();
+        boolean canAfford = prestigeManager.canPurchase(node.getName());
+
+        btn.setText(node.getDescription()
+    + " (Stufe " + node.getPurchaseCount() + ")"
+    + " - Kosten: " + NumberFormatter.formatCurrency(cost) + " PP");
+    
+        btn.setDisable(!canAfford);
+    }
+
+
+    public void updateCurrencyDisplay(double currency, Shape shape, int prestigeLevel) {
         delta = System.currentTimeMillis() - lastFrame;
         lastFrame = System.currentTimeMillis();
 
@@ -78,6 +126,19 @@ public class NusianController {
             prestigeCurrencyContainer.setVisible(true);
             prestigeCurrencyDisplay.setText(NumberFormatter.formatCurrency(prestigePoints));
         }
+
+        double pointsOnPrestige = Math.floor(Math.pow(currency, 0.45));
+        prestigeButton.setText("Prestige fuer +" + (long) pointsOnPrestige + " Punkte");
+
+        prestigeUpgradesContainer.getChildren().forEach(node -> {
+            if (node instanceof Button btn && btn != prestigeButton) {
+                int index = prestigeUpgradesContainer.getChildren().indexOf(btn) - 1;
+                if (index >= 0 && index < gameState.getPrestigeTree().getNodes().size()) {
+                    UpgradeNode upgradeNode = gameState.getPrestigeTree().getNodes().get(index);
+                    updatePrestigeButton(btn, upgradeNode);
+                }
+            }
+            });
 
         shapeG2D.clearRect(0, 0, shapeCanvas.getWidth(), shapeCanvas.getHeight());
         shapeG2D.setFill(Paint.valueOf("#999999"));

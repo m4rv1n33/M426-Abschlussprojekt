@@ -7,6 +7,7 @@ import javafx.stage.Stage;
 import nusextended.m426.game.GameState;
 import nusextended.m426.game.GameEngine;
 import nusextended.m426.game.UpgradeStateManager;
+import nusextended.m426.game.PrestigeStateManager;
 
 import java.io.IOException;
 
@@ -17,7 +18,8 @@ public class NusianApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         gameState = GameState.load();
-        UpgradeStateManager upgradeManager = gameState.getUpgradeStateManager();
+        UpgradeStateManager upgradeManager = new UpgradeStateManager(gameState);
+        PrestigeStateManager prestigeManager = new PrestigeStateManager(gameState);
 
         FXMLLoader fxmlLoader = new FXMLLoader(NusianApplication.class.getResource("nusian-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
@@ -25,6 +27,7 @@ public class NusianApplication extends Application {
         NusianController controller = fxmlLoader.getController();
         controller.setGameState(gameState);
         controller.setUpgradeManager(upgradeManager);
+        controller.setPrestigeManager(prestigeManager);
 
         gameEngine = new GameEngine(gameState, upgradeManager);
         gameEngine.setCurrencyListener(controller::updateCurrencyDisplay);
