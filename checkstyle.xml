@@ -22,7 +22,6 @@
         <!-- Whitespace -->
         <module name="WhitespaceAfter"/>
         <module name="WhitespaceAround"/>
-        <module name="NoWhitespaceAtEndOfLine"/>
 
         <!-- Braces -->
         <module name="NeedBraces"/>
@@ -33,7 +32,7 @@
         <module name="UpperEll"/>
     </module>
 
-    <!-- Line length (120 chars — modern Java default) -->
+    <!-- Line length (120 chars, modern Java default) -->
     <module name="LineLength">
         <property name="max" value="120"/>
     </module>

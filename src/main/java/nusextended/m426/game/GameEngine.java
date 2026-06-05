@@ -39,7 +39,10 @@ public class GameEngine extends AnimationTimer {
         upgradeManager.performAutoPurchases();
 
         if (currencyListener != null) {
-            currencyListener.onCurrencyChanged(gameState.getCurrency(), activeShape, gameState.getPrestigeLevel());
+            currencyListener.onCurrencyChanged(
+                gameState.getCurrency(), activeShape,
+                gameState.getPrestigeLevel(), gameState.getPrestigePoints()
+            );
         }
 
         // save periodically every 5 seconds
@@ -51,6 +54,6 @@ public class GameEngine extends AnimationTimer {
     }
 
     public interface CurrencyListener {
-        void onCurrencyChanged(double currency, Shape activeShape, int prestigeLevel);
+        void onCurrencyChanged(double currency, Shape activeShape, int prestigeLevel, double prestigePoints);
     }
 }

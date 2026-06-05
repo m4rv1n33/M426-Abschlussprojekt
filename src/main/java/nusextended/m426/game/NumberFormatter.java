@@ -13,7 +13,7 @@ public class NumberFormatter {
 
     public static String formatCurrencyWithLabel(double amount) {
         String formatted = formatCurrency(amount);
-        String label = amount == 1 ? "Nusian" : "Nusians";
+        String label = Math.abs(amount - 1.0) < 1e-9 ? "Nusian" : "Nusians";
         return formatted + " " + label;
     }
 
