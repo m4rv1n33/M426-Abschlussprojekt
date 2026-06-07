@@ -1,5 +1,38 @@
 # Git Basics & Workflow
 
+This guide assumes you have never used Git before. If a term feels unfamiliar, check the **Key Terms** section first, then come back here.
+
+## What is Git and why do we use it?
+
+Git is a **version control system**: a tool that tracks every change made to the project's files over time. Instead of emailing zip files back and forth or working in a single shared folder (where someone's changes can overwrite someone else's), Git lets several people work on the same project at the same time, on their own copy, and then combine ("merge") their work safely.
+
+Why this matters for our project:
+
+- **History**: Every change is saved with a message explaining what and why. You can always go back to an earlier version.
+- **Parallel work**: Everyone can work on their own feature without blocking or breaking what others are doing.
+- **Safety net**: Mistakes can almost always be undone (see "Undoing Mistakes" below).
+- **Review**: Changes go through a Pull Request, so a second person checks the code before it becomes part of the main project. This catches bugs early and spreads knowledge across the team.
+
+**GitHub** is the website/service that hosts our repository online (the "remote"). Git is the tool you run on your computer; GitHub is where everyone's work comes together.
+
+## Key Terms
+
+| Term | Meaning |
+|------|---------|
+| **Repository ("repo")** | The project folder, including its entire history of changes. Ours lives on GitHub and as a copy on each person's computer. |
+| **Clone** | Downloading a copy of the repository (with its full history) to your computer. You only do this once. |
+| **Commit** | A saved snapshot of changes, with a message describing what changed and why. Think of it as a checkpoint you can return to. |
+| **Branch** | An independent line of work, branched off from `main`. Lets you work on a feature without affecting the main codebase until it's ready. |
+| **`main`** | The branch that always contains the stable, working version of the project. |
+| **Staging area** | A "waiting room" for changes you want to include in your next commit. `git add` moves changes here; `git commit` saves them permanently. |
+| **Working directory** | The actual files on your computer, as you see and edit them in your editor/IDE. |
+| **Remote** | A version of the repository hosted elsewhere (for us: on GitHub). `origin` is the default name for our main remote. |
+| **Push** | Uploading your local commits to the remote (GitHub), so others can see them. |
+| **Pull** | Downloading the latest commits from the remote into your local branch. |
+| **Merge** | Combining the changes from one branch into another. |
+| **Conflict** | Happens when Git can't automatically combine changes (e.g. two people edited the same line). You resolve it by choosing or combining the correct version. |
+| **Pull Request (PR)** | A request on GitHub to merge your branch into `main`, so someone else can review your changes first. |
+
 ## Branching Strategy
 
 - **`main`** - Production-ready code. Only merged via Pull Request after review.
@@ -62,11 +95,20 @@ Write in English, keep it short but descriptive.
 
 ## Common Git Commands
 
+### First-time setup (once per computer)
+
+Git needs to know who you are, so your commits are correctly attributed:
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+```
+
 ### Cloning the repository (once)
 ```bash
 git clone <repository-url>
 cd <repository-folder>
 ```
+This downloads the project (with its full history) into a new folder and switches you into it. You only need to do this once per computer.
 
 ### Starting a new feature / fix
 ```bash
@@ -79,12 +121,22 @@ git checkout -b feature/my-feature
 ```bash
 git status
 ```
+This is the command you will run the most. It shows you:
+- which branch you are on,
+- which files you have changed,
+- which changes are staged (ready to be committed) and which are not.
+
+When in doubt about what Git will do next, run `git status` first.
 
 ### Staging and committing changes
+
+Committing is a two-step process: first you choose which changes to include (**staging**), then you save them as a commit.
+
 ```bash
 git add <file>
 git commit -m "feat: add currency display to HUD"
 ```
+`git add <file>` moves the file's changes into the staging area. `git commit` then takes everything in the staging area and saves it as a new commit with the given message.
 
 Or stage all changed files at once:
 ```bash
@@ -111,6 +163,33 @@ git pull
 git checkout feature/my-feature
 git merge main
 ```
+
+### Resolving a merge conflict
+
+Sometimes Git cannot automatically combine two sets of changes (e.g. you and a teammate both edited the same line of the same file). This is called a **conflict**, and it's completely normal, not a sign that something went wrong.
+
+When it happens, Git marks the conflicting spot directly in the file like this:
+
+```
+<<<<<<< HEAD
+your version of the line
+=======
+the other version of the line
+>>>>>>> main
+```
+
+To resolve it:
+
+1. Open the file and find the `<<<<<<<` / `=======` / `>>>>>>>` markers.
+2. Decide which version to keep (or combine both), then delete the markers and the version(s) you don't want.
+3. Save the file, then stage and commit it:
+   ```bash
+   git add <file>
+   git commit
+   ```
+4. Continue your work as normal.
+
+If you're unsure which version is correct, talk to the other person whose code is involved before deciding (see "Important Rules" below). Your editor or IDE (e.g. IntelliJ, VS Code) usually offers a visual merge tool that makes this easier than editing the markers by hand.
 
 ### Deleting a branch after merging
 ```bash
