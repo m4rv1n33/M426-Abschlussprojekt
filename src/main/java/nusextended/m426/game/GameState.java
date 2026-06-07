@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import nusextended.m426.model.Shape;
-import nusextended.m426.model.UpgradeCost;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -175,15 +174,6 @@ public class GameState {
         public ShapeData(int vertices, int level) {
             this.vertices = vertices;
             this.level = level;
-        }
-
-        public double getCurrentProductionRate(double baseRate) {
-            double levelBonus = 1.0 + (level * BalanceConfig.get().levelBonusPerLevel);
-            return baseRate * vertices * levelBonus;
-        }
-
-        public double getNextUpgradeCost() {
-            return UpgradeCost.getShapeUpgradeCost(level);
         }
 
         public void upgrade() {
