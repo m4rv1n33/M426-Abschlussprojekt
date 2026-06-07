@@ -45,11 +45,12 @@ loaded.upgradeStateManager = new UpgradeStateManager(loaded);
 
 `GameState.load()` reads the save file if it exists, deserializes it, then runs post-load repairs:
 
-1. If `prestigeTree` is null (save from before prestige was added), a fresh default tree is created.
-2. If `prestigeTree` exists, `resolveReferences()` is called to restore transient node links.
-3. If `upgradeTree` exists, `resolveReferences()` is called on it too.
-4. `upgradeStateManager` is constructed fresh.
-5. If the file does not exist, a new `GameState()` is returned.
+1. If Gson returns `null` (empty/blank file) or throws `JsonSyntaxException` (malformed JSON), the save is treated as unreadable: an error is logged and a fresh `new GameState()` is returned instead of crashing.
+2. If `prestigeTree` is null (save from before prestige was added), a fresh default tree is created.
+3. If `prestigeTree` exists, `resolveReferences()` is called to restore transient node links.
+4. If `upgradeTree` exists, `resolveReferences()` is called on it too.
+5. `upgradeStateManager` is constructed fresh.
+6. If the file does not exist, a new `GameState()` is returned.
 
 `resolveReferences()` must be called after Gson deserialization because `previousNodes` on `UpgradeNode` is `transient`. The nodes serialize their prerequisite names as strings; `resolveReferences()` rebuilds the object references from those names using a name-to-node map.
 

@@ -17,15 +17,29 @@ Prestige upgrades are arranged in rows. You must purchase every upgrade in a row
 
 ## Public Methods on GameState
 
-### `void prestige()`
+### `boolean canPrestige()`
+
+**Reports whether prestiging right now would grant any prestige points.** Use this to enable/disable the Prestige button.
+
+| Aspect | Detail |
+|---|---|
+| Source | `GameState.java` |
+| Input | None (reads `currency` internally) |
+| Output | `boolean` - `true` if `floor(currency^0.45) > 0` |
+
+---
+
+### `boolean prestige()`
 
 **Triggers a prestige reset.** Call when the player clicks the Prestige button.
 
 | Aspect | Detail |
 |---|---|
-| Source | `GameState.java:153` |
+| Source | `GameState.java` |
 | Input | None (reads `currency` internally) |
-| Output | `void` |
+| Output | `boolean` - `true` if the reset was applied, `false` if it was a no-op |
+
+**Guard:** if `canPrestige()` is `false` (i.e. `floor(currency^0.45)` would be `0`), `prestige()` does nothing and returns `false`. This prevents wiping all progress for zero reward.
 
 **Prestige points formula (hardcoded):**
 
@@ -33,7 +47,7 @@ Prestige upgrades are arranged in rows. You must purchase every upgrade in a row
 pointsGained = floor(currency^0.45)
 ```
 
-**Side effects (all applied in order):**
+**Side effects when the reset is applied (all applied in order):**
 
 1. **Prestige points** - increased by `floor(currency^0.45)`
 2. **Prestige level** - incremented by 1
@@ -188,6 +202,10 @@ Player clicks Prestige button
         v
 gameState.prestige()
         |
+        +-- canPrestige()? -- false --> no-op, returns false (progress untouched)
+        |       |
+        |      true
+        |       v
         +-- calculates: pointsGained = floor(currency^0.45)
         +-- prestigePoints += pointsGained
         +-- prestigeLevel++
