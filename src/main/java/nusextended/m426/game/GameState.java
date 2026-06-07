@@ -2,6 +2,7 @@ package nusextended.m426.game;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import nusextended.m426.model.Shape;
 import nusextended.m426.model.UpgradeCost;
 
@@ -79,6 +80,10 @@ public class GameState {
             if (Files.exists(Paths.get(SAVE_FILE))) {
                 String json = new String(Files.readAllBytes(Paths.get(SAVE_FILE)));
                 GameState loaded = GSON.fromJson(json, GameState.class);
+                if (loaded == null) {
+                    System.err.println("[GameState] Save file is empty or unreadable, starting a new game.");
+                    return new GameState();
+                }
                 if (loaded.prestigeTree == null) {
                     loaded.prestigeTree = PrestigeTree.createDefaultTree();
                 } else {
@@ -92,6 +97,8 @@ public class GameState {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (JsonSyntaxException e) {
+            System.err.println("[GameState] Save file is corrupted, starting a new game: " + e.getMessage());
         }
         return new GameState();
     }
