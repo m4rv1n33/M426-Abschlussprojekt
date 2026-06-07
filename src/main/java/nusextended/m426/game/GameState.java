@@ -158,13 +158,21 @@ public class GameState {
         return lifetimeCurrencyEarned;
     }
 
-    public void prestige() {
+    public boolean canPrestige() {
+        return Math.floor(Math.pow(currency, BalanceConfig.get().prestigeFormulaExponent)) > 0;
+    }
+
+    public boolean prestige() {
+        if (!canPrestige()) {
+            return false;
+        }
         double prestigePointsGained = Math.floor(Math.pow(currency, BalanceConfig.get().prestigeFormulaExponent));
         this.prestigePoints += prestigePointsGained;
         this.prestigeLevel++;
         this.currency = 0;
         this.activeShapeData = new ShapeData(1, 0);
         getUpgradeTree().reset();
+        return true;
     }
 
     public static class ShapeData {
