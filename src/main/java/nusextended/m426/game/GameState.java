@@ -2,8 +2,8 @@ package nusextended.m426.game;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import nusextended.m426.model.Shape;
-import nusextended.m426.model.UpgradeCost;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -79,6 +79,10 @@ public class GameState {
             if (Files.exists(Paths.get(SAVE_FILE))) {
                 String json = new String(Files.readAllBytes(Paths.get(SAVE_FILE)));
                 GameState loaded = GSON.fromJson(json, GameState.class);
+                if (loaded == null) {
+                    System.err.println("[GameState] Save file is empty or unreadable, starting a new game.");
+                    return new GameState();
+                }
                 if (loaded.prestigeTree == null) {
                     loaded.prestigeTree = PrestigeTree.createDefaultTree();
                 } else {
@@ -92,6 +96,8 @@ public class GameState {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (JsonSyntaxException e) {
+            System.err.println("[GameState] Save file is corrupted, starting a new game: " + e.getMessage());
         }
         return new GameState();
     }
@@ -152,13 +158,21 @@ public class GameState {
         return lifetimeCurrencyEarned;
     }
 
-    public void prestige() {
+    public boolean canPrestige() {
+        return Math.floor(Math.pow(currency, BalanceConfig.get().prestigeFormulaExponent)) > 0;
+    }
+
+    public boolean prestige() {
+        if (!canPrestige()) {
+            return false;
+        }
         double prestigePointsGained = Math.floor(Math.pow(currency, BalanceConfig.get().prestigeFormulaExponent));
         this.prestigePoints += prestigePointsGained;
         this.prestigeLevel++;
         this.currency = 0;
         this.activeShapeData = new ShapeData(1, 0);
         getUpgradeTree().reset();
+        return true;
     }
 
     public static class ShapeData {
@@ -168,15 +182,6 @@ public class GameState {
         public ShapeData(int vertices, int level) {
             this.vertices = vertices;
             this.level = level;
-        }
-
-        public double getCurrentProductionRate(double baseRate) {
-            double levelBonus = 1.0 + (level * BalanceConfig.get().levelBonusPerLevel);
-            return baseRate * vertices * levelBonus;
-        }
-
-        public double getNextUpgradeCost() {
-            return UpgradeCost.getShapeUpgradeCost(level);
         }
 
         public void upgrade() {
