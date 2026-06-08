@@ -164,6 +164,41 @@ git checkout feature/my-feature
 git merge main
 ```
 
+### Rebasing your branch onto main
+
+Rebasing is an alternative to merging when you want to bring your branch up to date with `main`. Instead of creating a merge commit, it **replays your commits on top of the latest `main`**, resulting in a cleaner, linear history.
+
+```bash
+git checkout main
+git pull
+git checkout feature/my-feature
+git rebase main
+```
+
+If there are conflicts during the rebase, Git pauses and tells you which file(s) to fix. For each conflicting file:
+
+1. Open the file, resolve the `<<<<<<<` / `=======` / `>>>>>>>` markers (same as a merge conflict).
+2. Stage the resolved file:
+   ```bash
+   git add <file>
+   ```
+3. Continue the rebase (do **not** run `git commit` here):
+   ```bash
+   git rebase --continue
+   ```
+
+Repeat for every paused step until the rebase completes. If you want to abort and go back to where you started:
+```bash
+git rebase --abort
+```
+
+After a rebase your local branch history has been rewritten, so a normal `git push` will be rejected. Use a force-push to update the remote:
+```bash
+git push --force-with-lease
+```
+
+> **Warning:** Only rebase branches that are **your own and not shared with others**. Rebasing a branch that someone else has already pulled rewrites history and causes problems for them. If in doubt, use `git merge main` instead.
+
 ### Resolving a merge conflict
 
 Sometimes Git cannot automatically combine two sets of changes (e.g. you and a teammate both edited the same line of the same file). This is called a **conflict**, and it's completely normal, not a sign that something went wrong.
