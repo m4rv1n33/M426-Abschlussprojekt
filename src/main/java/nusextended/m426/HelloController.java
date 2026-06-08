@@ -91,12 +91,8 @@ public class HelloController {
                         ev.getX(),
                         ev.getY());
 
-                upgradeTreeOffset = mouseDragStartOffset.add(diff);
+                upgradeTreeOffset = mouseDragStartOffset.subtract(diff);
             }
-        });
-
-        upgradesCanvas.setOnMouseReleased(ev -> {
-            upgradeTreeBeingDragged = false;
         });
     }
 
