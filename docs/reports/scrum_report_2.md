@@ -70,6 +70,7 @@ The backend is in a strong position with only 1 open issue remaining. However, j
 - Frontend status is unclear pending Finn's in-person update
 
 ### Focus Areas for Sprint #3
+1. **Timing** - tasks should not be pushed back; there is more than enough time to start early
 2. **Lea** - increase task ownership; assign a concrete deliverable with a clear definition of done
 3. **Frontend clarity** - act on Finn's in-person feedback to define a realistic sprint goal for the 8 open issues
 4. **Backend close-out** - resolve the 1 remaining issue early in Sprint #3 to free up capacity

@@ -70,6 +70,7 @@ Das Backend steht gut da, mit nur noch 1 offenen Issue. Der Output der Junior-Mi
 - Frontend-Status ist unklar, bis Finns persönliches Update vorliegt
 
 ### Fokusbereiche für Sprint #3
+1. **Timing** - Die Tasks sollten nicht herausgeschoben werden. Die Zeit ist mehr als genug um früh damit zu beginnen.
 2. **Lea** - mehr Task-Ownership; konkretes Deliverable mit klarer Definition of Done zuweisen
 3. **Frontend-Klarheit** - basierend auf Finns persönlichem Feedback ein realistisches Sprint-Ziel für die 8 offenen Issues definieren
 4. **Backend Close-out** - das verbleibende Issue früh in Sprint #3 lösen, um Kapazität freizugeben
