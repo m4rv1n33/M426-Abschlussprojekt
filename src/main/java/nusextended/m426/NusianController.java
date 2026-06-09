@@ -1,6 +1,5 @@
 package nusextended.m426;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
@@ -12,10 +11,10 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import nusextended.m426.game.GameState;
 import nusextended.m426.game.NumberFormatter;
-import nusextended.m426.game.UpgradeStateManager;
-import nusextended.m426.model.Shape;
 import nusextended.m426.game.PrestigeStateManager;
 import nusextended.m426.game.UpgradeNode;
+import nusextended.m426.game.UpgradeStateManager;
+import nusextended.m426.model.Shape;
 
 
 public class NusianController {
@@ -114,7 +113,7 @@ public class NusianController {
     }
 
 
-    public void updateCurrencyDisplay(double currency, Shape shape, int prestigeLevel) {
+    public void updateCurrencyDisplay(double currency, Shape shape, int prestigeLevel, double prestigePoints) {
         delta = System.currentTimeMillis() - lastFrame;
         lastFrame = System.currentTimeMillis();
 
