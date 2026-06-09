@@ -34,7 +34,7 @@ No changes from Sprint #2:
 - [ ] Implement shape upgrade button UI (Gabriela under Finn's guidance) - 3 SP - **[Lightwork]**
 - [ ] Design and program upgrades panel (Finn + Laura assistance) - 3 SP - **[Finn Lead]**
 - [ ] Create prestige UI & button (Laura under Finn's guidance) - 2 SP - **[Lightwork]**
-- [ ] Tutorial flow & state management (Gabriela, Laura - pair programming with Finn) - 3 SP - **[Minor]**
+- [ ] Tutorial flow & state management (Gabriela, Laura) - 3 SP - **[Minor]**
 - [ ] Tutorial texts, images & content (Gabriela, Laura) - 2 SP - **[Lightwork]**
 - [ ] Button styling & UI polish (Laura) - 2 SP - **[Lightwork]**
 - [ ] Full frontend-backend integration smoke test (Finn + Marvin) - 2 SP - **[Lead task]**
@@ -44,7 +44,7 @@ No changes from Sprint #2:
 **Team:** Marvin, Fenia, Lea
 
 - [ ] Close 1 remaining open issue from Sprint #2 (Marvin) - first day priority - **[Lead task]**
-- [ ] Refine balance parameters & data-driven adjustments (Marvin) - 3 SP - **[Lead task]**
+- [ ] Refine balance parameters & data-driven adjustments (Marvin(yes, we're gonna do ts again)) - 3 SP - **[Lead task]**
 - [ ] Git basics workshop (Marvin leads, all juniors participate) - 2 SP - **[Team goal]**
 - [ ] Write prestige tree unit tests (Fenia) - 2 SP - **[Lightwork]**
 - [ ] Write UpgradeNode edge-case tests (Lea) - 2 SP - **[Lightwork]**
@@ -53,8 +53,7 @@ No changes from Sprint #2:
 
 ### Team-wide Tasks
 
-- [ ] Git basics workshop (Marvin leads, all juniors participate) - **2 SP**
-- [ ] End-to-end manual playthrough with all team members - **1 SP**
+- [ ] Git basics workshop improvements or hands-on session if needed(Marvin leads, all juniors participate) - **2 SP**
 
 ---
 
@@ -86,10 +85,10 @@ No changes from Sprint #2:
 
 ## Notes from Sprint #2 Retrospective
 
-- **Fenia** - two consecutive sprints of zero output; assigned the smallest meaningful task (prestige tree unit tests, 2 SP) with no ambiguity in scope. No further excuses.
+- **Fenia** - two consecutive sprints of zero output; assigned the smallest meaningful task (prestige tree unit tests, 2 SP) with no ambiguity in scope. 
 - **Lea** - minor output in Sprint #2; given sole ownership of UpgradeNode edge-case tests to build accountability.
 - **Frontend recovery** - all 6 carryover tasks must be completed this sprint; the game cannot ship without them.
-- **Git workshop** - was planned for Sprint #2 and did not happen; it is a hard commitment for Sprint #3 day 1.
+- **Git workshop** - may need a hadns-on lesson if the juniors wish one. 
 - **Balance tuning** - now that the full test suite is in place, balance parameters can be adjusted with confidence.
 
 ---
