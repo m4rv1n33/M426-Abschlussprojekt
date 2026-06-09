@@ -97,4 +97,14 @@ public class UpgradeCostCalculationTest {
         assertThrows(IllegalArgumentException.class,
             () -> UpgradeCost.getCurrentCost(0.0, 1.5, 1));
     }
+
+    @Test
+    @DisplayName("canAfford should return true when money equals cost")
+    void canAffordShouldReturnTrueWhenMoneyEqualsCost() {
+        double cost = UpgradeCost.getShapeUpgradeCost(1);
+
+        boolean result = UpgradeCost.canAfford(cost, cost);
+
+        assertEquals(true, result);
+    }
 }
