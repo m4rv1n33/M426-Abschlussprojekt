@@ -1,14 +1,14 @@
 package nusextended.m426;
 
+import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import nusextended.m426.game.GameState;
 import nusextended.m426.game.GameEngine;
+import nusextended.m426.game.GameState;
 import nusextended.m426.game.UpgradeStateManager;
-
-import java.io.IOException;
 
 public class NusianApplication extends Application {
     private GameState gameState;
@@ -30,7 +30,7 @@ public class NusianApplication extends Application {
         gameEngine.setCurrencyListener(controller::updateCurrencyDisplay);
         gameEngine.start();
 
-        stage.setTitle("Nusian somethingburger");
+        stage.setTitle("Nusian incremental");
         stage.setScene(scene);
         stage.setOnCloseRequest(event -> {
             gameState.save();
