@@ -9,6 +9,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
+import nusextended.m426.game.BalanceConfig;
 import nusextended.m426.game.GameState;
 import nusextended.m426.game.NumberFormatter;
 import nusextended.m426.game.PrestigeStateManager;
@@ -81,9 +82,8 @@ public class NusianController {
     }
 
     private void refreshPrestigeUpgradeButtons() {
-        prestigeUpgradesContainer.getChildren().removeIf(
-            node -> node instanceof Button && node != prestigeButton
-        );
+        prestigeUpgradesContainer.getChildren().clear();
+            
         for (UpgradeNode node : gameState.getPrestigeTree().getNodes()) {
             Button btn = new Button();
             updatePrestigeButton(btn, node);
@@ -112,6 +112,20 @@ public class NusianController {
         btn.setDisable(!canAfford);
     }
 
+    private void updatePrestigeButtonText(double currency) {
+    long pointsGained = (long) Math.floor(Math.pow(currency, BalanceConfig.get().prestigeFormulaExponent));
+    double currentBonus = gameState.getPrestigeBonus();             
+    double newBonus = 1.0 + ((gameState.getPrestigeLevel() + 1) * BalanceConfig.get().prestigeBonusPerLevel);   
+
+    int currentPct = (int) Math.round((currentBonus - 1.0) * 100);
+    int newPct     = (int) Math.round((newBonus     - 1.0) * 100);
+
+    prestigeButton.setText(
+        "Prestige fuer +" + pointsGained + " PP"
+        + "  |  Bonus: +" + currentPct + "% → +" + newPct + "%"
+    );
+    prestigeButton.setDisable(!gameState.canPrestige());
+}
 
     public void updateCurrencyDisplay(double currency, Shape shape, int prestigeLevel, double prestigePoints) {
         delta = System.currentTimeMillis() - lastFrame;
@@ -126,8 +140,7 @@ public class NusianController {
             prestigeCurrencyDisplay.setText(NumberFormatter.formatCurrency(prestigePoints));
         }
 
-        double pointsOnPrestige = Math.floor(Math.pow(currency, 0.45));
-        prestigeButton.setText("Prestige fuer +" + (long) pointsOnPrestige + " Punkte");
+        updatePrestigeButtonText(currency);
 
         prestigeUpgradesContainer.getChildren().forEach(node -> {
             if (node instanceof Button btn && btn != prestigeButton) {
