@@ -114,18 +114,10 @@ public class NusianController {
 
     private void updatePrestigeButtonText(double currency) {
     long pointsGained = (long) Math.floor(Math.pow(currency, BalanceConfig.get().prestigeFormulaExponent));
-    double currentBonus = gameState.getPrestigeBonus();             
-    double newBonus = 1.0 + ((gameState.getPrestigeLevel() + 1) * BalanceConfig.get().prestigeBonusPerLevel);   
 
-    int currentPct = (int) Math.round((currentBonus - 1.0) * 100);
-    int newPct     = (int) Math.round((newBonus     - 1.0) * 100);
-
-    prestigeButton.setText(
-        "Prestige fuer +" + pointsGained + " PP"
-        + "  |  Bonus: +" + currentPct + "% → +" + newPct + "%"
-    );
+    prestigeButton.setText("Prestige for +" + pointsGained + " PP");
     prestigeButton.setDisable(!gameState.canPrestige());
-}
+    }
 
     public void updateCurrencyDisplay(double currency, Shape shape, int prestigeLevel, double prestigePoints) {
         delta = System.currentTimeMillis() - lastFrame;
