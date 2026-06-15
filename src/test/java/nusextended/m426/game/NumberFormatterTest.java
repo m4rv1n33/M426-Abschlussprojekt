@@ -35,4 +35,16 @@ public class NumberFormatterTest {
         assertEquals("1.0T", NumberFormatter.formatCurrency(1_000_000_000_000.0));
         assertEquals("12.3T", NumberFormatter.formatCurrency(12_345_678_900_000.0));
     }
+
+    @Test
+    void formatsCurrencyWithLabel() {
+        assertEquals("1.0 Nusian", NumberFormatter.formatCurrencyWithLabel(1.0));
+        assertEquals("2.0 Nusians", NumberFormatter.formatCurrencyWithLabel(2.0));
+    }
+
+    @Test
+    void formatsProductionRate() {
+        assertEquals("0.00 per second", NumberFormatter.formatProductionRate(0));
+        assertEquals("1.23 per second", NumberFormatter.formatProductionRate(1.2345));
+    }
 }

@@ -33,7 +33,7 @@ public class NusianApplication extends Application {
         gameEngine.setCurrencyListener(controller::updateCurrencyDisplay);
         gameEngine.start();
 
-        stage.setTitle("Nusian somethingburger");
+        stage.setTitle("Nusian incremental");
         stage.setScene(scene);
         stage.setOnCloseRequest(event -> {
             gameState.save();
