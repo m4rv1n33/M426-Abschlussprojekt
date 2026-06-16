@@ -43,7 +43,7 @@ work started late despite this being flagged repeatedly in past retrospectives.
 
 | Team Member | Experience Level | Contribution |
 |---|---|---|
-| Finn | Experienced | Supervisor; left Gabriela's PR unreviewed for 6 days |
+| Finn | Experienced | Supervisor; left Gabriela's PR unreviewed for 5 days |
 | Gabriela | Junior | Delivered shape upgrade button work |
 | Laura | Junior | Shipped the prestige UI & button |
 
