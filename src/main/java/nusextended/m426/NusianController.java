@@ -78,6 +78,7 @@ public class NusianController {
             gameState.prestige();
             refreshPrestigeUpgradeButtons();
         });
+
         refreshPrestigeUpgradeButtons();
     }
 
@@ -86,7 +87,7 @@ public class NusianController {
             
         for (UpgradeNode node : gameState.getPrestigeTree().getNodes()) {
             Button btn = new Button();
-            updatePrestigeButton(btn, node);
+            updatePrestigeUpgradeButton(btn, node);
 
             btn.setPrefWidth(446);
             btn.setPrefHeight(40);
@@ -94,29 +95,29 @@ public class NusianController {
 
             btn.setOnAction(e -> {
                 prestigeManager.attemptPurchase(node.getName());
-                updatePrestigeButton(btn, node);
-                
+                updatePrestigeUpgradeButton(btn, node);
             });
+
             prestigeUpgradesContainer.getChildren().add(btn);
         }
     }
 
-    private void updatePrestigeButton(Button btn, UpgradeNode node) {
+    private void updatePrestigeUpgradeButton(Button btn, UpgradeNode node) {
         double cost = node.getCurrentCost();
         boolean canAfford = prestigeManager.canPurchase(node.getName());
 
-        btn.setText(node.getDescription()
-    + " (Stufe " + node.getPurchaseCount() + ")"
-    + " - Kosten: " + NumberFormatter.formatCurrency(cost) + " PP");
+        btn.setText(node.getName()
+    + " (Lv. " + node.getPurchaseCount() + ")"
+    + " / " + NumberFormatter.formatCurrency(cost) + " PP");
     
         btn.setDisable(!canAfford);
     }
 
     private void updatePrestigeButtonText(double currency) {
-    long pointsGained = (long) Math.floor(Math.pow(currency, BalanceConfig.get().prestigeFormulaExponent));
+        long pointsGained = (long) Math.floor(Math.pow(currency, BalanceConfig.get().prestigeFormulaExponent));
 
-    prestigeButton.setText("Prestige for +" + pointsGained + " PP");
-    prestigeButton.setDisable(!gameState.canPrestige());
+        prestigeButton.setText("Prestige for +" + pointsGained + " PP");
+        prestigeButton.setDisable(!gameState.canPrestige());
     }
 
     public void updateCurrencyDisplay(double currency, Shape shape, int prestigeLevel, double prestigePoints) {
@@ -134,15 +135,18 @@ public class NusianController {
 
         updatePrestigeButtonText(currency);
 
+        // don't do this every frame that's ridiculous
+        /*
         prestigeUpgradesContainer.getChildren().forEach(node -> {
             if (node instanceof Button btn && btn != prestigeButton) {
                 int index = prestigeUpgradesContainer.getChildren().indexOf(btn) - 1;
                 if (index >= 0 && index < gameState.getPrestigeTree().getNodes().size()) {
                     UpgradeNode upgradeNode = gameState.getPrestigeTree().getNodes().get(index);
-                    updatePrestigeButton(btn, upgradeNode);
+                    updatePrestigeUpgradeButton(btn, upgradeNode);
                 }
             }
-            });
+        });
+        */
 
         shapeG2D.clearRect(0, 0, shapeCanvas.getWidth(), shapeCanvas.getHeight());
         shapeG2D.setFill(Paint.valueOf("#999999"));
