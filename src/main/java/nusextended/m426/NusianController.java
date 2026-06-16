@@ -14,6 +14,7 @@ import javafx.scene.text.Text;
 import nusextended.m426.game.GameState;
 import nusextended.m426.game.NumberFormatter;
 import nusextended.m426.game.UpgradeStateManager;
+import nusextended.m426.game.rendering.PrestigeUpgradeRenderer;
 import nusextended.m426.model.Shape;
 
 public class NusianController {
@@ -57,52 +58,8 @@ public class NusianController {
         lastFrame = System.currentTimeMillis();
         shapeG2D.setLineWidth(lineWidth);
         shapeG2D.setStroke(Paint.valueOf("white"));
-        setPrestigeUpgrades();
+        PrestigeUpgradeRenderer prestigeRenderer = new PrestigeUpgradeRenderer(prestigeUpgradesContainer); prestigeRenderer.setPrestigeUpgrades();
     }
-
-    public VBox createUpgradeBox(String description, String cost) {
-        VBox vbox = new VBox(); 
-        vbox.setMinHeight(100); 
-        vbox.setStyle("-fx-background-color: #FFEDFB; -fx-border-color: #CBBFFF");
-        HBox.setHgrow(vbox, Priority.ALWAYS); 
-        vbox.setMaxWidth(Double.MAX_VALUE);
-        Label descLabel = new Label(description); 
-        Label costLabel = new Label(cost); 
-        vbox.getChildren().addAll(descLabel, costLabel);
-        return vbox;
-    }
-
-    public void setPrestigeUpgrades() {
-        HBox row1 = new HBox(5);
-        row1.getChildren().addAll(
-        createUpgradeBox("smtburgir", "50"),
-        createUpgradeBox("smtburgir", "50"),
-        createUpgradeBox("smtburgir", "50")
-    );
-        HBox row2 = new HBox(5);
-        row2.getChildren().addAll(
-        createUpgradeBox("smtburgir", "50"),
-        createUpgradeBox("smtburgir", "50"),
-        createUpgradeBox("smtburgir", "50")
-    );
-        HBox row3= new HBox(5);
-        row3.getChildren().addAll(
-        createUpgradeBox("smtburgir", "50"),
-        createUpgradeBox("smtburgir", "50"),
-        createUpgradeBox("smtburgir", "50")
-    );
-        HBox row4 = new HBox(5);
-        row4.getChildren().addAll(
-        createUpgradeBox("smtburgir", "50"),
-        createUpgradeBox("smtburgir", "50"),
-        createUpgradeBox("smtburgir", "50")
-    );
-
-    System.out.println("Children count: " + prestigeUpgradesContainer.getChildren().size());
-
-    prestigeUpgradesContainer.getChildren().addAll(row1, row2, row3, row4);
-    }
-
 
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
