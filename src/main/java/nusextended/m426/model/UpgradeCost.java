@@ -1,8 +1,8 @@
 package nusextended.m426.model;
 
+import nusextended.m426.game.BalanceConfig;
+
 public final class UpgradeCost {
-    private static final UpgradeCost SHAPE_UPGRADE = new UpgradeCost(10.0, 1.2);
-    private static final UpgradeCost PRESTIGE_UPGRADE = new UpgradeCost(100.0, 1.6);
 
     private final double baseCost;
     private final double scalingFactor;
@@ -38,19 +38,21 @@ public final class UpgradeCost {
     }
 
     public static UpgradeCost shapeUpgrade() {
-        return SHAPE_UPGRADE;
+        BalanceConfig cfg = BalanceConfig.get();
+        return new UpgradeCost(cfg.shapeUpgradeBaseCost, cfg.shapeUpgradeScaling);
     }
 
     public static UpgradeCost prestigeUpgrade() {
-        return PRESTIGE_UPGRADE;
+        BalanceConfig cfg = BalanceConfig.get();
+        return new UpgradeCost(cfg.prestigeUpgradeBaseCost, cfg.prestigeUpgradeScaling);
     }
 
     public static double getShapeUpgradeCost(int level) {
-        return SHAPE_UPGRADE.getCurrentCost(level);
+        return shapeUpgrade().getCurrentCost(level);
     }
 
     public static double getPrestigeUpgradeCost(int level) {
-        return PRESTIGE_UPGRADE.getCurrentCost(level);
+        return prestigeUpgrade().getCurrentCost(level);
     }
 
     public static double getCurrentCost(double baseCost, double scalingFactor, int level) {

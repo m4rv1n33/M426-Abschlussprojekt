@@ -81,7 +81,9 @@ public class UpgradeNode {
     }
 
     public void resolveReferences(Map<String, UpgradeNode> nodeMap) {
-        if (previousNodeNames == null) return;
+        if (previousNodeNames == null) {
+            return;
+        }
         this.previousNodes = new ArrayList<>();
         for (String name : previousNodeNames) {
             UpgradeNode ref = nodeMap.get(name);
