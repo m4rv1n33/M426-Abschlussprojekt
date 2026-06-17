@@ -21,7 +21,9 @@ public class PrestigeStateManager {
 
     public boolean canPurchase(String nodeName) {
         UpgradeNode node = gameState.getPrestigeTree().getNode(nodeName);
-        if (node == null) return false;
+        if (node == null) {
+            return false;
+        }
         boolean repeatable = node.isInfinitelyPurchaseable() || !node.isPurchased();
         return node.hasUnlockedPrerequisites()
             && repeatable
@@ -29,7 +31,9 @@ public class PrestigeStateManager {
     }
 
     public boolean attemptPurchase(String nodeName) {
-        if (!canPurchase(nodeName)) return false;
+        if (!canPurchase(nodeName)) {
+            return false;
+        }
         UpgradeNode node = gameState.getPrestigeTree().getNode(nodeName);
         double cost = node.getCurrentCost();
         gameState.spendPrestigePoints(cost);

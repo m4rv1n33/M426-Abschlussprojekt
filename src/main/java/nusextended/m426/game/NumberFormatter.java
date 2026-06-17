@@ -2,10 +2,14 @@ package nusextended.m426.game;
 
 public class NumberFormatter {
     public static String formatCurrency(double amount) {
-        if (amount >= 1_000_000) {
-            return String.format("%.1fM", amount / 1_000_000);
-        } else if (amount >= 1_000) {
-            return String.format("%.1fK", amount / 1_000);
+        if (amount >= 1_000_000_000_000.0) {
+            return String.format("%.1fT", amount / 1_000_000_000_000.0);
+        } else if (amount >= 1_000_000_000.0) {
+            return String.format("%.1fB", amount / 1_000_000_000.0);
+        } else if (amount >= 1_000_000.0) {
+            return String.format("%.1fM", amount / 1_000_000.0);
+        } else if (amount >= 1_000.0) {
+            return String.format("%.1fK", amount / 1_000.0);
         } else {
             return String.format("%.0f", amount);
         }
@@ -13,7 +17,7 @@ public class NumberFormatter {
 
     public static String formatCurrencyWithLabel(double amount) {
         String formatted = formatCurrency(amount);
-        String label = amount == 1 ? "Nusian" : "Nusians";
+        String label = Math.abs(amount - 1.0) < 1e-9 ? "Nusian" : "Nusians";
         return formatted + " " + label;
     }
 

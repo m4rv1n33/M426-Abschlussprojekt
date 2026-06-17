@@ -6,6 +6,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GameStatePrestigeTest {
 
@@ -30,6 +32,29 @@ public class GameStatePrestigeTest {
         Shape activeShape = gameState.getActiveShape();
         assertEquals(0, activeShape.getLevel());
         assertEquals(1, activeShape.getVertices());
+    }
+
+    @Test
+    @DisplayName("prestige should be a no-op when it would grant zero prestige points")
+    void prestigeShouldDoNothingWhenItWouldGrantZeroPoints() {
+        gameState.setCurrency(0.5);
+
+        boolean prestiged = gameState.prestige();
+
+        assertFalse(prestiged);
+        assertFalse(gameState.canPrestige());
+        assertEquals(0.5, gameState.getCurrency(), 0.0001);
+        assertEquals(0, gameState.getPrestigeLevel());
+        assertEquals(0.0, gameState.getPrestigePoints(), 0.0001);
+    }
+
+    @Test
+    @DisplayName("prestige should succeed and report success when it would grant prestige points")
+    void prestigeShouldSucceedWhenItWouldGrantPoints() {
+        gameState.setCurrency(10000.0);
+
+        assertTrue(gameState.canPrestige());
+        assertTrue(gameState.prestige());
     }
 
     @Test

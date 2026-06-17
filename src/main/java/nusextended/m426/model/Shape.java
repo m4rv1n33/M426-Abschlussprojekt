@@ -1,5 +1,7 @@
 package nusextended.m426.model;
 
+import nusextended.m426.game.BalanceConfig;
+
 public class Shape {
     private final int id;
     private int level;
@@ -40,7 +42,7 @@ public class Shape {
     }
 
     public double getCurrentProductionRate() {
-        double levelBonus = 1.0 + (level * 0.2);
+        double levelBonus = 1.0 + (level * BalanceConfig.get().levelBonusPerLevel);
         return baseProductionRate * vertices * vertexMultiplier * levelBonus;
     }
 

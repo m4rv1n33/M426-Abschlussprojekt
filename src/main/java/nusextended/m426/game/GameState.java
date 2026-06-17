@@ -2,14 +2,12 @@ package nusextended.m426.game;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import nusextended.m426.model.Shape;
-import nusextended.m426.model.ShapeType;
-import nusextended.m426.model.UpgradeCost;
 
-import java.nio.file.FileSystems;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.io.IOException;
 
 public class GameState {
     private double currency;
@@ -23,16 +21,16 @@ public class GameState {
     private static final String OUR_DIRECTORY = "/nusExtended/M426/";
     private static final String SAVE_DIR;
     private static final String SAVE_FILE;
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    private UpgradeStateManager upgradeStateManager;
+    private transient UpgradeStateManager upgradeStateManager;
 
     static {
         StringBuilder saveDirBuilder = new StringBuilder();
 
         if (OS.contains("WIN")) {
             saveDirBuilder.append(System.getenv("LOCALAPPDATA"));
-        } else if (OS.equals("LINUX")) {
+        } else {
             saveDirBuilder.append(System.getProperty("user.home"))
                     .append("/.local/share");
         }
@@ -55,11 +53,14 @@ public class GameState {
     }
 
     public Shape getActiveShape() {
-        Shape shape = new Shape(0, 1.0);
+        BalanceConfig cfg = BalanceConfig.get();
+        Shape shape = new Shape(0, cfg.shapeBaseProductionRate);
         shape.setLevel(activeShapeData.level);
         shape.setVertices(activeShapeData.vertices);
-        UpgradeNode vertexMultiplier = prestigeTree.getNode("vertex-multiplier");
-        double multiplier = 1.0 + (vertexMultiplier.getPurchaseCount() * 0.10);
+        UpgradeNode vertexMultiplier = getPrestigeTree().getNode("vertex-multiplier");
+        double multiplier = vertexMultiplier != null
+            ? 1.0 + (vertexMultiplier.getPurchaseCount() * cfg.vertexMultiplierPerPurchase)
+            : 1.0;
         shape.setVertexMultiplier(multiplier);
         return shape;
     }
@@ -67,7 +68,7 @@ public class GameState {
     public void save() {
         try {
             Files.createDirectories(Paths.get(SAVE_DIR));
-            Files.write(Paths.get(SAVE_FILE), gson.toJson(this).getBytes());
+            Files.write(Paths.get(SAVE_FILE), GSON.toJson(this).getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -77,7 +78,11 @@ public class GameState {
         try {
             if (Files.exists(Paths.get(SAVE_FILE))) {
                 String json = new String(Files.readAllBytes(Paths.get(SAVE_FILE)));
-                GameState loaded = gson.fromJson(json, GameState.class);
+                GameState loaded = GSON.fromJson(json, GameState.class);
+                if (loaded == null) {
+                    System.err.println("[GameState] Save file is empty or unreadable, starting a new game.");
+                    return new GameState();
+                }
                 if (loaded.prestigeTree == null) {
                     loaded.prestigeTree = PrestigeTree.createDefaultTree();
                 } else {
@@ -86,10 +91,13 @@ public class GameState {
                 if (loaded.upgradeTree != null) {
                     loaded.upgradeTree.resolveReferences();
                 }
+                loaded.upgradeStateManager = new UpgradeStateManager(loaded);
                 return loaded;
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (JsonSyntaxException e) {
+            System.err.println("[GameState] Save file is corrupted, starting a new game: " + e.getMessage());
         }
         return new GameState();
     }
@@ -118,9 +126,9 @@ public class GameState {
     public int getPrestigeLevel() {
         return prestigeLevel;
     }
-    
+
     public double getPrestigeBonus() {
-        return 1.0 + (prestigeLevel * 0.10);
+        return 1.0 + (prestigeLevel * BalanceConfig.get().prestigeBonusPerLevel);
     }
 
     public double getPrestigePoints() {
@@ -150,13 +158,21 @@ public class GameState {
         return lifetimeCurrencyEarned;
     }
 
-    public void prestige() {
-        double prestigePointsGained = Math.floor(Math.pow(currency, 0.45));
+    public boolean canPrestige() {
+        return Math.floor(Math.pow(currency, BalanceConfig.get().prestigeFormulaExponent)) > 0;
+    }
+
+    public boolean prestige() {
+        if (!canPrestige()) {
+            return false;
+        }
+        double prestigePointsGained = Math.floor(Math.pow(currency, BalanceConfig.get().prestigeFormulaExponent));
         this.prestigePoints += prestigePointsGained;
         this.prestigeLevel++;
         this.currency = 0;
         this.activeShapeData = new ShapeData(1, 0);
         getUpgradeTree().reset();
+        return true;
     }
 
     public static class ShapeData {
@@ -166,15 +182,6 @@ public class GameState {
         public ShapeData(int vertices, int level) {
             this.vertices = vertices;
             this.level = level;
-        }
-
-        public double getCurrentProductionRate(double baseRate) {
-            double levelBonus = 1.0 + (level * 0.2);
-            return baseRate * vertices * levelBonus;
-        }
-
-        public double getNextUpgradeCost() {
-            return UpgradeCost.getShapeUpgradeCost(level);
         }
 
         public void upgrade() {
