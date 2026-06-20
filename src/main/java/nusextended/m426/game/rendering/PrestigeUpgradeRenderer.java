@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.geometry.Insets;
 import javafx.scene.layout.Priority;
 import javafx.geometry.Pos;
+import nusextended.m426.game.UpgradeNode;
 
 public class PrestigeUpgradeRenderer {
     private VBox prestigeUpgradesContainer;
@@ -15,8 +16,8 @@ public class PrestigeUpgradeRenderer {
     this.prestigeUpgradesContainer = container;
 }
 
-    // TODO: add onclick handler to actually purchase the upgrade
-    public Button createUpgradeBox(String description, String cost) {
+
+    public Button createUpgradeBox(UpgradeNode node) {
         Button btn = new Button();
         VBox vbox = new VBox();
 
@@ -27,8 +28,8 @@ public class PrestigeUpgradeRenderer {
 
         HBox.setHgrow(btn, Priority.ALWAYS);
 
-        Label descLabel = new Label(description);
-        Label costLabel = new Label(cost);
+        Label descLabel = new Label(node.getDescription());
+        Label costLabel = new Label(String.valueOf(node.getCurrentCost()));
         vbox.setAlignment(Pos.CENTER);
         descLabel.setAlignment(Pos.CENTER);
         costLabel.setAlignment(Pos.CENTER);
@@ -36,6 +37,16 @@ public class PrestigeUpgradeRenderer {
         costLabel.setMaxWidth(Double.MAX_VALUE);
         vbox.getChildren().addAll(descLabel, costLabel);
         btn.setGraphic(vbox);
+
+        btn.setOnAction(event -> {
+            if (node.canPurchase(null, gameState.getPrestigePoints()))  {
+                double costPaid = node.getCurrentCost();
+                node.recordPurchase();
+                gameState.spendPrestigePoints(costPaid);
+                setPrestigeUpgrades();
+            }
+        });
+
         return btn;
     }
 
