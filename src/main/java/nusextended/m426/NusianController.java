@@ -63,13 +63,12 @@ public class NusianController {
         lastFrame = System.currentTimeMillis();
         shapeG2D.setLineWidth(lineWidth);
         shapeG2D.setStroke(Paint.valueOf("white"));
-
-        prestigeRenderer = new PrestigeUpgradeRenderer(prestigeUpgradesContainer);
-        prestigeRenderer.setPrestigeUpgrades();
     }
 
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
+        prestigeRenderer = new PrestigeUpgradeRenderer(prestigeUpgradesContainer, gameState);
+        prestigeRenderer.setPrestigeUpgrades();
     }
 
     public void setUpgradeManager(UpgradeStateManager upgradeManager) {

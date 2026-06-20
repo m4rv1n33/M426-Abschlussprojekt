@@ -8,14 +8,16 @@ import javafx.geometry.Insets;
 import javafx.scene.layout.Priority;
 import javafx.geometry.Pos;
 import nusextended.m426.game.UpgradeNode;
+import nusextended.m426.game.GameState;
 
 public class PrestigeUpgradeRenderer {
     private VBox prestigeUpgradesContainer;
+    private GameState gameState;
 
-    public PrestigeUpgradeRenderer(VBox container) {
+    public PrestigeUpgradeRenderer(VBox container, GameState gameState) {
     this.prestigeUpgradesContainer = container;
+    this.gameState = gameState;
 }
-
 
     public Button createUpgradeBox(UpgradeNode node) {
         Button btn = new Button();
@@ -39,44 +41,37 @@ public class PrestigeUpgradeRenderer {
         btn.setGraphic(vbox);
 
         btn.setOnAction(event -> {
+            System.out.println("PP: " + gameState.getPrestigePoints() + " cost: " + node.getCurrentCost());
             if (node.canPurchase(null, gameState.getPrestigePoints()))  {
-                double costPaid = node.getCurrentCost();
-                node.recordPurchase();
-                gameState.spendPrestigePoints(costPaid);
-                setPrestigeUpgrades();
+            double costPaid = node.getCurrentCost();
+            node.recordPurchase();
+            gameState.spendPrestigePoints(costPaid);
+            setPrestigeUpgrades();
             }
         });
 
         return btn;
     }
 
-    // TODO: create prestige buttons from game state
     public void setPrestigeUpgrades() {
+
+        prestigeUpgradesContainer.getChildren().clear();
+
         HBox row1 = new HBox(5);
         VBox.setVgrow(row1, Priority.ALWAYS);
-        row1.getChildren().addAll(
-            createUpgradeBox("smtburgir", "50"),
-            createUpgradeBox("smtburgir", "50"),
-            createUpgradeBox("smtburgir", "50")
-        );
+        UpgradeNode node1 = gameState.getPrestigeTree().getNode("vertex-multiplier");
+        if (node1 != null) {
+            row1.getChildren().add(createUpgradeBox(node1));
+        }
+
         HBox row2 = new HBox(5);
         VBox.setVgrow(row2, Priority.ALWAYS);
-        row2.getChildren().add(createUpgradeBox("smtburgir", "50")
-    );
+    
         HBox row3= new HBox(5);
         VBox.setVgrow(row3, Priority.ALWAYS);
-         row3.getChildren().addAll(
-         createUpgradeBox("smtburgir", "50"),
-        createUpgradeBox("smtburgir", "50"),
-        createUpgradeBox("smtburgir", "50")
-     );
+     
         HBox row4 = new HBox(5);
         VBox.setVgrow(row4, Priority.ALWAYS);
-         row4.getChildren().addAll(
-         createUpgradeBox("smtburgir", "50"),
-         createUpgradeBox("smtburgir", "50"),
-         createUpgradeBox("smtburgir", "50")
-    );
 
         System.out.println("Children count: " + prestigeUpgradesContainer.getChildren().size());
         prestigeUpgradesContainer.getChildren().addAll(row1, row2, row3, row4);
