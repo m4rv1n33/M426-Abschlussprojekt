@@ -10,6 +10,7 @@ import nusextended.m426.game.GameEngine;
 import nusextended.m426.game.GameState;
 import nusextended.m426.game.PrestigeStateManager;
 import nusextended.m426.game.UpgradeStateManager;
+import nusextended.m426.game.TutorialManager;
 
 public class NusianApplication extends Application {
     private GameState gameState;
@@ -40,6 +41,8 @@ public class NusianApplication extends Application {
             gameEngine.stop();
         });
         stage.show();
+
+        new TutorialManager().showTutorial();
     }
 
     public static void main(String[] args) {
