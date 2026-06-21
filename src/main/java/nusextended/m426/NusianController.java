@@ -1,5 +1,3 @@
-<<<<<<<< HEAD:src/main/java/nusextended/m426/HelloController.java
-========
 package nusextended.m426;
 
 import javafx.fxml.FXML;
@@ -17,7 +15,6 @@ import nusextended.m426.game.BalanceConfig;
 import nusextended.m426.game.GameState;
 import nusextended.m426.game.NumberFormatter;
 import nusextended.m426.game.PrestigeStateManager;
-import nusextended.m426.game.UpgradeNode;
 import nusextended.m426.game.UpgradeStateManager;
 import nusextended.m426.model.Shape;
 import nusextended.m426.model.UpgradeNode;
@@ -67,9 +64,6 @@ public class NusianController {
 
     @FXML
     private Button prestigeButton;
-
-    @FXML
-    private Canvas upgradesCanvas;
 
     @FXML
     protected void initialize() {
@@ -275,4 +269,3 @@ public class NusianController {
         }
     }
 }
->>>>>>>> fa93df4 (i hope i can rebase now):src/main/java/nusextended/m426/NusianController.java

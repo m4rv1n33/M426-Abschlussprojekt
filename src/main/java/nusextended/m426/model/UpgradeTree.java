@@ -1,5 +1,6 @@
 package nusextended.m426.model;
 
+import nusextended.m426.game.BalanceConfig;
 import nusextended.m426.model.ShapeType;
 import nusextended.m426.model.UpgradeCost;
 import javafx.geometry.Point2D;

@@ -1,5 +1,7 @@
 package nusextended.m426.game;
 
+import nusextended.m426.model.UpgradeNode;
+
 import java.util.ArrayList;
 import java.util.List;
 
