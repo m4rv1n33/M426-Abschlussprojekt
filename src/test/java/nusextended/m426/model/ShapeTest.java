@@ -38,7 +38,7 @@ public class ShapeTest {
 
         shape.applyUpgrade();
 
-        assertEquals(12.0, shape.getNextUpgradeCost(), 0.0001);
+        assertEquals(11.5, shape.getNextUpgradeCost(), 0.0001);
     }
 
     @Test

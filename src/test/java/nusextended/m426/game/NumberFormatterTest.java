@@ -38,8 +38,8 @@ public class NumberFormatterTest {
 
     @Test
     void formatsCurrencyWithLabel() {
-        assertEquals("1.0 Nusian", NumberFormatter.formatCurrencyWithLabel(1.0));
-        assertEquals("2.0 Nusians", NumberFormatter.formatCurrencyWithLabel(2.0));
+        assertEquals("1 Nusian", NumberFormatter.formatCurrencyWithLabel(1.0));
+        assertEquals("2 Nusians", NumberFormatter.formatCurrencyWithLabel(2.0));
     }
 
     @Test

@@ -19,13 +19,15 @@ Prestige upgrades are arranged in rows. You must purchase every upgrade in a row
 
 ### `boolean canPrestige()`
 
-**Reports whether prestiging right now would grant any prestige points.** Use this to enable/disable the Prestige button.
+**Reports whether prestiging right now would grant a worthwhile number of prestige points.** Use this to enable/disable the Prestige button.
 
 | Aspect | Detail |
 |---|---|
 | Source | `GameState.java` |
 | Input | None (reads `currency` internally) |
-| Output | `boolean` - `true` if `floor(currency^0.45) > 0` |
+| Output | `boolean` - `true` if `floor(currency^prestigeFormulaExponent) >= prestigeMinimumPoints` |
+
+With the default balance (`prestigeFormulaExponent = 0.5`, `prestigeMinimumPoints = 10`) this means the button stays disabled until the player holds at least `10^2 = 100` currency, which removes the old "prestige for a single point" trap.
 
 ---
 
@@ -39,17 +41,17 @@ Prestige upgrades are arranged in rows. You must purchase every upgrade in a row
 | Input | None (reads `currency` internally) |
 | Output | `boolean` - `true` if the reset was applied, `false` if it was a no-op |
 
-**Guard:** if `canPrestige()` is `false` (i.e. `floor(currency^0.45)` would be `0`), `prestige()` does nothing and returns `false`. This prevents wiping all progress for zero reward.
+**Guard:** if `canPrestige()` is `false` (i.e. `floor(currency^prestigeFormulaExponent)` would be below `prestigeMinimumPoints`), `prestige()` does nothing and returns `false`. This prevents wiping all progress for a negligible reward.
 
-**Prestige points formula (hardcoded):**
+**Prestige points formula (data-driven via `balance.json`):**
 
 ```
-pointsGained = floor(currency^0.45)
+pointsGained = floor(currency^prestigeFormulaExponent)   // default exponent 0.5 -> floor(sqrt(currency))
 ```
 
 **Side effects when the reset is applied (all applied in order):**
 
-1. **Prestige points** - increased by `floor(currency^0.45)`
+1. **Prestige points** - increased by `floor(currency^prestigeFormulaExponent)`
 2. **Prestige level** - incremented by 1
 3. **Currency** - reset to `0`
 4. **Active shape** - reset to `new ShapeData(1, 0)` (level 0, 1 vertex)
@@ -155,7 +157,7 @@ Holds the list of prestige `UpgradeNode` instances.
 ### Default tree structure (Row 1)
 
 ```
-Row 1: vertex-multiplier (infinitely purchaseable, cost: 100 * 1.6^level)
+Row 1: vertex-multiplier (infinitely purchaseable, cost: 50 * 1.6^level)
 ```
 
 **Row constraint:** Since this is the only node in row 1, there are no prerequisites. When future rows are added, each node in row 2 must list `vertex-multiplier` (and any other row 1 nodes) as `previousNodes`.
@@ -206,7 +208,7 @@ gameState.prestige()
         |       |
         |      true
         |       v
-        +-- calculates: pointsGained = floor(currency^0.45)
+        +-- calculates: pointsGained = floor(currency^prestigeFormulaExponent)
         +-- prestigePoints += pointsGained
         +-- prestigeLevel++
         +-- currency = 0

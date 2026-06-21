@@ -40,7 +40,7 @@ class PrestigeStateManagerTest {
     @Test
     @DisplayName("attemptPurchase deducts prestige points and records purchase")
     void attemptPurchaseDeductsPointsAndRecordsPurchase() {
-        gameState.spendPrestigePoints(-100.0);
+        gameState.spendPrestigePoints(-50.0); // exactly the base cost of vertex-multiplier
 
         boolean success = manager.attemptPurchase("vertex-multiplier");
 
@@ -61,7 +61,7 @@ class PrestigeStateManagerTest {
     @Test
     @DisplayName("can repeatedly purchase infinitely purchaseable node")
     void canRepeatPurchaseInfinitelyPurchaseableNode() {
-        gameState.spendPrestigePoints(-260.0);
+        gameState.spendPrestigePoints(-130.0); // first two purchases: 50 + 50 * 1.6 = 130
 
         assertTrue(manager.attemptPurchase("vertex-multiplier"));
         assertTrue(manager.attemptPurchase("vertex-multiplier"));
