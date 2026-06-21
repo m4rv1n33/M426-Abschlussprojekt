@@ -5,7 +5,7 @@
   "levelBonusPerLevel": 0.2,
 
   "shapeUpgradeBaseCost": 10.0,
-  "shapeUpgradeScaling": 1.2,
+  "shapeUpgradeScaling": 1.15,
 
   "shapeFocusBaseCost": 35.0,
   "shapeFocusScaling": 1.25,
@@ -13,10 +13,11 @@
   "squareSomethingBaseCost": 120.0,
   "squareSomethingScaling": 1.35,
 
-  "prestigeUpgradeBaseCost": 100.0,
+  "prestigeUpgradeBaseCost": 50.0,
   "prestigeUpgradeScaling": 1.6,
 
-  "prestigeFormulaExponent": 0.45,
+  "prestigeFormulaExponent": 0.5,
+  "prestigeMinimumPoints": 10.0,
   "prestigeBonusPerLevel": 0.10,
   "vertexMultiplierPerPurchase": 0.10
 }

@@ -12,17 +12,18 @@ public class BalanceConfig {
     public double levelBonusPerLevel = 0.2;
 
     public double shapeUpgradeBaseCost = 10.0;
-    public double shapeUpgradeScaling = 1.2;
+    public double shapeUpgradeScaling = 1.15;
 
     public double shapeFocusBaseCost = 35.0;
     public double shapeFocusScaling = 1.25;
     public double squareSomethingBaseCost = 120.0;
     public double squareSomethingScaling = 1.35;
 
-    public double prestigeUpgradeBaseCost = 100.0;
+    public double prestigeUpgradeBaseCost = 50.0;
     public double prestigeUpgradeScaling = 1.6;
 
-    public double prestigeFormulaExponent = 0.45;
+    public double prestigeFormulaExponent = 0.5;
+    public double prestigeMinimumPoints = 10.0;
     public double prestigeBonusPerLevel = 0.10;
     public double vertexMultiplierPerPurchase = 0.10;
 

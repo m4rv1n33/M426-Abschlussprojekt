@@ -30,7 +30,7 @@ class PrestigeTreeTest {
         UpgradeNode node = tree.getNode("vertex-multiplier");
         assertNotNull(node);
         assertTrue(node.isInfinitelyPurchaseable());
-        assertEquals(100.0, node.getCurrentCost(), 0.0001);
+        assertEquals(50.0, node.getCurrentCost(), 0.0001);
     }
 
     @Test
