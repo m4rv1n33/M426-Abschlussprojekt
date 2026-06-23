@@ -41,3 +41,6 @@ build/
 CLAUDE.md
 CLAUDE.local.md
 .claude/
+
+### Reports ###
+docs/reports/contribution-report.md
