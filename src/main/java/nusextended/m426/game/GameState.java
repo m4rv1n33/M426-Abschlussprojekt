@@ -159,14 +159,19 @@ public class GameState {
     }
 
     public boolean canPrestige() {
-        return Math.floor(Math.pow(currency, BalanceConfig.get().prestigeFormulaExponent)) > 0;
+        return getPendingPrestigePoints() > 0;
+    }
+
+    public double getPendingPrestigePoints() {
+        double effectiveCurrency = Math.max(0, currency - BalanceConfig.get().minimumCurrencyToPrestige);
+        return Math.ceil(Math.pow(effectiveCurrency, BalanceConfig.get().prestigeFormulaExponent));
     }
 
     public boolean prestige() {
         if (!canPrestige()) {
             return false;
         }
-        double prestigePointsGained = Math.floor(Math.pow(currency, BalanceConfig.get().prestigeFormulaExponent));
+        double prestigePointsGained = getPendingPrestigePoints();
         this.prestigePoints += prestigePointsGained;
         this.prestigeLevel++;
         this.currency = 0;
