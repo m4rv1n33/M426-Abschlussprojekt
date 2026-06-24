@@ -86,21 +86,19 @@ public class NusianController {
                 upgradesCanvas.getWidth() / 2, upgradesCanvas.getHeight() / 2);
 
         upgradesCanvas.setOnMousePressed(ev -> {
-            upgradeTreeBeingDragged = true;
             mouseDragStartPos = new Point2D(
                     ev.getX(),
                     ev.getY());
+            
             mouseDragStartOffset = upgradeTreeOffset;
         });
 
-        upgradesCanvas.setOnMouseMoved(ev -> {
-            if (upgradeTreeBeingDragged) {
-                Point2D diff = mouseDragStartPos.subtract(
-                        ev.getX(),
-                        ev.getY());
+        upgradesCanvas.setOnMouseDragged(ev -> {
+            Point2D diff = mouseDragStartPos.subtract(
+                    ev.getX(),
+                    ev.getY());
 
-                upgradeTreeOffset = mouseDragStartOffset.subtract(diff);
-            }
+            upgradeTreeOffset = mouseDragStartOffset.subtract(diff);
         });
     }
 
