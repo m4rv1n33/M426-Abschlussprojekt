@@ -58,7 +58,7 @@ public class UpgradeNode {
         this(name, description, cost, infinitelyPurchaseable, null, previousNodes);
     }
 
-    public double getVisualSize() { return visualSize; }
+    public double getVisualSize() { return visualSize <= 10 ? 64 : visualSize; }
 
     public void setVisualSize(double visualSize) { this.visualSize = visualSize; }
 

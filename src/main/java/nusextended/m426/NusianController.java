@@ -42,7 +42,10 @@ public class NusianController {
 
     private Point2D mouseDragStartPos;
     private Point2D mouseDragStartOffset;
-    private boolean upgradeTreeBeingDragged = false;
+
+    private UpgradeNode upgradeInfoNode;
+    private Point2D upgradeInfoLoc;
+    private boolean shouldDrawUpgradeInfo;
 
     @FXML
     public Text currencyDisplay;
@@ -89,7 +92,7 @@ public class NusianController {
             mouseDragStartPos = new Point2D(
                     ev.getX(),
                     ev.getY());
-            
+
             mouseDragStartOffset = upgradeTreeOffset;
         });
 
@@ -100,6 +103,50 @@ public class NusianController {
 
             upgradeTreeOffset = mouseDragStartOffset.subtract(diff);
         });
+
+        upgradesCanvas.setOnMouseMoved(ev -> {
+            Point2D hoverLoc = upgradeTreeOffset.subtract(
+                    ev.getX(),
+                    ev.getY());
+
+            Point2D infoLoc = new Point2D(ev.getX(), ev.getY()).add(20, 0); // mouse pointer offset
+
+            shouldDrawUpgradeInfo = false;
+
+            for (UpgradeNode upgrade : gameState.getUpgradeTree().getNodes()) {
+                double visualSize = upgrade.getVisualSize() / 2;
+
+                if (upgrade.getLocation().distance(hoverLoc) <= visualSize) {
+                    setDrawnUpgradeInfo(upgrade, infoLoc);
+                    shouldDrawUpgradeInfo = true;
+                }
+            }
+        });
+    }
+
+    public void setDrawnUpgradeInfo(UpgradeNode upgrade, Point2D position) {
+        upgradeInfoLoc = position;
+        upgradeInfoNode = upgrade;
+    }
+
+    public void renderUpgradeInfo() {
+        if (!shouldDrawUpgradeInfo) return;
+
+        double x = upgradeInfoLoc.getX();
+        double y = upgradeInfoLoc.getY();
+
+        upgradesG2D.setStroke(Paint.valueOf("black"));
+        upgradesG2D.setFill(Paint.valueOf("#999999"));
+
+        upgradesG2D.fillRect(x, y, 320, 120);
+
+        upgradesG2D.beginPath();
+        upgradesG2D.strokeLine(x, y, x + 320, y);
+        upgradesG2D.strokeLine(x + 320, y, x + 320, y + 120);
+        upgradesG2D.strokeLine(x + 320, y + 120, x, y + 120);
+        upgradesG2D.strokeLine(x, y + 120, x, y);
+        upgradesG2D.stroke();
+        upgradesG2D.closePath();
     }
 
     public void setGameState(GameState gameState) {
@@ -194,6 +241,7 @@ public class NusianController {
 
         renderShape();
         renderUpgradeTree();
+        renderUpgradeInfo();
     }
 
     private void renderUpgradeTree() {
@@ -206,6 +254,7 @@ public class NusianController {
         // do this in two steps so the lines actually look nice
 
         upgradesG2D.setLineWidth(1);
+        upgradesG2D.setStroke(Paint.valueOf("white"));
         for (UpgradeNode upgrade : gameState.getUpgradeTree().getNodes()) {
             Point2D transformed = upgrade.getLocation().add(upgradeTreeOffset);
 
