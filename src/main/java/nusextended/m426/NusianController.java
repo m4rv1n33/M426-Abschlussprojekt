@@ -6,9 +6,10 @@ import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import nusextended.m426.game.BalanceConfig;
@@ -31,6 +32,9 @@ public class NusianController {
     private final double upgradeInfoWidth = 260;
     private final double upgradeInfoHeight = 140;
 
+    private final Font titleFont = new Font("Helvetica",25);
+    private final Font bodyFont = new Font("Helvetica",17);
+
     private double lastFrame;
     private double delta;
     private double time = 0;
@@ -49,7 +53,7 @@ public class NusianController {
 
     private UpgradeNode upgradeInfoNode;
     private Point2D upgradeInfoLoc;
-    private boolean shouldDrawUpgradeInfo;
+    private boolean isHoveringUpgrade;
 
     @FXML
     public Text currencyDisplay;
@@ -83,8 +87,6 @@ public class NusianController {
         shapeG2D.setStroke(PaintHelper.WHITE);
 
         upgradesG2D.setStroke(PaintHelper.WHITE);
-        upgradesG2D.setTextAlign(TextAlignment.CENTER);
-        upgradesG2D.setTextBaseline(VPos.CENTER);
 
         shapeG2D.setFill(PaintHelper.BLACK);
         shapeG2D.fillRect(0, 0, 5, shapeCanvas.getHeight());
@@ -100,6 +102,15 @@ public class NusianController {
             mouseDragStartOffset = upgradeTreeOffset;
         });
 
+        upgradesCanvas.setOnMouseClicked(ev -> {
+            if (ev.getButton() != MouseButton.PRIMARY) return;
+            if (!isHoveringUpgrade) return;
+            if (!upgradeInfoNode.canPurchase(gameState.getActiveShape().getType(), gameState.getCurrency())) return;
+
+            gameState.addCurrency(-upgradeInfoNode.getCurrentCost());
+            upgradeInfoNode.recordPurchase();
+        });
+
         upgradesCanvas.setOnMouseDragged(ev -> {
             Point2D diff = mouseDragStartPos.subtract(
                     ev.getX(),
@@ -113,14 +124,14 @@ public class NusianController {
             Point2D hoverLoc = mouseLoc.subtract(upgradeTreeOffset);
             Point2D infoLoc = mouseLoc.add(20, 0); // mouse pointer offset
 
-            shouldDrawUpgradeInfo = false;
+            isHoveringUpgrade = false;
 
             for (UpgradeNode upgrade : gameState.getUpgradeTree().getNodes()) {
                 double visualSize = upgrade.getVisualSize() / 2;
 
                 if (upgrade.getLocation().distance(hoverLoc) <= visualSize) {
                     setDrawnUpgradeInfo(upgrade, infoLoc);
-                    shouldDrawUpgradeInfo = true;
+                    isHoveringUpgrade = true;
                 }
             }
         });
@@ -132,7 +143,7 @@ public class NusianController {
     }
 
     public void renderUpgradeInfo() {
-        if (!shouldDrawUpgradeInfo) return;
+        if (!isHoveringUpgrade) return;
 
         double x = upgradeInfoLoc.getX();
         double y = upgradeInfoLoc.getY();
@@ -149,6 +160,26 @@ public class NusianController {
         upgradesG2D.strokeLine(x, y + upgradeInfoHeight, x, y);
         upgradesG2D.stroke();
         upgradesG2D.closePath();
+
+        upgradesG2D.setFill(PaintHelper.WHITE);
+        upgradesG2D.setFont(titleFont);
+        upgradesG2D.setTextAlign(TextAlignment.LEFT);
+        upgradesG2D.setTextBaseline(VPos.TOP);
+
+        upgradesG2D.fillText(upgradeInfoNode.getName(), x + 7, y + 7, upgradeInfoWidth - 14);
+
+        upgradesG2D.setFont(bodyFont);
+        upgradesG2D.setTextAlign(TextAlignment.RIGHT);
+
+        String priceText;
+        if (upgradeInfoNode.isPurchased() && !upgradeInfoNode.isInfinitelyPurchaseable()) { priceText = "MAX"; }
+        else { priceText = "$" + Math.round(Math.floor(upgradeInfoNode.getCurrentCost())); }
+
+        upgradesG2D.fillText(priceText, x + upgradeInfoWidth - 7, y + 36, upgradeInfoWidth - 14);
+
+        upgradesG2D.setTextAlign(TextAlignment.LEFT);
+        upgradesG2D.fillText(upgradeInfoNode.getDescription(),
+                x + 7, y + 54, upgradeInfoWidth - 14);
     }
 
     public void setGameState(GameState gameState) {
@@ -267,14 +298,22 @@ public class NusianController {
         }
 
         upgradesG2D.setLineWidth(3);
+        upgradesG2D.setTextAlign(TextAlignment.CENTER);
+        upgradesG2D.setTextBaseline(VPos.CENTER);
+        upgradesG2D.setFont(bodyFont);
+
         for (UpgradeNode upgrade : gameState.getUpgradeTree().getNodes()) {
             double radius = upgrade.getVisualSize();
             Point2D transformed = upgrade.getLocation().add(upgradeTreeOffset);
 
-            upgradesG2D.setFill(PaintHelper.GREY);
+            if (upgrade.isPurchased()) { upgradesG2D.setFill(PaintHelper.OFFWHITE); }
+            else { upgradesG2D.setFill(PaintHelper.GREY); }
+
             upgradesG2D.fillOval(transformed.getX() - radius / 2, transformed.getY() - radius / 2, radius, radius);
 
-            upgradesG2D.setFill(PaintHelper.WHITE);
+            if (upgrade.isPurchased()) { upgradesG2D.setFill(PaintHelper.BLACK); }
+            else { upgradesG2D.setFill(PaintHelper.WHITE); }
+
             upgradesG2D.strokeOval(transformed.getX() - radius / 2, transformed.getY() - radius / 2, radius, radius);
             upgradesG2D.fillText(upgrade.getIcon(), transformed.getX(), transformed.getY());
         }

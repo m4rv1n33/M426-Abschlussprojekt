@@ -27,7 +27,7 @@ public class UpgradeTree {
 
         UpgradeNode vertexGrowth = new UpgradeNode(
             "vertex-growth",
-            "Increase the active shape by one vertex.",
+            "Increase the active\nshape by one vertex.",
             UpgradeCost.shapeUpgrade(),
             true
         );
