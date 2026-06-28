@@ -5,6 +5,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import nusextended.m426.game.GameState;
@@ -28,10 +29,6 @@ public class UpgradeRenderer {
     private Canvas upgradesCanvas;
     private GameState gameState;
 
-        public void setGameState(GameState gameState) {
-        this.gameState = gameState;
-    }
-
     public UpgradeRenderer(Canvas canvas, GameState gameState) {
         this.upgradesCanvas = canvas;
         this.gameState = gameState;
@@ -41,32 +38,43 @@ public class UpgradeRenderer {
         upgradeTreeOffset = new Point2D(
                 upgradesCanvas.getWidth() / 2, upgradesCanvas.getHeight() / 2); 
 
-        upgradesCanvas.setOnMousePressed(ev -> {
-            mouseDragStartPos = new Point2D(
-                    ev.getX(),
-                    ev.getY());
 
-            mouseDragStartOffset = upgradeTreeOffset;
-        });
+    }
 
-        upgradesCanvas.setOnMouseClicked(ev -> {
-            if (gameState == null) return;
-            if (ev.getButton() != MouseButton.PRIMARY) return;
-            if (!isHoveringUpgrade) return;
-            if (!upgradeInfoNode.canPurchase(gameState.getActiveShape().getType(), gameState.getCurrency())) return;
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
+        upgradesCanvas.setOnMousePressed(this::onCanvasMousePressed);
+        upgradesCanvas.setOnMouseClicked(this::onCanvasMouseClicked);
+        upgradesCanvas.setOnMouseDragged(this::onCanvasMouseDragged);
+        upgradesCanvas.setOnMouseMoved(this::onCanvasMouseMoved);
+    }
 
-            gameState.getUpgradeStateManager().attemptPurchase(upgradeInfoNode.getName());
-        });
+    private void onCanvasMousePressed(MouseEvent ev) {
+        mouseDragStartPos = new Point2D(
+                ev.getX(),
+                ev.getY());
 
-        upgradesCanvas.setOnMouseDragged(ev -> {
-            Point2D diff = mouseDragStartPos.subtract(
-                    ev.getX(),
-                    ev.getY());
+        mouseDragStartOffset = upgradeTreeOffset;
+    }
 
-            upgradeTreeOffset = mouseDragStartOffset.subtract(diff);
-        });
+    private void onCanvasMouseClicked(MouseEvent ev) {
+        if (gameState == null) return;
+        if (ev.getButton() != MouseButton.PRIMARY) return;
+        if (!isHoveringUpgrade) return;
+        if (!upgradeInfoNode.canPurchase(gameState.getActiveShape().getType(), gameState.getCurrency())) return;
 
-        upgradesCanvas.setOnMouseMoved(ev -> {
+        gameState.getUpgradeStateManager().attemptPurchase(upgradeInfoNode.getName());
+    }
+
+    private void onCanvasMouseDragged(MouseEvent ev) {
+        Point2D diff = mouseDragStartPos.subtract(
+                ev.getX(),
+                ev.getY());
+
+        upgradeTreeOffset = mouseDragStartOffset.subtract(diff);
+    }
+
+    private void onCanvasMouseMoved(MouseEvent ev) {
             if (gameState == null) return;
             Point2D mouseLoc = new Point2D(ev.getX(), ev.getY());
             Point2D hoverLoc = mouseLoc.subtract(upgradeTreeOffset);
@@ -82,9 +90,8 @@ public class UpgradeRenderer {
                     isHoveringUpgrade = true;
                 }
             }
-        }   
-        );
-    }
+        }
+
     public void setDrawnUpgradeInfo(UpgradeNode upgrade, Point2D position) {
         upgradeInfoLoc = position;
         upgradeInfoNode = upgrade;
