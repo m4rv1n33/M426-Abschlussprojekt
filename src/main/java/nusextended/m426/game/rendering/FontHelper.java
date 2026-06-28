@@ -1,4 +1,5 @@
 package nusextended.m426.game.rendering;
+
 import javafx.scene.text.Font;
 
 public class FontHelper {

@@ -1,56 +1,31 @@
 package nusextended.m426;
 
 import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
-import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import nusextended.m426.game.BalanceConfig;
 import nusextended.m426.game.GameState;
 import nusextended.m426.game.NumberFormatter;
 import nusextended.m426.game.PrestigeStateManager;
 import nusextended.m426.game.UpgradeStateManager;
-import nusextended.m426.game.rendering.PaintHelper;
 import nusextended.m426.game.rendering.ShapeRenderer;
 import nusextended.m426.game.rendering.UpgradeRenderer;
 import nusextended.m426.model.Shape;
 import nusextended.m426.model.UpgradeNode;
 
-
 public class NusianController {
-
-    private final double upgradeInfoWidth = 260;
-    private final double upgradeInfoHeight = 140;
-
-    private final Font titleFont = new Font("Helvetica",25);
-    private final Font bodyFont = new Font("Helvetica",17);
-
     private double lastFrame;
     private double delta;
     private double time = 0;
 
-
     private GameState gameState;
     private UpgradeStateManager upgradeManager;
     private PrestigeStateManager prestigeManager;
-    private GraphicsContext upgradesG2D;
-    private Point2D upgradeTreeOffset;
     private ShapeRenderer shapeRenderer;
     private UpgradeRenderer upgradeRenderer;
-
-    private Point2D mouseDragStartPos;
-    private Point2D mouseDragStartOffset;
-
-    private UpgradeNode upgradeInfoNode;
-    private Point2D upgradeInfoLoc;
-    private boolean isHoveringUpgrade;
 
     @FXML
     public Text currencyDisplay;
@@ -79,9 +54,7 @@ public class NusianController {
         upgradeRenderer = new UpgradeRenderer(upgradesCanvas, gameState);
 
         lastFrame = System.currentTimeMillis();
-
     }
-
 
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
@@ -173,9 +146,10 @@ public class NusianController {
 
         shapeRenderer.clearCanvas();
         shapeRenderer.renderShape(delta);
+
+        upgradeRenderer.clearCanvas();
         upgradeRenderer.renderUpgradeTree();
         upgradeRenderer.renderUpgradeInfo();
-
     }
 
 }

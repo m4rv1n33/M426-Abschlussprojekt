@@ -1,15 +1,13 @@
 package nusextended.m426.game.rendering;
+
 import javafx.geometry.Point2D;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import nusextended.m426.game.GameState;
-import nusextended.m426.game.rendering.FontHelper;
 import nusextended.m426.model.UpgradeNode;
 
 public class UpgradeRenderer {
@@ -17,7 +15,7 @@ public class UpgradeRenderer {
     private final double upgradeInfoHeight = 140;
 
     private Point2D upgradeTreeOffset;
-    private GraphicsContext upgradesG2D;
+    private final GraphicsContext upgradesG2D;
 
     private UpgradeNode upgradeInfoNode;
     private Point2D upgradeInfoLoc;
@@ -26,7 +24,7 @@ public class UpgradeRenderer {
     private Point2D mouseDragStartPos;
     private Point2D mouseDragStartOffset;
 
-    private Canvas upgradesCanvas;
+    private final Canvas upgradesCanvas;
     private GameState gameState;
 
     public UpgradeRenderer(Canvas canvas, GameState gameState) {
@@ -36,9 +34,7 @@ public class UpgradeRenderer {
         upgradesG2D.setStroke(PaintHelper.WHITE);
 
         upgradeTreeOffset = new Point2D(
-                upgradesCanvas.getWidth() / 2, upgradesCanvas.getHeight() / 2); 
-
-
+                upgradesCanvas.getWidth() / 2, upgradesCanvas.getHeight() / 2);
     }
 
     public void setGameState(GameState gameState) {
@@ -75,29 +71,29 @@ public class UpgradeRenderer {
     }
 
     private void onCanvasMouseMoved(MouseEvent ev) {
-            if (gameState == null) return;
-            Point2D mouseLoc = new Point2D(ev.getX(), ev.getY());
-            Point2D hoverLoc = mouseLoc.subtract(upgradeTreeOffset);
-            Point2D infoLoc = mouseLoc.add(20, 0); // mouse pointer offset
+        if (gameState == null) return;
+        Point2D mouseLoc = new Point2D(ev.getX(), ev.getY());
+        Point2D hoverLoc = mouseLoc.subtract(upgradeTreeOffset);
+        Point2D infoLoc = mouseLoc.add(20, 0); // mouse pointer offset
 
-            isHoveringUpgrade = false;
+        isHoveringUpgrade = false;
 
-            for (UpgradeNode upgrade : gameState.getUpgradeTree().getNodes()) {
-                double visualSize = upgrade.getVisualSize() / 2;
+        for (UpgradeNode upgrade : gameState.getUpgradeTree().getNodes()) {
+            double visualSize = upgrade.getVisualSize() / 2;
 
-                if (upgrade.getLocation().distance(hoverLoc) <= visualSize) {
-                    setDrawnUpgradeInfo(upgrade, infoLoc);
-                    isHoveringUpgrade = true;
-                }
+            if (upgrade.getLocation().distance(hoverLoc) <= visualSize) {
+                setDrawnUpgradeInfo(upgrade, infoLoc);
+                isHoveringUpgrade = true;
             }
         }
+    }
 
     public void setDrawnUpgradeInfo(UpgradeNode upgrade, Point2D position) {
         upgradeInfoLoc = position;
         upgradeInfoNode = upgrade;
     }
 
-        public void renderUpgradeInfo() {
+    public void renderUpgradeInfo() {
         if (!isHoveringUpgrade) return;
 
         double x = upgradeInfoLoc.getX();
@@ -137,13 +133,14 @@ public class UpgradeRenderer {
                 x + 7, y + 54, upgradeInfoWidth - 14);
     }
 
-
-
-        public void renderUpgradeTree() {
-        if (gameState == null) return;
+    public void clearCanvas() {
         upgradesG2D.clearRect(0, 0, upgradesCanvas.getWidth(), upgradesCanvas.getHeight());
         upgradesG2D.setFill(PaintHelper.GREY);
         upgradesG2D.fillRect(0, 0, upgradesCanvas.getWidth(), upgradesCanvas.getHeight());
+    }
+
+    public void renderUpgradeTree() {
+        if (gameState == null) return;
 
         upgradesG2D.setFill(PaintHelper.WHITE);
 
