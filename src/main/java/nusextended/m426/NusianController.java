@@ -107,8 +107,7 @@ public class NusianController {
             if (!isHoveringUpgrade) return;
             if (!upgradeInfoNode.canPurchase(gameState.getActiveShape().getType(), gameState.getCurrency())) return;
 
-            gameState.addCurrency(-upgradeInfoNode.getCurrentCost());
-            upgradeInfoNode.recordPurchase();
+            gameState.getUpgradeStateManager().attemptPurchase(upgradeInfoNode.getName());
         });
 
         upgradesCanvas.setOnMouseDragged(ev -> {
