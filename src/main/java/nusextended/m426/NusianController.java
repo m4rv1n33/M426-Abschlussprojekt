@@ -18,16 +18,12 @@ import nusextended.m426.game.NumberFormatter;
 import nusextended.m426.game.PrestigeStateManager;
 import nusextended.m426.game.UpgradeStateManager;
 import nusextended.m426.game.rendering.PaintHelper;
+import nusextended.m426.game.rendering.ShapeRenderer;
 import nusextended.m426.model.Shape;
 import nusextended.m426.model.UpgradeNode;
 
 
 public class NusianController {
-    private final Point2D shapeOrigin = new Point2D(407.5, 250);
-    private final double shapeRadius = 225;
-    private final double vertexSize = 16;
-    private final double lineWidth = 6;
-    private final double spinSpeed = 0.1; // radii per second
 
     private final double upgradeInfoWidth = 260;
     private final double upgradeInfoHeight = 140;
@@ -39,14 +35,13 @@ public class NusianController {
     private double delta;
     private double time = 0;
 
-    private double spinOffset;
 
     private GameState gameState;
     private UpgradeStateManager upgradeManager;
-    private GraphicsContext shapeG2D;
     private PrestigeStateManager prestigeManager;
     private GraphicsContext upgradesG2D;
     private Point2D upgradeTreeOffset;
+    private ShapeRenderer shapeRenderer;
 
     private Point2D mouseDragStartPos;
     private Point2D mouseDragStartOffset;
@@ -78,18 +73,13 @@ public class NusianController {
 
     @FXML
     protected void initialize() {
-        shapeG2D = shapeCanvas.getGraphicsContext2D();
+        shapeRenderer = new ShapeRenderer(shapeCanvas, gameState);
         upgradesG2D = upgradesCanvas.getGraphicsContext2D();
 
         lastFrame = System.currentTimeMillis();
 
-        shapeG2D.setLineWidth(lineWidth);
-        shapeG2D.setStroke(PaintHelper.WHITE);
-
         upgradesG2D.setStroke(PaintHelper.WHITE);
 
-        shapeG2D.setFill(PaintHelper.BLACK);
-        shapeG2D.fillRect(0, 0, 5, shapeCanvas.getHeight());
 
         upgradeTreeOffset = new Point2D(
                 upgradesCanvas.getWidth() / 2, upgradesCanvas.getHeight() / 2);
@@ -183,6 +173,7 @@ public class NusianController {
 
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
+        shapeRenderer.setGameState(gameState);
     }
 
     public void setUpgradeManager(UpgradeStateManager upgradeManager) {
@@ -267,11 +258,8 @@ public class NusianController {
         });
         */
 
-        shapeG2D.clearRect(4, 0, shapeCanvas.getWidth(), shapeCanvas.getHeight());
-        shapeG2D.setFill(PaintHelper.GREY);
-        shapeG2D.fillRect(4, 0, shapeCanvas.getWidth(), shapeCanvas.getHeight());
-
-        renderShape();
+        shapeRenderer.clearCanvas();
+        shapeRenderer.renderShape(delta);
         renderUpgradeTree();
         renderUpgradeInfo();
     }
@@ -318,41 +306,4 @@ public class NusianController {
         }
     }
 
-    private void renderShape() {
-        int vertexCount = gameState.getActiveShape().getVertices();
-        double anglePerVertex = Math.TAU / vertexCount;
-        Point2D[] points = new Point2D[vertexCount];
-
-        spinOffset += Math.TAU * spinSpeed * delta / 1000.0;
-
-        if (vertexCount > 1) {
-            for (int i = 0; i < vertexCount; i++) {
-                Point2D p = new Point2D(
-                        Math.cos((anglePerVertex * i) + spinOffset),
-                        Math.sin((anglePerVertex * i) + spinOffset)
-                ).multiply(shapeRadius);
-
-                points[i] = p.add(shapeOrigin);
-            }
-        } else {
-            points[0] = shapeOrigin;
-        }
-
-        shapeG2D.setFill(PaintHelper.WHITE);
-        for (Point2D p : points) {
-            shapeG2D.fillOval(
-                    p.getX() - vertexSize / 2, p.getY() - vertexSize / 2,
-                    vertexSize, vertexSize);
-        }
-
-        for (int i = 0; i < vertexCount; i++) {
-            Point2D p1 = points[i];
-            Point2D p2;
-
-            if (i == vertexCount - 1) { p2 = points[0]; }
-            else { p2 = points[i + 1]; }
-
-            shapeG2D.strokeLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
-        }
-    }
 }
