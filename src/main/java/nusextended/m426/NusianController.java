@@ -27,6 +27,9 @@ public class NusianController {
     private final double lineWidth = 6;
     private final double spinSpeed = 0.1; // radii per second
 
+    private final double upgradeInfoWidth = 260;
+    private final double upgradeInfoHeight = 140;
+
     private double lastFrame;
     private double delta;
     private double time = 0;
@@ -105,11 +108,9 @@ public class NusianController {
         });
 
         upgradesCanvas.setOnMouseMoved(ev -> {
-            Point2D hoverLoc = upgradeTreeOffset.subtract(
-                    ev.getX(),
-                    ev.getY());
-
-            Point2D infoLoc = new Point2D(ev.getX(), ev.getY()).add(20, 0); // mouse pointer offset
+            Point2D mouseLoc = new Point2D(ev.getX(), ev.getY());
+            Point2D hoverLoc = mouseLoc.subtract(upgradeTreeOffset);
+            Point2D infoLoc = mouseLoc.add(20, 0); // mouse pointer offset
 
             shouldDrawUpgradeInfo = false;
 
@@ -138,13 +139,13 @@ public class NusianController {
         upgradesG2D.setStroke(Paint.valueOf("black"));
         upgradesG2D.setFill(Paint.valueOf("#999999"));
 
-        upgradesG2D.fillRect(x, y, 320, 120);
+        upgradesG2D.fillRect(x, y, upgradeInfoWidth, upgradeInfoHeight);
 
         upgradesG2D.beginPath();
-        upgradesG2D.strokeLine(x, y, x + 320, y);
-        upgradesG2D.strokeLine(x + 320, y, x + 320, y + 120);
-        upgradesG2D.strokeLine(x + 320, y + 120, x, y + 120);
-        upgradesG2D.strokeLine(x, y + 120, x, y);
+        upgradesG2D.strokeLine(x, y, x + upgradeInfoWidth, y);
+        upgradesG2D.strokeLine(x + upgradeInfoWidth, y, x + upgradeInfoWidth, y + upgradeInfoHeight);
+        upgradesG2D.strokeLine(x + upgradeInfoWidth, y + upgradeInfoHeight, x, y + upgradeInfoHeight);
+        upgradesG2D.strokeLine(x, y + upgradeInfoHeight, x, y);
         upgradesG2D.stroke();
         upgradesG2D.closePath();
     }
