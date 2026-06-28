@@ -16,6 +16,7 @@ import nusextended.m426.game.GameState;
 import nusextended.m426.game.NumberFormatter;
 import nusextended.m426.game.PrestigeStateManager;
 import nusextended.m426.game.UpgradeStateManager;
+import nusextended.m426.game.rendering.PaintHelper;
 import nusextended.m426.model.Shape;
 import nusextended.m426.model.UpgradeNode;
 
@@ -79,13 +80,13 @@ public class NusianController {
         lastFrame = System.currentTimeMillis();
 
         shapeG2D.setLineWidth(lineWidth);
-        shapeG2D.setStroke(Paint.valueOf("white"));
+        shapeG2D.setStroke(PaintHelper.WHITE);
 
-        upgradesG2D.setStroke(Paint.valueOf("white"));
+        upgradesG2D.setStroke(PaintHelper.WHITE);
         upgradesG2D.setTextAlign(TextAlignment.CENTER);
         upgradesG2D.setTextBaseline(VPos.CENTER);
 
-        shapeG2D.setFill(Paint.valueOf("black"));
+        shapeG2D.setFill(PaintHelper.BLACK);
         shapeG2D.fillRect(0, 0, 5, shapeCanvas.getHeight());
 
         upgradeTreeOffset = new Point2D(
@@ -136,8 +137,8 @@ public class NusianController {
         double x = upgradeInfoLoc.getX();
         double y = upgradeInfoLoc.getY();
 
-        upgradesG2D.setStroke(Paint.valueOf("black"));
-        upgradesG2D.setFill(Paint.valueOf("#999999"));
+        upgradesG2D.setStroke(PaintHelper.BLACK);
+        upgradesG2D.setFill(PaintHelper.GREY);
 
         upgradesG2D.fillRect(x, y, upgradeInfoWidth, upgradeInfoHeight);
 
@@ -237,7 +238,7 @@ public class NusianController {
         */
 
         shapeG2D.clearRect(4, 0, shapeCanvas.getWidth(), shapeCanvas.getHeight());
-        shapeG2D.setFill(Paint.valueOf("#999999"));
+        shapeG2D.setFill(PaintHelper.GREY);
         shapeG2D.fillRect(4, 0, shapeCanvas.getWidth(), shapeCanvas.getHeight());
 
         renderShape();
@@ -247,15 +248,15 @@ public class NusianController {
 
     private void renderUpgradeTree() {
         upgradesG2D.clearRect(0, 0, upgradesCanvas.getWidth(), upgradesCanvas.getHeight());
-        upgradesG2D.setFill(Paint.valueOf("#999999"));
+        upgradesG2D.setFill(PaintHelper.GREY);
         upgradesG2D.fillRect(0, 0, upgradesCanvas.getWidth(), upgradesCanvas.getHeight());
 
-        upgradesG2D.setFill(Paint.valueOf("#ffffff"));
+        upgradesG2D.setFill(PaintHelper.WHITE);
 
         // do this in two steps so the lines actually look nice
 
         upgradesG2D.setLineWidth(1);
-        upgradesG2D.setStroke(Paint.valueOf("white"));
+        upgradesG2D.setStroke(PaintHelper.WHITE);
         for (UpgradeNode upgrade : gameState.getUpgradeTree().getNodes()) {
             Point2D transformed = upgrade.getLocation().add(upgradeTreeOffset);
 
@@ -270,10 +271,10 @@ public class NusianController {
             double radius = upgrade.getVisualSize();
             Point2D transformed = upgrade.getLocation().add(upgradeTreeOffset);
 
-            upgradesG2D.setFill(Paint.valueOf("#999999"));
+            upgradesG2D.setFill(PaintHelper.GREY);
             upgradesG2D.fillOval(transformed.getX() - radius / 2, transformed.getY() - radius / 2, radius, radius);
 
-            upgradesG2D.setFill(Paint.valueOf("white"));
+            upgradesG2D.setFill(PaintHelper.WHITE);
             upgradesG2D.strokeOval(transformed.getX() - radius / 2, transformed.getY() - radius / 2, radius, radius);
             upgradesG2D.fillText(upgrade.getIcon(), transformed.getX(), transformed.getY());
         }
@@ -299,7 +300,7 @@ public class NusianController {
             points[0] = shapeOrigin;
         }
 
-        shapeG2D.setFill(Paint.valueOf("white"));
+        shapeG2D.setFill(PaintHelper.WHITE);
         for (Point2D p : points) {
             shapeG2D.fillOval(
                     p.getX() - vertexSize / 2, p.getY() - vertexSize / 2,
