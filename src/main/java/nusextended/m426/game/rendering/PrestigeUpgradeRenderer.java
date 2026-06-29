@@ -24,6 +24,7 @@ public class PrestigeUpgradeRenderer {
         VBox vbox = new VBox();
 
         btn.setMinHeight(100);
+        btn.setMaxHeight(150);
         btn.setStyle("-fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-width: 3");
         btn.setMaxWidth(Double.MAX_VALUE);
         btn.setMaxHeight(Double.MAX_VALUE);
