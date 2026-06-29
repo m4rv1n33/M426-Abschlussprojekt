@@ -4,7 +4,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.geometry.Insets;
+import java.util.List;
 import javafx.scene.layout.Priority;
 import javafx.geometry.Pos;
 import nusextended.m426.game.UpgradeNode;
@@ -16,8 +16,8 @@ public class PrestigeUpgradeRenderer {
 
     public PrestigeUpgradeRenderer(VBox container, GameState gameState) {
     this.prestigeUpgradesContainer = container;
-    this.gameState = gameState;
-}
+    this.gameState = gameState; 
+    }
 
     public Button createUpgradeBox(UpgradeNode node) {
         Button btn = new Button();
@@ -57,23 +57,22 @@ public class PrestigeUpgradeRenderer {
 
         prestigeUpgradesContainer.getChildren().clear();
 
-        HBox row1 = new HBox(5);
-        VBox.setVgrow(row1, Priority.ALWAYS);
-        UpgradeNode node1 = gameState.getPrestigeTree().getNode("vertex-multiplier");
-        if (node1 != null) {
-            row1.getChildren().add(createUpgradeBox(node1));
+        List<UpgradeNode> nodes = gameState.getPrestigeTree().getNodes();
+        HBox currentRow = new HBox(5);
+        VBox.setVgrow(currentRow, Priority.ALWAYS);
+
+        for (int i = 0; i < nodes.size(); i++) {
+            currentRow.getChildren().add(createUpgradeBox(nodes.get(i)));
+
+            if (i % 3 == 2) {
+                prestigeUpgradesContainer.getChildren().add(currentRow);
+                currentRow = new HBox(5);
+                VBox.setVgrow(currentRow, Priority.ALWAYS);
+            }
         }
 
-        HBox row2 = new HBox(5);
-        VBox.setVgrow(row2, Priority.ALWAYS);
-    
-        HBox row3= new HBox(5);
-        VBox.setVgrow(row3, Priority.ALWAYS);
-     
-        HBox row4 = new HBox(5);
-        VBox.setVgrow(row4, Priority.ALWAYS);
-
-        System.out.println("Children count: " + prestigeUpgradesContainer.getChildren().size());
-        prestigeUpgradesContainer.getChildren().addAll(row1, row2, row3, row4);
+        if (!currentRow.getChildren().isEmpty()) {
+            prestigeUpgradesContainer.getChildren().add(currentRow);
+        }
     }
 }
