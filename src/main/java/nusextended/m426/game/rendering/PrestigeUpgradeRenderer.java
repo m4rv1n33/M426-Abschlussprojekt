@@ -27,7 +27,6 @@ public class PrestigeUpgradeRenderer {
         btn.setMaxHeight(150);
         btn.setStyle("-fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-width: 3");
         btn.setMaxWidth(Double.MAX_VALUE);
-        btn.setMaxHeight(Double.MAX_VALUE);
 
         HBox.setHgrow(btn, Priority.ALWAYS);
 
@@ -75,5 +74,16 @@ public class PrestigeUpgradeRenderer {
         if (!currentRow.getChildren().isEmpty()) {
             prestigeUpgradesContainer.getChildren().add(currentRow);
         }
+    }
+
+    private int getDepth(UpgradeNode node) {
+        if (node.getPreviousNodes().isEmpty()) {
+            return 0;
+        }
+        int maxDepth = 0;
+        for (UpgradeNode previous : node.getPreviousNodes()) {
+            maxDepth = Math.max(maxDepth, getDepth(previous))
+        }
+        return maxDepth + 1;
     }
 }
