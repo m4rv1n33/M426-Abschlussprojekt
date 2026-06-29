@@ -4,7 +4,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import javafx.scene.layout.Priority;
 import javafx.geometry.Pos;
 import nusextended.m426.game.UpgradeNode;
@@ -57,24 +60,42 @@ public class PrestigeUpgradeRenderer {
 
         prestigeUpgradesContainer.getChildren().clear();
 
-        List<UpgradeNode> nodes = gameState.getPrestigeTree().getNodes();
-        HBox currentRow = new HBox(5);
-        VBox.setVgrow(currentRow, Priority.ALWAYS);
+        List<List<UpgradeNode>> rows = new ArrayList<>();
+        Queue<UpgradeNode> remainingNodes = new ArrayDeque<>(gameState.getUpgradeTree().getNodes());
 
-        for (int i = 0; i < nodes.size(); i++) {
-            currentRow.getChildren().add(createUpgradeBox(nodes.get(i)));
+        while (remainingNodes.size() > 0) {
+            List<UpgradeNode> currentRow = new ArrayList<>();
+            List<UpgradeNode> toRemove = new ArrayList<>();
 
-            if (i % 3 == 2) {
-                prestigeUpgradesContainer.getChildren().add(currentRow);
-                currentRow = new HBox(5);
-                VBox.setVgrow(currentRow, Priority.ALWAYS);
+            for (UpgradeNode node : remainingNodes) {
+                if (allPrerequisitesPlaced(node, rows)) {
+                    currentRow.add(node);
+                    toRemove.add(node);
+                }
+            }
+
+            remainingNodes.removeAll(toRemove);
+            rows.add(currentRow);
+
+        }
+
+    }
+
+    private boolean allPrerequisitesPlaced(UpgradeNode node, List<List<UpgradeNode>> alreadyPlaced) {
+    for (UpgradeNode previous : node.getPreviousNodes()) {
+        boolean found = false;
+        for (List<UpgradeNode> row : alreadyPlaced) {
+            if (row.contains(previous)) {
+                found = true;
+                break;
             }
         }
-
-        if (!currentRow.getChildren().isEmpty()) {
-            prestigeUpgradesContainer.getChildren().add(currentRow);
+        if (!found) {
+            return false;
         }
     }
+    return true;
+}
 
     private int getDepth(UpgradeNode node) {
         if (node.getPreviousNodes().isEmpty()) {
