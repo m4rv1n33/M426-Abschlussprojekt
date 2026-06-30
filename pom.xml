@@ -108,6 +108,22 @@
               <noHeaderFiles>true</noHeaderFiles>
             </configuration>
           </execution>
+          <execution>
+            <!-- Dev: wipe the save and exit. Run with: mvn javafx:run@reset -->
+            <id>reset</id>
+            <configuration>
+              <mainClass>nusextended.m426.NusianApplication</mainClass>
+              <commandlineArgs>--reset</commandlineArgs>
+            </configuration>
+          </execution>
+          <execution>
+            <!-- Dev: max the save for a demo, then launch. Run with: mvn javafx:run@max -->
+            <id>max</id>
+            <configuration>
+              <mainClass>nusextended.m426.NusianApplication</mainClass>
+              <commandlineArgs>--max</commandlineArgs>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
     </plugins>

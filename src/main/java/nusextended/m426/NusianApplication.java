@@ -49,6 +49,27 @@ public class NusianApplication extends Application {
     }
 
     public static void main(String[] args) {
+        for (String arg : args) {
+            switch (arg.toLowerCase()) {
+                case "--reset":
+                    boolean wiped = GameState.deleteSave();
+                    System.out.println(wiped
+                        ? "[dev] Save file wiped: " + GameState.getSaveFilePath()
+                        : "[dev] No save file to wipe at " + GameState.getSaveFilePath());
+                    System.exit(0);
+                    return;
+                case "--max":
+                case "--boost":
+                    GameState boosted = GameState.load();
+                    boosted.maxOut();
+                    boosted.save();
+                    System.out.println("[dev] Save file maxxed out: " + GameState.getSaveFilePath());
+                    break;
+                default:
+                    System.out.println("[dev] Unknown argument ignored: " + arg);
+                    break;
+            }
+        }
         launch();
     }
 }

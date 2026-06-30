@@ -85,6 +85,31 @@ public class GameState {
         }
     }
 
+    public static String getSaveFilePath() {
+        return SAVE_FILE;
+    }
+
+    // Dev helper: wipe the save file so the next launch starts fresh.
+    public static boolean deleteSave() {
+        try {
+            return Files.deleteIfExists(Paths.get(SAVE_FILE));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Dev helper: crank the save to absurd values for presentations and demos.
+    public void maxOut() {
+        this.currency = 1_000_000_000_000.0;
+        this.lifetimeCurrencyEarned = Math.max(this.lifetimeCurrencyEarned, this.currency);
+        this.prestigeLevel = 50;
+        this.prestigePoints = 1_000_000.0;
+        this.activeShapeData = new ShapeData(8, 100);
+        this.hasSeenTutorial = true;
+        getUpgradeTree().syncShapeGrowthLevel(this.activeShapeData.level);
+    }
+
     public static GameState load() {
         try {
             if (Files.exists(Paths.get(SAVE_FILE))) {
