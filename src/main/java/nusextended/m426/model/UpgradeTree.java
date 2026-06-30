@@ -36,7 +36,20 @@ public class UpgradeTree {
         vertexGrowth.setIcon("V");
         vertexGrowth.setVisualSize(90);
 
-        return new UpgradeTree(List.of(vertexGrowth));
+        UpgradeNode shapeFocus = new UpgradeNode(
+            "shape-focus",
+            "Automatically buy\nvertex growth.",
+            new UpgradeCost(cfg.shapeFocusBaseCost, cfg.shapeFocusScaling),
+            false,
+            ShapeType.TRIANGLE,
+            vertexGrowth
+        );
+
+        shapeFocus.setLocation(0, 110);
+        shapeFocus.setIcon("///");
+        shapeFocus.setVisualSize(64);
+
+        return new UpgradeTree(List.of(vertexGrowth, shapeFocus));
     }
 
     public List<UpgradeNode> getNodes() {

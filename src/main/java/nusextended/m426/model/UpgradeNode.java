@@ -136,7 +136,9 @@ public class UpgradeNode {
     }
 
     public boolean canPurchase(ShapeType currentShapeType, double currency) {
-        boolean shapeRequirementMet = requiredShapeType == null || requiredShapeType == currentShapeType;
+        boolean shapeRequirementMet = requiredShapeType == null
+            || (currentShapeType != null
+                && currentShapeType.getVertices() >= requiredShapeType.getVertices());
         boolean repeatable = infinitelyPurchaseable || purchaseCount == 0;
         return shapeRequirementMet
             && hasUnlockedPrerequisites()
