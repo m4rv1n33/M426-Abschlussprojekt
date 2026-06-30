@@ -17,6 +17,8 @@ public class GameState {
     private PrestigeTree prestigeTree;
     private UpgradeTree upgradeTree;
     private double lifetimeCurrencyEarned;
+    private boolean hasSeenTutorial;
+
     private static final String OS = System.getProperty("os.name").toUpperCase();
     private static final String OUR_DIRECTORY = "/nusExtended/M426/";
     private static final String SAVE_DIR;
@@ -46,10 +48,19 @@ public class GameState {
         this.prestigePoints = 0;
         this.prestigeLevel = 0;
         this.lifetimeCurrencyEarned = 0;
+        this.hasSeenTutorial = false;
         this.activeShapeData = new ShapeData(1, 0);
         this.prestigeTree = PrestigeTree.createDefaultTree();
         this.upgradeTree = UpgradeTree.createDefaultTree();
         this.upgradeStateManager = new UpgradeStateManager(this);
+    }
+
+    public boolean hasSeenTutorial() {
+        return hasSeenTutorial;
+    }
+
+    public void setHasSeenTutorial(boolean hasSeenTutorial) {
+        this.hasSeenTutorial = hasSeenTutorial;
     }
 
     public Shape getActiveShape() {

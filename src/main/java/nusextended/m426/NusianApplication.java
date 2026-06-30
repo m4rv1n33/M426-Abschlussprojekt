@@ -42,7 +42,10 @@ public class NusianApplication extends Application {
         });
         stage.show();
 
-        new TutorialManager().showTutorial();
+        if (!gameState.hasSeenTutorial()) {
+            new TutorialManager().showTutorial();
+            gameState.setHasSeenTutorial(true);
+        }
     }
 
     public static void main(String[] args) {

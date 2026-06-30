@@ -36,33 +36,7 @@ public class UpgradeTree {
         vertexGrowth.setIcon("V");
         vertexGrowth.setVisualSize(90);
 
-        UpgradeNode shapeFocus = new UpgradeNode(
-            "shape-focus",
-            "Improve production once triangle-era shapes are reached.",
-            new UpgradeCost(cfg.shapeFocusBaseCost, cfg.shapeFocusScaling),
-            false,
-            ShapeType.TRIANGLE,
-            vertexGrowth
-        );
-
-        shapeFocus.setLocation(0, 110);
-        shapeFocus.setIcon("///");
-        shapeFocus.setVisualSize(64);
-
-        UpgradeNode squareAutomation = new UpgradeNode(
-            "square-something",
-            ":thumbs_up:",
-            new UpgradeCost(cfg.squareSomethingBaseCost, cfg.squareSomethingScaling),
-            false,
-            ShapeType.SQUARE,
-            shapeFocus
-        );
-
-        squareAutomation.setLocation(0, 220);
-        squareAutomation.setIcon("Q");
-        squareAutomation.setVisualSize(64);
-
-        return new UpgradeTree(List.of(vertexGrowth, shapeFocus, squareAutomation));
+        return new UpgradeTree(List.of(vertexGrowth));
     }
 
     public List<UpgradeNode> getNodes() {

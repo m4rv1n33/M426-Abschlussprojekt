@@ -40,8 +40,9 @@ public class PrestigeUpgradeRenderer {
         }
 
         for (List<UpgradeNode> row : rows) {
-            HBox hbox = new HBox(5);
-            VBox.setVgrow(hbox, Priority.ALWAYS);
+            HBox hbox = new HBox(12);
+            VBox.setVgrow(hbox, Priority.NEVER);
+            hbox.setMinHeight(150);
 
             for (UpgradeNode node : row) {
                 PrestigeUpgradeButton btn = new PrestigeUpgradeButton(node, gameState, this);

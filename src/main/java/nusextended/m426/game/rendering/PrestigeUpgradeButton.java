@@ -35,6 +35,8 @@ public class PrestigeUpgradeButton extends Button {
             costLabel.setStyle("-fx-text-fill: #ffffff");
         }
 
+        descLabel.setStyle(descLabel.getStyle() + "; -fx-font-size: 16px");
+
         vbox.setAlignment(Pos.CENTER);
 
         descLabel.setAlignment(Pos.CENTER);
@@ -43,7 +45,8 @@ public class PrestigeUpgradeButton extends Button {
         descLabel.setMaxWidth(Double.MAX_VALUE);
         costLabel.setMaxWidth(Double.MAX_VALUE);
 
-        vbox.getChildren().addAll(descLabel, costLabel);
+        vbox.getChildren().add(descLabel);
+        if (!node.isPurchased() || node.isInfinitelyPurchaseable()) vbox.getChildren().add(costLabel);
 
         if (node.isInfinitelyPurchaseable()) {
             Label levelLabel = new Label("Lv. " + node.getPurchaseCount());
