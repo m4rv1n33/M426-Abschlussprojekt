@@ -11,6 +11,7 @@ import nusextended.m426.game.GameState;
 import nusextended.m426.game.NumberFormatter;
 import nusextended.m426.game.PrestigeStateManager;
 import nusextended.m426.game.UpgradeStateManager;
+import nusextended.m426.game.rendering.PrestigeUpgradeRenderer;
 import nusextended.m426.game.rendering.ShapeRenderer;
 import nusextended.m426.game.rendering.UpgradeRenderer;
 import nusextended.m426.model.Shape;
@@ -24,6 +25,7 @@ public class NusianController {
     private GameState gameState;
     private UpgradeStateManager upgradeManager;
     private PrestigeStateManager prestigeManager;
+    private PrestigeUpgradeRenderer prestigeRenderer;
     private ShapeRenderer shapeRenderer;
     private UpgradeRenderer upgradeRenderer;
 
@@ -58,6 +60,8 @@ public class NusianController {
 
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
+        prestigeRenderer = new PrestigeUpgradeRenderer(prestigeUpgradesContainer, gameState);
+        prestigeRenderer.setPrestigeUpgrades();
         shapeRenderer.setGameState(gameState);
         upgradeRenderer.setGameState(gameState);
     }
@@ -71,31 +75,10 @@ public class NusianController {
 
         prestigeButton.setOnAction(e -> {
             gameState.prestige();
-            refreshPrestigeUpgradeButtons();
+            prestigeRenderer.setPrestigeUpgrades();
         });
-
-        refreshPrestigeUpgradeButtons();
     }
 
-    private void refreshPrestigeUpgradeButtons() {
-        prestigeUpgradesContainer.getChildren().clear();
-
-        for (UpgradeNode node : gameState.getPrestigeTree().getNodes()) {
-            Button btn = new Button();
-            updatePrestigeUpgradeButton(btn, node);
-
-            btn.setPrefWidth(446);
-            btn.setPrefHeight(40);
-            btn.setStyle("-fx-font-size: 16px;");
-
-            btn.setOnAction(e -> {
-                prestigeManager.attemptPurchase(node.getName());
-                updatePrestigeUpgradeButton(btn, node);
-            });
-
-            prestigeUpgradesContainer.getChildren().add(btn);
-        }
-    }
 
     private void updatePrestigeUpgradeButton(Button btn, UpgradeNode node) {
         double cost = node.getCurrentCost();
@@ -109,7 +92,7 @@ public class NusianController {
     }
 
     private void updatePrestigeButtonText(double currency) {
-        long pointsGained = (long) Math.floor(Math.pow(currency, BalanceConfig.get().prestigeFormulaExponent));
+        long pointsGained = (long) gameState.getPendingPrestigePoints();
 
         prestigeButton.setText("Prestige for +" + pointsGained + " PP");
         prestigeButton.setDisable(!gameState.canPrestige());

@@ -19,5 +19,6 @@
   "prestigeFormulaExponent": 0.5,
   "prestigeMinimumPoints": 10.0,
   "prestigeBonusPerLevel": 0.10,
-  "vertexMultiplierPerPurchase": 0.10
+  "vertexMultiplierPerPurchase": 0.10,
+  "minimumCurrencyToPrestige": 1000.0
 }

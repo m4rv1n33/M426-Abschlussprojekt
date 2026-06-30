@@ -22,8 +22,8 @@ public class BalanceConfig {
     public double prestigeUpgradeBaseCost = 50.0;
     public double prestigeUpgradeScaling = 1.6;
 
-    public double prestigeFormulaExponent = 0.5;
-    public double prestigeMinimumPoints = 10.0;
+    public double minimumCurrencyToPrestige = 1000.0;
+    public double prestigeFormulaExponent = 0.45;
     public double prestigeBonusPerLevel = 0.10;
     public double vertexMultiplierPerPurchase = 0.10;
 

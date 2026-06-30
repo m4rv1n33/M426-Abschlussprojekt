@@ -59,22 +59,20 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <VBox alignment="TOP_CENTER" prefHeight="689.0" prefWidth="465.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <VBox fx:id="prestigeUpgradesContainer" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="689.0" prefWidth="465.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Button fx:id="prestigeButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="446.0" text="Prestige for 10">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <opaqueInsets>
+                              <Insets top="12.0" />
+                           </opaqueInsets>
                            <padding>
                               <Insets top="12.0" />
                            </padding>
-                           <children>
-                              <Button fx:id="prestigeButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="446.0" maxWidth="Infinity" text="Prestige for 10">
-                              <font>
-                                 <Font size="24.0" />
-                              </font>
-                              </Button>
-                              <VBox fx:id="prestigeUpgradesContainer" alignment="TOP_CENTER" prefWidth="465.0">
-                              <padding>
-                                 <Insets top="8.0" />
-                              </padding>
-                              </VBox>
-                           </children>
                         </VBox>
                      </children>
                   </AnchorPane>

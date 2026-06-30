@@ -27,7 +27,34 @@ public class PrestigeTree {
             UpgradeCost.prestigeUpgrade(),
             true
         );
-        return new PrestigeTree(List.of(vertexMultiplier));
+        UpgradeNode dummy1 = new UpgradeNode(
+                "dummy-1",
+                ":x:",
+                UpgradeCost.prestigeUpgrade(),
+                false
+        );
+        UpgradeNode dummy2 = new UpgradeNode(
+                "dummy-2",
+                ":x:",
+                UpgradeCost.prestigeUpgrade(),
+                false,
+                vertexMultiplier, dummy1
+        );
+        UpgradeNode dummy3 = new UpgradeNode(
+                "dummy-3",
+                ":x:",
+                UpgradeCost.prestigeUpgrade(),
+                false,
+                vertexMultiplier, dummy1
+        );
+        UpgradeNode dummy4 = new UpgradeNode(
+                "dummy-4",
+                ":x:",
+                UpgradeCost.prestigeUpgrade(),
+                false,
+                vertexMultiplier, dummy1
+        );
+        return new PrestigeTree(List.of(vertexMultiplier, dummy1, dummy2, dummy3, dummy4));
     }
 
     public List<UpgradeNode> getNodes() {
