@@ -18,8 +18,8 @@ public class UpgradeCostCalculationTest {
     @BeforeEach
     void setUp() {
         shapeBaseCost = 10.0;
-        shapeMultiplier = 1.2;
-        prestigeBaseCost = 100.0;
+        shapeMultiplier = 1.15;
+        prestigeBaseCost = 50.0;
         prestigeMultiplier = 1.6;
     }
 

@@ -1,7 +1,9 @@
-package nusextended.m426.game;
+package nusextended.m426.model;
 
+import nusextended.m426.game.BalanceConfig;
 import nusextended.m426.model.ShapeType;
 import nusextended.m426.model.UpgradeCost;
+import javafx.geometry.Point2D;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,10 +27,14 @@ public class UpgradeTree {
 
         UpgradeNode vertexGrowth = new UpgradeNode(
             "vertex-growth",
-            "Increase the active shape by one vertex.",
+            "Increase the active\nshape by one vertex.",
             UpgradeCost.shapeUpgrade(),
             true
         );
+
+        vertexGrowth.setLocation(0, 0);
+        vertexGrowth.setIcon("V");
+        vertexGrowth.setVisualSize(90);
 
         UpgradeNode shapeFocus = new UpgradeNode(
             "shape-focus",
@@ -39,6 +45,10 @@ public class UpgradeTree {
             vertexGrowth
         );
 
+        shapeFocus.setLocation(0, 110);
+        shapeFocus.setIcon("///");
+        shapeFocus.setVisualSize(64);
+
         UpgradeNode squareAutomation = new UpgradeNode(
             "square-something",
             ":thumbs_up:",
@@ -47,6 +57,10 @@ public class UpgradeTree {
             ShapeType.SQUARE,
             shapeFocus
         );
+
+        squareAutomation.setLocation(0, 220);
+        squareAutomation.setIcon("Q");
+        squareAutomation.setVisualSize(64);
 
         return new UpgradeTree(List.of(vertexGrowth, shapeFocus, squareAutomation));
     }

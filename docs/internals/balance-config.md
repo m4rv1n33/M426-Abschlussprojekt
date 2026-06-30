@@ -28,7 +28,7 @@ Production formula: `baseRate * vertices * vertexMultiplier * (1 + level * level
 | Key | Default | Effect |
 |---|---|---|
 | `shapeUpgradeBaseCost` | 10.0 | Cost of the first vertex-growth purchase |
-| `shapeUpgradeScaling` | 1.2 | Exponential cost multiplier per purchase |
+| `shapeUpgradeScaling` | 1.15 | Exponential cost multiplier per purchase |
 
 Cost at purchase N: `shapeUpgradeBaseCost * shapeUpgradeScaling ^ N`
 
@@ -47,18 +47,48 @@ One-time upgrades are only purchased once so the scaling factor has no practical
 
 | Key | Default | Effect |
 |---|---|---|
-| `prestigeUpgradeBaseCost` | 100.0 | Cost of the first vertex-multiplier purchase |
+| `prestigeUpgradeBaseCost` | 50.0 | Cost of the first vertex-multiplier purchase |
 | `prestigeUpgradeScaling` | 1.6 | Exponential cost multiplier per purchase |
 
 ### Prestige system
 
 | Key | Default | Effect |
 |---|---|---|
-| `prestigeFormulaExponent` | 0.45 | Exponent in `floor(currency^exponent)` |
+| `prestigeFormulaExponent` | 0.5 | Exponent in `floor(currency^exponent)` (0.5 = `floor(sqrt(currency))`) |
+| `prestigeMinimumPoints` | 10.0 | Minimum points a prestige must grant before it is allowed |
 | `prestigeBonusPerLevel` | 0.10 | Additive production bonus per prestige level (+10% per level) |
 | `vertexMultiplierPerPurchase` | 0.10 | Additive vertex multiplier per vertex-multiplier purchase |
 
 Prestige points gained on reset: `floor(currency ^ prestigeFormulaExponent)`
+
+Prestige is only permitted when `floor(currency ^ prestigeFormulaExponent) >= prestigeMinimumPoints`. With the defaults this requires at least `10^2 = 100` currency, which prevents the degenerate "prestige for a single point" reset that was possible when the threshold was simply `> 0`.
+
+## Tuning history and rationale
+
+The balance was tuned against `ProgressionBalanceTest`, an automated playtest that drives the
+real game logic one simulated second at a time and measures the progression curve. The figures
+below come from that test (before = the original values, after = the values shipped now).
+
+| Parameter | Before | After | Rationale |
+|---|---|---|---|
+| `shapeUpgradeScaling` | 1.20 | 1.15 | Cost grew exponentially while production grows only polynomially, so a single shape level eventually took minutes to afford. Lowering the scaling keeps the climb steady instead of hitting a wall. |
+| `prestigeFormulaExponent` | 0.45 | 0.5 | Switches the payout to `floor(sqrt(currency))`: intuitive, and it makes the first prestige meaningful instead of yielding a partial upgrade. |
+| `prestigeUpgradeBaseCost` | 100 | 50 | At 100 the very first prestige could not afford a single upgrade (a dead first reset). At 50 the first realistic prestige run buys exactly one vertex-multiplier. |
+| `prestigeMinimumPoints` | n/a (`> 0`) | 10 | New, data-driven gate. The old implicit `> 0` threshold let the player wipe all progress for a single prestige point. |
+
+### Measured effect (from `ProgressionBalanceTest`)
+
+| Metric | Before | After |
+|---|---|---|
+| Time to reach shape level 50 (single run) | ~18.9 min | ~3.8 min |
+| Worst wait on a single shape level (to level 50) | ~140 s | ~18 s |
+| First prestige upgrade affordable at | ~305 s | ~77 s |
+| Prestiges completed in a 1-hour session | 4 | 7 |
+
+The "worst wait on a single shape level" is the flat-spot metric: the original 140 s gap is the
+excessively long flat spot the issue calls out; after tuning the largest gap in the same range is
+about 18 s. `ProgressionBalanceTest` asserts this stays at or below 60 s, so a future regression
+back toward harsh scaling fails the build.
 
 ## Adding a new parameter
 

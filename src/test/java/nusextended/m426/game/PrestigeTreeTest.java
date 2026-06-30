@@ -1,6 +1,7 @@
 package nusextended.m426.game;
 
 import nusextended.m426.model.UpgradeCost;
+import nusextended.m426.model.UpgradeNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ class PrestigeTreeTest {
         UpgradeNode node = tree.getNode("vertex-multiplier");
         assertNotNull(node);
         assertTrue(node.isInfinitelyPurchaseable());
-        assertEquals(100.0, node.getCurrentCost(), 0.0001);
+        assertEquals(50.0, node.getCurrentCost(), 0.0001);
     }
 
     @Test

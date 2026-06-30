@@ -27,7 +27,8 @@ public class GameStatePrestigeTest {
 
         assertEquals(0.0, gameState.getCurrency(), 0.0001);
         assertEquals(1, gameState.getPrestigeLevel());
-        assertEquals(63.0, gameState.getPrestigePoints(), 0.0001);
+        // points = floor(currency ^ prestigeFormulaExponent) = floor(10000 ^ 0.5) = 100
+        assertEquals(100.0, gameState.getPrestigePoints(), 0.0001);
 
         Shape activeShape = gameState.getActiveShape();
         assertEquals(0, activeShape.getLevel());
@@ -55,6 +56,19 @@ public class GameStatePrestigeTest {
 
         assertTrue(gameState.canPrestige());
         assertTrue(gameState.prestige());
+    }
+
+    @Test
+    @DisplayName("prestige is gated until it would grant at least the minimum number of points")
+    void prestigeShouldBeGatedBelowMinimumPoints() {
+        // floor(50 ^ 0.5) = 7 prestige points, which is below the prestigeMinimumPoints gate (10),
+        // so prestige must be refused even though it would technically grant a non-zero amount.
+        gameState.setCurrency(50.0);
+
+        assertFalse(gameState.canPrestige());
+        assertFalse(gameState.prestige());
+        assertEquals(50.0, gameState.getCurrency(), 0.0001);
+        assertEquals(0, gameState.getPrestigeLevel());
     }
 
     @Test
