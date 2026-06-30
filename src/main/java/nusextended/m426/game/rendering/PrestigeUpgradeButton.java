@@ -14,7 +14,8 @@ public class PrestigeUpgradeButton extends Button {
     private final UpgradeNode node;
 
     public PrestigeUpgradeButton(UpgradeNode node, GameState gameState, PrestigeUpgradeRenderer renderer) {
-        this.node = node; 
+        this.node = node;
+
         VBox vbox = new VBox();
 
         this.setMinHeight(100);
@@ -35,44 +36,51 @@ public class PrestigeUpgradeButton extends Button {
         }
 
         vbox.setAlignment(Pos.CENTER);
+
         descLabel.setAlignment(Pos.CENTER);
         costLabel.setAlignment(Pos.CENTER);
+
         descLabel.setMaxWidth(Double.MAX_VALUE);
         costLabel.setMaxWidth(Double.MAX_VALUE);
+
         vbox.getChildren().addAll(descLabel, costLabel);
 
         if (node.isInfinitelyPurchaseable()) {
             Label levelLabel = new Label("Lv. " + node.getPurchaseCount());
+
             levelLabel.setAlignment(Pos.CENTER);
             levelLabel.setMaxWidth(Double.MAX_VALUE);
+
             if (node.isPurchased()) {
                 levelLabel.setStyle("-fx-text-fill: #ffffff");
             }
+
             vbox.getChildren().add(levelLabel);
         }
 
         this.setGraphic(vbox);
 
         this.setOnAction(event -> {
-            System.out.println("PP: " + gameState.getPrestigePoints() + " cost: " + node.getCurrentCost());
-            if (node.canPurchase(null, gameState.getPrestigePoints()))  {
-            double costPaid = node.getCurrentCost();
-            node.recordPurchase();
-            gameState.spendPrestigePoints(costPaid);
-            renderer.setPrestigeUpgrades();
+           if (node.canPurchase(gameState.getActiveShape().getType(), gameState.getPrestigePoints()))  {
+                double costPaid = node.getCurrentCost();
+                node.recordPurchase();
+                gameState.spendPrestigePoints(costPaid);
+                renderer.setPrestigeUpgrades();
+
+                System.out.println("Purchased " + node.getName() + " for " + costPaid);
             }
         });
 
         this.setOnMouseEntered(e -> {
             if (!node.isPurchased()) {
-            this.setStyle("-fx-background-color: #f0f0f0; -fx-border-color: #000000; -fx-border-width: 3");
-        }
+                this.setStyle("-fx-background-color: #f0f0f0; -fx-border-color: #000000; -fx-border-width: 3");
+            }
         });
 
         this.setOnMouseExited(e -> {
             if (!node.isPurchased()) {
-            this.setStyle("-fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-width: 3");
-        }
+                this.setStyle("-fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-width: 3");
+            }
         });
 
     }
