@@ -6,7 +6,7 @@ import javafx.scene.layout.HBox;
 import java.util.*;
 
 import javafx.scene.layout.Priority;
-import nusextended.m426.game.UpgradeNode;
+import nusextended.m426.model.UpgradeNode;
 import nusextended.m426.game.GameState;
 
 public class PrestigeUpgradeRenderer {

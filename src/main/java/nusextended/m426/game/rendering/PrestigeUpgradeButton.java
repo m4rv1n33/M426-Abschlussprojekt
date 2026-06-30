@@ -1,7 +1,7 @@
 package nusextended.m426.game.rendering;
 
 import nusextended.m426.game.GameState;
-import nusextended.m426.game.UpgradeNode;
+import nusextended.m426.model.UpgradeNode;
 import nusextended.m426.game.NumberFormatter;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
