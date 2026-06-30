@@ -65,8 +65,6 @@ Prestige points gained on reset: `ceil((currency - minimumCurrencyToPrestige) ^ 
 
 Prestige is only permitted when that value is `> 0`, i.e. when `currency > minimumCurrencyToPrestige` (at least `1000` with the defaults). This prevents the degenerate "prestige for a single point" reset that was possible when the threshold was simply `> 0` currency.
 
-Note: `balance.json` still carries a `prestigeMinimumPoints` key, but `BalanceConfig` has no matching field, so Gson ignores it. It is a stale key with no effect.
-
 ## Tuning history and rationale
 
 The balance was tuned against `ProgressionBalanceTest`, an automated playtest that drives the

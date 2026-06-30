@@ -68,7 +68,7 @@ class GameIntegrationTest {
     @Test
     @DisplayName("Prestige resets currency and upgrade progress then applies production bonus via engine")
     void prestigeResetsStateAndAppliesBonus() {
-        state.addCurrency(500.0);
+        state.addCurrency(5000.0);
         upgradeManager.attemptPurchase("vertex-growth");
 
         assertTrue(state.canPrestige());

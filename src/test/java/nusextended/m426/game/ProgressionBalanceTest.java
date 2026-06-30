@@ -98,8 +98,9 @@ class ProgressionBalanceTest {
         for (int second = 1; second <= PRESTIGE_SESSION_SECONDS; second++) {
             produceOneSecond(state);
 
-            double prestigeThresholdPoints = Math.max(cfg.prestigeMinimumPoints, nextMultiplierCost(state));
-            double pointsOnPrestige = Math.floor(Math.pow(state.getCurrency(), cfg.prestigeFormulaExponent));
+            // Prestige once it would yield enough points to buy the next vertex-multiplier.
+            double prestigeThresholdPoints = nextMultiplierCost(state);
+            double pointsOnPrestige = state.getPendingPrestigePoints();
 
             if (pointsOnPrestige >= prestigeThresholdPoints && state.canPrestige()) {
                 state.prestige();
@@ -114,8 +115,10 @@ class ProgressionBalanceTest {
             }
 
             // Grow the shape only while upgrades are cheap relative to the prestige target,
-            // then save the remainder of the run toward the next prestige.
-            double prestigeCurrencyTarget = Math.pow(prestigeThresholdPoints, 1.0 / cfg.prestigeFormulaExponent);
+            // then save the remainder of the run toward the next prestige. The currency
+            // target inverts the payout formula: ceil((currency - floor)^exp) = points.
+            double prestigeCurrencyTarget = cfg.minimumCurrencyToPrestige
+                    + Math.pow(prestigeThresholdPoints, 1.0 / cfg.prestigeFormulaExponent);
             buyGrowthWhileCheap(state, upgrades, prestigeCurrencyTarget * 0.25);
         }
 
@@ -156,9 +159,6 @@ class ProgressionBalanceTest {
             if (upgrades.attemptPurchase("shape-focus")) {
                 bought = true;
             }
-            if (upgrades.attemptPurchase("square-something")) {
-                bought = true;
-            }
             if (upgrades.attemptPurchase("vertex-growth")) {
                 bought = true;
             }
@@ -168,7 +168,6 @@ class ProgressionBalanceTest {
     /** Grows the shape while the next growth purchase stays below the given cost ceiling. */
     private static void buyGrowthWhileCheap(GameState state, UpgradeStateManager upgrades, double costCeiling) {
         upgrades.attemptPurchase("shape-focus");
-        upgrades.attemptPurchase("square-something");
         UpgradeNode growth = state.getUpgradeTree().getNode("vertex-growth");
         while (growth != null
                 && growth.getCurrentCost() <= costCeiling

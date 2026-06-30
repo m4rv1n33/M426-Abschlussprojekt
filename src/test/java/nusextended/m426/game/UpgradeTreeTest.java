@@ -18,10 +18,9 @@ public class UpgradeTreeTest {
     void defaultTreeShouldDefineTheExpectedUpgradeChain() {
         UpgradeTree tree = UpgradeTree.createDefaultTree();
 
-        assertEquals(3, tree.getNodes().size());
+        assertEquals(2, tree.getNodes().size());
         assertEquals("vertex-growth", tree.getNodes().get(0).getName());
         assertEquals("shape-focus", tree.getNodes().get(1).getName());
-        assertEquals("square-something", tree.getNodes().get(2).getName());
     }
 
     @Test
