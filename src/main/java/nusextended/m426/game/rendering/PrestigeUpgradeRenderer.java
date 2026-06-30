@@ -61,7 +61,7 @@ public class PrestigeUpgradeRenderer {
         prestigeUpgradesContainer.getChildren().clear();
 
         List<List<UpgradeNode>> rows = new ArrayList<>();
-        Queue<UpgradeNode> remainingNodes = new ArrayDeque<>(gameState.getUpgradeTree().getNodes());
+        Queue<UpgradeNode> remainingNodes = new ArrayDeque<>(gameState.getPrestigeTree().getNodes());
 
         while (remainingNodes.size() > 0) {
             List<UpgradeNode> currentRow = new ArrayList<>();
@@ -76,6 +76,19 @@ public class PrestigeUpgradeRenderer {
 
             remainingNodes.removeAll(toRemove);
             rows.add(currentRow);
+
+        }
+
+        for (List<UpgradeNode> row : rows) {
+            HBox hbox = new HBox(5);
+            VBox.setVgrow(hbox, Priority.ALWAYS);
+
+            for (UpgradeNode node : row) {
+                Button btn = createUpgradeBox(node);
+                hbox.getChildren().add(btn);
+            }
+
+            prestigeUpgradesContainer.getChildren().add(hbox);
 
         }
 
@@ -103,7 +116,7 @@ public class PrestigeUpgradeRenderer {
         }
         int maxDepth = 0;
         for (UpgradeNode previous : node.getPreviousNodes()) {
-            maxDepth = Math.max(maxDepth, getDepth(previous))
+            maxDepth = Math.max(maxDepth, getDepth(previous));
         }
         return maxDepth + 1;
     }
