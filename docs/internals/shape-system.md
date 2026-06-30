@@ -43,7 +43,7 @@ Example at level 3, 4 vertices, no prestige multiplier:
 ## ShapeType enum
 
 `ShapeType` maps vertex counts to polygon names. It is used for:
-- Determining which upgrade tree nodes are available (shape type requirements on nodes)
+- Determining which upgrade tree nodes are available (a node's shape requirement is met once the active shape has at least the required vertex count)
 - Displaying the shape name in the UI
 
 Defined constants: `TRIANGLE(3)`, `SQUARE(4)`, `PENTAGON(5)`, `HEXAGON(6)`, `HEPTAGON(7)`, `OCTAGON(8)`.
@@ -64,7 +64,7 @@ Each shape upgrade costs more than the previous one. The cost at the current lev
 cost = shapeUpgradeBaseCost * shapeUpgradeScaling ^ level
 ```
 
-Default: `10.0 * 1.2^level`
+Default: `10.0 * 1.15^level`
 
 `Shape.getNextUpgradeCost()` delegates to `UpgradeCost.getShapeUpgradeCost(level)`.
 

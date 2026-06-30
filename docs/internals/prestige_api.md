@@ -25,9 +25,9 @@ Prestige upgrades are arranged in rows. You must purchase every upgrade in a row
 |---|---|
 | Source | `GameState.java` |
 | Input | None (reads `currency` internally) |
-| Output | `boolean` - `true` if `floor(currency^prestigeFormulaExponent) >= prestigeMinimumPoints` |
+| Output | `boolean` - `true` if `getPendingPrestigePoints() > 0` |
 
-With the default balance (`prestigeFormulaExponent = 0.5`, `prestigeMinimumPoints = 10`) this means the button stays disabled until the player holds at least `10^2 = 100` currency, which removes the old "prestige for a single point" trap.
+`getPendingPrestigePoints()` returns `ceil((currency - minimumCurrencyToPrestige)^prestigeFormulaExponent)` with the base clamped to `0`. With the default balance (`prestigeFormulaExponent = 0.5`, `minimumCurrencyToPrestige = 1000`) the button stays disabled until the player holds more than `1000` currency, which removes the old "prestige for a single point" trap.
 
 ---
 
@@ -41,17 +41,17 @@ With the default balance (`prestigeFormulaExponent = 0.5`, `prestigeMinimumPoint
 | Input | None (reads `currency` internally) |
 | Output | `boolean` - `true` if the reset was applied, `false` if it was a no-op |
 
-**Guard:** if `canPrestige()` is `false` (i.e. `floor(currency^prestigeFormulaExponent)` would be below `prestigeMinimumPoints`), `prestige()` does nothing and returns `false`. This prevents wiping all progress for a negligible reward.
+**Guard:** if `canPrestige()` is `false` (i.e. `currency` is not above `minimumCurrencyToPrestige`), `prestige()` does nothing and returns `false`. This prevents wiping all progress for a negligible reward.
 
 **Prestige points formula (data-driven via `balance.json`):**
 
 ```
-pointsGained = floor(currency^prestigeFormulaExponent)   // default exponent 0.5 -> floor(sqrt(currency))
+pointsGained = ceil((currency - minimumCurrencyToPrestige)^prestigeFormulaExponent)   // base clamped to >= 0; default exponent 0.5 -> square root
 ```
 
 **Side effects when the reset is applied (all applied in order):**
 
-1. **Prestige points** - increased by `floor(currency^prestigeFormulaExponent)`
+1. **Prestige points** - increased by `pointsGained`
 2. **Prestige level** - incremented by 1
 3. **Currency** - reset to `0`
 4. **Active shape** - reset to `new ShapeData(1, 0)` (level 0, 1 vertex)
@@ -66,7 +66,7 @@ pointsGained = floor(currency^prestigeFormulaExponent)   // default exponent 0.5
 
 | Aspect | Detail |
 |---|---|
-| Source | `GameState.java:126` |
+| Source | `GameState.java:145` |
 | Returns | `double` - total prestige points |
 | Side effects | None |
 
@@ -80,7 +80,7 @@ Prestige points are spent on prestige upgrades. Display in the Prestige tab.
 
 | Aspect | Detail |
 |---|---|
-| Source | `GameState.java:118` |
+| Source | `GameState.java:137` |
 | Returns | `int` - prestige count |
 | Side effects | None |
 
@@ -96,7 +96,7 @@ Prestige points are spent on prestige upgrades. Display in the Prestige tab.
 
 | Aspect | Detail |
 |---|---|
-| Source | `GameState.java:122` |
+| Source | `GameState.java:141` |
 | Returns | `double` - e.g. `1.0` (level 0), `1.1` (level 1), `1.2` (level 2) |
 | Side effects | None |
 
@@ -122,7 +122,7 @@ double production = activeShape.getCurrentProductionRate()
 
 | Aspect | Detail |
 |---|---|
-| Source | `GameState.java:130` |
+| Source | `GameState.java:149` |
 | Returns | `PrestigeTree` - container of prestige `UpgradeNode` instances |
 | Side effects | Lazily initializes tree if null (old saves) |
 
@@ -134,7 +134,7 @@ double production = activeShape.getCurrentProductionRate()
 
 | Aspect | Detail |
 |---|---|
-| Source | `GameState.java:137` |
+| Source | `GameState.java:156` |
 | Input | `cost` - amount to deduct |
 | Output | `void` |
 | Side effects | Reduces `prestigePoints` by `cost` |
@@ -208,7 +208,7 @@ gameState.prestige()
         |       |
         |      true
         |       v
-        +-- calculates: pointsGained = floor(currency^prestigeFormulaExponent)
+        +-- calculates: pointsGained = ceil((currency - minimumCurrencyToPrestige)^prestigeFormulaExponent)
         +-- prestigePoints += pointsGained
         +-- prestigeLevel++
         +-- currency = 0

@@ -38,10 +38,10 @@ Cost at purchase N: `shapeUpgradeBaseCost * shapeUpgradeScaling ^ N`
 |---|---|---|
 | `shapeFocusBaseCost` | 35.0 | shape-focus (one-time) |
 | `shapeFocusScaling` | 1.25 | shape-focus |
-| `squareSomethingBaseCost` | 120.0 | square-something (one-time) |
-| `squareSomethingScaling` | 1.35 | square-something |
+| `squareSomethingBaseCost` | 120.0 | unused (square-something node was removed) |
+| `squareSomethingScaling` | 1.35 | unused (square-something node was removed) |
 
-One-time upgrades are only purchased once so the scaling factor has no practical effect unless the node is later made repeatable.
+One-time upgrades are only purchased once so the scaling factor has no practical effect unless the node is later made repeatable. The `squareSomething*` keys remain in the config and `BalanceConfig` but no node currently reads them.
 
 ### Prestige upgrade costs
 
@@ -54,14 +54,18 @@ One-time upgrades are only purchased once so the scaling factor has no practical
 
 | Key | Default | Effect |
 |---|---|---|
-| `prestigeFormulaExponent` | 0.5 | Exponent in `floor(currency^exponent)` (0.5 = `floor(sqrt(currency))`) |
-| `prestigeMinimumPoints` | 10.0 | Minimum points a prestige must grant before it is allowed |
+| `prestigeFormulaExponent` | 0.5 (`BalanceConfig` default 0.45) | Exponent in `ceil((currency - minimumCurrencyToPrestige)^exponent)` (0.5 = square root) |
+| `minimumCurrencyToPrestige` | 1000.0 | Currency floor subtracted before the payout, and the threshold a prestige requires |
 | `prestigeBonusPerLevel` | 0.10 | Additive production bonus per prestige level (+10% per level) |
 | `vertexMultiplierPerPurchase` | 0.10 | Additive vertex multiplier per vertex-multiplier purchase |
 
-Prestige points gained on reset: `floor(currency ^ prestigeFormulaExponent)`
+The shipped `balance.json` sets `prestigeFormulaExponent` to `0.5`; the `BalanceConfig` built-in fallback (used only if `balance.json` is missing) is `0.45`.
 
-Prestige is only permitted when `floor(currency ^ prestigeFormulaExponent) >= prestigeMinimumPoints`. With the defaults this requires at least `10^2 = 100` currency, which prevents the degenerate "prestige for a single point" reset that was possible when the threshold was simply `> 0`.
+Prestige points gained on reset: `ceil((currency - minimumCurrencyToPrestige) ^ prestigeFormulaExponent)`, where the base is clamped to a minimum of `0`.
+
+Prestige is only permitted when that value is `> 0`, i.e. when `currency > minimumCurrencyToPrestige` (at least `1000` with the defaults). This prevents the degenerate "prestige for a single point" reset that was possible when the threshold was simply `> 0` currency.
+
+Note: `balance.json` still carries a `prestigeMinimumPoints` key, but `BalanceConfig` has no matching field, so Gson ignores it. It is a stale key with no effect.
 
 ## Tuning history and rationale
 
@@ -74,7 +78,7 @@ below come from that test (before = the original values, after = the values ship
 | `shapeUpgradeScaling` | 1.20 | 1.15 | Cost grew exponentially while production grows only polynomially, so a single shape level eventually took minutes to afford. Lowering the scaling keeps the climb steady instead of hitting a wall. |
 | `prestigeFormulaExponent` | 0.45 | 0.5 | Switches the payout to `floor(sqrt(currency))`: intuitive, and it makes the first prestige meaningful instead of yielding a partial upgrade. |
 | `prestigeUpgradeBaseCost` | 100 | 50 | At 100 the very first prestige could not afford a single upgrade (a dead first reset). At 50 the first realistic prestige run buys exactly one vertex-multiplier. |
-| `prestigeMinimumPoints` | n/a (`> 0`) | 10 | New, data-driven gate. The old implicit `> 0` threshold let the player wipe all progress for a single prestige point. |
+| `minimumCurrencyToPrestige` | n/a (`> 0` currency) | 1000 | New gate. The old implicit `> 0` threshold let the player wipe all progress for a single prestige point; the payout now subtracts this floor and a prestige is only allowed above it. |
 
 ### Measured effect (from `ProgressionBalanceTest`)
 

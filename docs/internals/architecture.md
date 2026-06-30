@@ -11,15 +11,17 @@ nusextended.m426
     ├── GameState.java         central data store + persistence
     ├── BalanceConfig.java     runtime config loader
     ├── NumberFormatter.java   currency/rate display formatting
-    ├── UpgradeTree.java       regular upgrade tree container
-    ├── UpgradeNode.java       single upgrade node
+    ├── TutorialManager.java   first-run tutorial flow
     ├── UpgradeStateManager.java  purchase logic for regular upgrades
     ├── UpgradeStateListener.java interface for purchase callbacks
     ├── PrestigeTree.java      prestige upgrade tree container
-    └── PrestigeStateManager.java purchase logic for prestige upgrades
+    ├── PrestigeStateManager.java purchase logic for prestige upgrades
+    └── rendering/             canvas renderers and paint/font helpers
     model/
     ├── Shape.java             active shape with production calculation
     ├── ShapeType.java         polygon type enum with name generation
+    ├── UpgradeTree.java       regular upgrade tree container
+    ├── UpgradeNode.java       single upgrade node
     └── UpgradeCost.java       exponential cost calculator
 ```
 

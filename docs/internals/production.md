@@ -43,7 +43,7 @@ The per-frame earn is `productionPerSecond * deltaSeconds`.
 
 ## Auto-purchasing
 
-After currency is added each frame, `UpgradeStateManager.performAutoPurchases()` is called. It auto-buys `vertex-growth` in a loop until the player cannot afford another purchase. Auto-purchasing is only active if the `shape-focus` upgrade has been purchased. See `docs/upgrades.md` for upgrade details.
+After currency is added each frame, `UpgradeStateManager.performAutoPurchases()` is called. It auto-buys `vertex-growth` in a loop until the player cannot afford another purchase. Auto-purchasing is only active if the `shape-focus` upgrade has been purchased. See `upgrades.md` for upgrade details.
 
 ## CurrencyListener interface
 

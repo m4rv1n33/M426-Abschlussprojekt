@@ -10,20 +10,19 @@ Each node has:
 - a list of prerequisite nodes
 - a flag for infinite purchases
 
-`GameState` owns the active `UpgradeTree` and handles purchase logic.
-`GameEngine` calls the game state every tick, so unlocked repeatable upgrades can be bought automatically.
+`GameState` owns the active `UpgradeTree`; purchase logic lives in `UpgradeStateManager`.
+`GameEngine` calls `UpgradeStateManager.performAutoPurchases()` every tick, so unlocked repeatable upgrades can be bought automatically.
 
 Current examples:
 - `vertex-growth` is the regular shape upgrade
 - `shape-focus` unlocks auto-buying `vertex-growth`
-- `square-something` is the next node in the chain
 
 ## How to add a new upgrade
 
 1. Create a new `UpgradeNode` in `UpgradeTree.createDefaultTree()`.
 2. Give it a name, description, cost, and `infinitelyPurchaseable` value.
 3. Add prerequisite nodes if the upgrade should unlock later.
-4. Use a `ShapeType` requirement if the upgrade should only work for certain shapes.
+4. Use a `ShapeType` requirement if the upgrade needs a minimum shape. The requirement is met once the active shape has at least that many vertices, so it stays buyable on larger shapes too.
 5. Add a test that checks unlock behavior and purchase behavior.
 
 ## How to implement the upgrade effect
@@ -32,7 +31,7 @@ Creating the node only defines the upgrade in the tree. The gameplay effect must
 
 Use this pattern:
 - if the upgrade changes currency production, apply it in `Shape.getCurrentProductionRate()` or `GameEngine`
-- if the upgrade unlocks automation, check for it in `GameState` during the tick loop
+- if the upgrade unlocks automation, check for it in `UpgradeStateManager.performAutoPurchases()`, called each tick
 - if the upgrade changes costs, make the cost calculation read the purchased node state
 - if the upgrade affects prestige, apply it in `GameState.prestige()` or the prestige bonus methods
 

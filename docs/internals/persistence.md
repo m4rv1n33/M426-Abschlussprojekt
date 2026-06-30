@@ -7,10 +7,28 @@ The save file path is determined at class-load time by the OS:
 | OS | Path |
 |---|---|
 | Windows | `%LOCALAPPDATA%\nusExtended\M426\game.json` |
-| macOS | `~/Library/Application Support/nusExtended/M426/game.json` |
 | Linux | `~/.local/share/nusExtended/M426/game.json` |
 
-Detection uses `System.getProperty("os.name").toUpperCase()` checked against `"WIN"` and `"MAC"`.
+Detection uses `System.getProperty("os.name").toUpperCase()`: if it contains `"WIN"` the Windows path is used, otherwise the Linux path.
+
+## Dev launch flags
+
+`NusianApplication.main()` reads a few developer command-line flags before the JavaFX window starts. The cleanest way to pass them is via named plugin executions in `pom.xml`:
+
+| Flag | Execution | Effect |
+|---|---|---|
+| `--reset` | `mvn javafx:run@reset` | Deletes the save file and exits immediately (`System.exit(0)`, no window). |
+| `--max` / `--boost` | `mvn javafx:run@max` | Loads the save, cranks it to demo values (huge currency, prestige level 50, octagon at level 100), saves, then launches normally so it is ready to show off. |
+
+```bash
+# Wipe the save
+mvn javafx:run@reset
+
+# Boost the save for a presentation, then launch
+mvn javafx:run@max
+```
+
+The flags can also be passed directly, e.g. `mvn javafx:run "-Djavafx.args=--reset"`. Unknown flags are ignored with a console notice. These are dev conveniences only; they are not exposed in the UI.
 
 ## Save triggers
 
