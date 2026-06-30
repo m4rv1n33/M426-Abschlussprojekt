@@ -22,43 +22,9 @@ public class PrestigeUpgradeRenderer {
     this.gameState = gameState; 
     }
 
-    public Button createUpgradeBox(UpgradeNode node) {
-        Button btn = new Button();
-        VBox vbox = new VBox();
-
-        btn.setMinHeight(100);
-        btn.setMaxHeight(150);
-        btn.setStyle("-fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-width: 3");
-        btn.setMaxWidth(Double.MAX_VALUE);
-
-        HBox.setHgrow(btn, Priority.ALWAYS);
-
-        Label descLabel = new Label(node.getDescription());
-        Label costLabel = new Label(String.valueOf(node.getCurrentCost()));
-        vbox.setAlignment(Pos.CENTER);
-        descLabel.setAlignment(Pos.CENTER);
-        costLabel.setAlignment(Pos.CENTER);
-        descLabel.setMaxWidth(Double.MAX_VALUE);
-        costLabel.setMaxWidth(Double.MAX_VALUE);
-        vbox.getChildren().addAll(descLabel, costLabel);
-        btn.setGraphic(vbox);
-
-        btn.setOnAction(event -> {
-            System.out.println("PP: " + gameState.getPrestigePoints() + " cost: " + node.getCurrentCost());
-            if (node.canPurchase(null, gameState.getPrestigePoints()))  {
-            double costPaid = node.getCurrentCost();
-            node.recordPurchase();
-            gameState.spendPrestigePoints(costPaid);
-            setPrestigeUpgrades();
-            }
-        });
-
-        return btn;
-    }
-
     public void setPrestigeUpgrades() {
 
-        prestigeUpgradesContainer.getChildren().clear();
+        prestigeUpgradesContainer.getChildren().removeIf(node -> node instanceof PrestigeUpgradeButton);
 
         List<List<UpgradeNode>> rows = new ArrayList<>();
         Queue<UpgradeNode> remainingNodes = new ArrayDeque<>(gameState.getPrestigeTree().getNodes());
@@ -84,7 +50,7 @@ public class PrestigeUpgradeRenderer {
             VBox.setVgrow(hbox, Priority.ALWAYS);
 
             for (UpgradeNode node : row) {
-                Button btn = createUpgradeBox(node);
+                PrestigeUpgradeButton btn = new PrestigeUpgradeButton(node, gameState, this);
                 hbox.getChildren().add(btn);
             }
 
