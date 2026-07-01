@@ -23,7 +23,7 @@ public class PrestigeTree {
     public static PrestigeTree createDefaultTree() {
         UpgradeNode vertexMultiplier = new UpgradeNode(
             "vertex-multiplier",
-            "Multiplies the vertex count of the active shape.",
+            "Increase production multiplier by +0.1.",
             UpgradeCost.prestigeUpgrade(),
             true
         );
