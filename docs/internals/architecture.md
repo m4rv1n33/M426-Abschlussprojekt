@@ -65,3 +65,18 @@ There is no DI framework. Dependencies are wired manually in `NusianApplication.
 ## Threading
 
 All game logic runs on the JavaFX Application Thread via `AnimationTimer`. There is no background thread for game updates. Saving to disk (`GameState.save()`) is called from the game loop and is synchronous.
+
+## Further reading
+
+Each of the following documents covers one component in depth:
+
+| Document | Covers |
+|---|---|
+| `production.md` | `GameEngine` loop, production formula, `CurrencyListener` |
+| `shape-system.md` | `Shape`, `ShapeType`, shape upgrade cost |
+| `upgrades.md` | `UpgradeTree`, `UpgradeNode`, `UpgradeStateManager`, adding new upgrades |
+| `prestige_api.md` | `PrestigeTree`, `PrestigeStateManager`, prestige reset flow |
+| `rendering.md` | `game/rendering/*` - canvas drawing and the prestige button panel |
+| `ui-controller.md` | `NusianApplication`, `NusianController`, `TutorialManager`, `NumberFormatter` |
+| `persistence.md` | Save file location, serialization, dev launch flags |
+| `balance-config.md` | `BalanceConfig`, tuning history |

@@ -13,6 +13,12 @@ Prestige resets the player's progress in exchange for permanent bonuses. Prestig
 
 Prestige upgrades are arranged in rows. You must purchase every upgrade in a row at least once before any upgrade in the next row becomes available. This is enforced via the `previousNodes` prerequisite system: each node in row N+1 lists all nodes in row N as its prerequisites.
 
+### Prestige payout is based on your peak currency, not your spendable balance
+
+`GameState` tracks a second field, `currencyThisPrestige`, alongside `currency`. It is a high-water mark: `addCurrency()` sets it to `Math.max(currency, currencyThisPrestige)` every time currency is earned, so it only ever goes up (or resets to `0` on prestige, alongside `currency`).
+
+The prestige payout formula reads `currencyThisPrestige`, **not** `currency`. This means spending currency - e.g. via `UpgradeStateManager.performAutoPurchases()` buying `vertex-growth` every tick once `shape-focus` is unlocked - does not reduce how many prestige points a reset will grant. Before this change, the auto-buyer competed with the prestige payout: every automatic purchase lowered `currency` and therefore `getPendingPrestigePoints()`, even though the player had genuinely earned (and just reinvested) that currency. Tracking the peak instead of the live balance removes that penalty.
+
 ---
 
 ## Public Methods on GameState
@@ -24,10 +30,10 @@ Prestige upgrades are arranged in rows. You must purchase every upgrade in a row
 | Aspect | Detail |
 |---|---|
 | Source | `GameState.java` |
-| Input | None (reads `currency` internally) |
+| Input | None (reads `currencyThisPrestige` internally) |
 | Output | `boolean` - `true` if `getPendingPrestigePoints() > 0` |
 
-`getPendingPrestigePoints()` returns `ceil((currency - minimumCurrencyToPrestige)^prestigeFormulaExponent)` with the base clamped to `0`. With the default balance (`prestigeFormulaExponent = 0.5`, `minimumCurrencyToPrestige = 1000`) the button stays disabled until the player holds more than `1000` currency, which removes the old "prestige for a single point" trap.
+`getPendingPrestigePoints()` returns `ceil((currencyThisPrestige - minimumCurrencyToPrestige)^prestigeFormulaExponent)` with the base clamped to `0`. `currencyThisPrestige` is the highest `currency` value reached since the last prestige (see "Prestige payout is based on your peak currency" above), so spending currency on upgrades before prestiging does not lower this value. With the default balance (`prestigeFormulaExponent = 0.5`, `minimumCurrencyToPrestige = 1000`) the button stays disabled until the player has reached more than `1000` currency at some point this run, which removes the old "prestige for a single point" trap.
 
 ---
 
@@ -38,25 +44,28 @@ Prestige upgrades are arranged in rows. You must purchase every upgrade in a row
 | Aspect | Detail |
 |---|---|
 | Source | `GameState.java` |
-| Input | None (reads `currency` internally) |
+| Input | None (reads `currencyThisPrestige` internally) |
 | Output | `boolean` - `true` if the reset was applied, `false` if it was a no-op |
 
-**Guard:** if `canPrestige()` is `false` (i.e. `currency` is not above `minimumCurrencyToPrestige`), `prestige()` does nothing and returns `false`. This prevents wiping all progress for a negligible reward.
+**Guard:** if `canPrestige()` is `false` (i.e. `currencyThisPrestige` is not above `minimumCurrencyToPrestige`), `prestige()` does nothing and returns `false`. This prevents wiping all progress for a negligible reward.
 
 **Prestige points formula (data-driven via `balance.json`):**
 
 ```
-pointsGained = ceil((currency - minimumCurrencyToPrestige)^prestigeFormulaExponent)   // base clamped to >= 0; default exponent 0.5 -> square root
+pointsGained = ceil((currencyThisPrestige - minimumCurrencyToPrestige)^prestigeFormulaExponent)   // base clamped to >= 0; default exponent 0.5 -> square root
 ```
+
+`currencyThisPrestige` is the high-water mark described above, not the live `currency` balance - see "Prestige payout is based on your peak currency" for why.
 
 **Side effects when the reset is applied (all applied in order):**
 
 1. **Prestige points** - increased by `pointsGained`
 2. **Prestige level** - incremented by 1
 3. **Currency** - reset to `0`
-4. **Active shape** - reset to `new ShapeData(1, 0)` (level 0, 1 vertex)
-5. **Upgrade tree** (regular) - fully reset via `getUpgradeTree().reset()`; all upgrades lose their progress
-6. **Prestige tree** - **NOT reset**; prestige upgrades persist across prestiges
+4. **`currencyThisPrestige`** - reset to `0`
+5. **Active shape** - reset to `new ShapeData(1, 0)` (level 0, 1 vertex)
+6. **Upgrade tree** (regular) - fully reset via `getUpgradeTree().reset()`; all upgrades lose their progress
+7. **Prestige tree** - **NOT reset**; prestige upgrades persist across prestiges
 
 ---
 
@@ -66,7 +75,7 @@ pointsGained = ceil((currency - minimumCurrencyToPrestige)^prestigeFormulaExpone
 
 | Aspect | Detail |
 |---|---|
-| Source | `GameState.java:145` |
+| Source | `GameState.java:173` |
 | Returns | `double` - total prestige points |
 | Side effects | None |
 
@@ -80,7 +89,7 @@ Prestige points are spent on prestige upgrades. Display in the Prestige tab.
 
 | Aspect | Detail |
 |---|---|
-| Source | `GameState.java:137` |
+| Source | `GameState.java:165` |
 | Returns | `int` - prestige count |
 | Side effects | None |
 
@@ -96,7 +105,7 @@ Prestige points are spent on prestige upgrades. Display in the Prestige tab.
 
 | Aspect | Detail |
 |---|---|
-| Source | `GameState.java:141` |
+| Source | `GameState.java:169` |
 | Returns | `double` - e.g. `1.0` (level 0), `1.1` (level 1), `1.2` (level 2) |
 | Side effects | None |
 
@@ -122,7 +131,7 @@ double production = activeShape.getCurrentProductionRate()
 
 | Aspect | Detail |
 |---|---|
-| Source | `GameState.java:149` |
+| Source | `GameState.java:177` |
 | Returns | `PrestigeTree` - container of prestige `UpgradeNode` instances |
 | Side effects | Lazily initializes tree if null (old saves) |
 
@@ -134,7 +143,7 @@ double production = activeShape.getCurrentProductionRate()
 
 | Aspect | Detail |
 |---|---|
-| Source | `GameState.java:156` |
+| Source | `GameState.java:184` |
 | Input | `cost` - amount to deduct |
 | Output | `void` |
 | Side effects | Reduces `prestigePoints` by `cost` |
@@ -208,10 +217,11 @@ gameState.prestige()
         |       |
         |      true
         |       v
-        +-- calculates: pointsGained = ceil((currency - minimumCurrencyToPrestige)^prestigeFormulaExponent)
+        +-- calculates: pointsGained = ceil((currencyThisPrestige - minimumCurrencyToPrestige)^prestigeFormulaExponent)
         +-- prestigePoints += pointsGained
         +-- prestigeLevel++
         +-- currency = 0
+        +-- currencyThisPrestige = 0
         +-- activeShapeData = ShapeData(1, 0)     // level 0, 1 vertex
         +-- upgradeTree.reset()                    // regular upgrades cleared
         +-- prestigeTree NOT reset                 // prestige upgrades persist
@@ -220,6 +230,7 @@ gameState.prestige()
 Production loop (GameEngine)
         |
         +-- production = shapeRate * prestigeBonus * deltaTime
+        +-- addCurrency(production)                // also raises currencyThisPrestige if this is a new peak
         +-- onCurrencyChanged(currency, shape, prestigeLevel)
                 |
                 v
@@ -241,6 +252,7 @@ prestigeManager.attemptPurchase("vertex-multiplier")
 | Resource | Reset? | Detail |
 |---|---|---|
 | Currency | Yes | Set to `0` |
+| `currencyThisPrestige` (peak currency, drives payout) | Yes | Set to `0` |
 | Active shape | Yes | Level 0, 1 vertex |
 | Regular upgrade tree | Yes | All nodes reset to unpurchased |
 | Prestige tree | **No** | All nodes retain purchase counts |

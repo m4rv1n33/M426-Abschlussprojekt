@@ -54,16 +54,16 @@ One-time upgrades are only purchased once so the scaling factor has no practical
 
 | Key | Default | Effect |
 |---|---|---|
-| `prestigeFormulaExponent` | 0.5 (`BalanceConfig` default 0.45) | Exponent in `ceil((currency - minimumCurrencyToPrestige)^exponent)` (0.5 = square root) |
+| `prestigeFormulaExponent` | 0.5 (`BalanceConfig` default 0.45) | Exponent in `ceil((currencyThisPrestige - minimumCurrencyToPrestige)^exponent)` (0.5 = square root) |
 | `minimumCurrencyToPrestige` | 1000.0 | Currency floor subtracted before the payout, and the threshold a prestige requires |
 | `prestigeBonusPerLevel` | 0.10 | Additive production bonus per prestige level (+10% per level) |
 | `vertexMultiplierPerPurchase` | 0.10 | Additive vertex multiplier per vertex-multiplier purchase |
 
 The shipped `balance.json` sets `prestigeFormulaExponent` to `0.5`; the `BalanceConfig` built-in fallback (used only if `balance.json` is missing) is `0.45`.
 
-Prestige points gained on reset: `ceil((currency - minimumCurrencyToPrestige) ^ prestigeFormulaExponent)`, where the base is clamped to a minimum of `0`.
+Prestige points gained on reset: `ceil((currencyThisPrestige - minimumCurrencyToPrestige) ^ prestigeFormulaExponent)`, where the base is clamped to a minimum of `0`. `currencyThisPrestige` is a high-water mark of `currency` since the last prestige (see `prestige_api.md`), not the live spendable balance, so buying upgrades - including the `shape-focus` auto-buyer - never lowers the payout.
 
-Prestige is only permitted when that value is `> 0`, i.e. when `currency > minimumCurrencyToPrestige` (at least `1000` with the defaults). This prevents the degenerate "prestige for a single point" reset that was possible when the threshold was simply `> 0` currency.
+Prestige is only permitted when that value is `> 0`, i.e. when `currencyThisPrestige > minimumCurrencyToPrestige` (the player must have reached at least `1000` currency this run, with the defaults). This prevents the degenerate "prestige for a single point" reset that was possible when the threshold was simply `> 0` currency.
 
 ## Tuning history and rationale
 

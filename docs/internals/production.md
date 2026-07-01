@@ -45,6 +45,8 @@ The per-frame earn is `productionPerSecond * deltaSeconds`.
 
 After currency is added each frame, `UpgradeStateManager.performAutoPurchases()` is called. It auto-buys `vertex-growth` in a loop until the player cannot afford another purchase. Auto-purchasing is only active if the `shape-focus` upgrade has been purchased. See `upgrades.md` for upgrade details.
 
+Spending currency here does not reduce the player's eventual prestige payout: `GameState` tracks a separate high-water mark (`currencyThisPrestige`) that the prestige formula reads instead of the live `currency` balance. See `prestige_api.md` for details.
+
 ## CurrencyListener interface
 
 ```java

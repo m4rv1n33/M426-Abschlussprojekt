@@ -85,6 +85,7 @@ The file is a pretty-printed JSON object matching the fields of `GameState`. Exa
 ```json
 {
   "currency": 1234.5,
+  "currencyThisPrestige": 1234.5,
   "prestigePoints": 63.0,
   "prestigeLevel": 1,
   "lifetimeCurrencyEarned": 10000.0,
