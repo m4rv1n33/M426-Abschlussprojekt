@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 
 public class GameState {
     private double currency;
+    private double currencyThisPrestige;
     private double prestigePoints;
     private int prestigeLevel;
     private ShapeData activeShapeData;
@@ -45,6 +46,7 @@ public class GameState {
 
     public GameState() {
         this.currency = 0;
+        this.currencyThisPrestige = 0;
         this.prestigePoints = 0;
         this.prestigeLevel = 0;
         this.lifetimeCurrencyEarned = 0;
@@ -152,6 +154,7 @@ public class GameState {
 
     public void addCurrency(double amount) {
         this.currency += amount;
+        this.currencyThisPrestige = Math.max(currency, currencyThisPrestige);
         this.lifetimeCurrencyEarned += amount;
     }
 
@@ -199,7 +202,7 @@ public class GameState {
     }
 
     public double getPendingPrestigePoints() {
-        double effectiveCurrency = Math.max(0, currency - BalanceConfig.get().minimumCurrencyToPrestige);
+        double effectiveCurrency = Math.max(0, currencyThisPrestige - BalanceConfig.get().minimumCurrencyToPrestige);
         return Math.ceil(Math.pow(effectiveCurrency, BalanceConfig.get().prestigeFormulaExponent));
     }
 
@@ -211,6 +214,7 @@ public class GameState {
         this.prestigePoints += prestigePointsGained;
         this.prestigeLevel++;
         this.currency = 0;
+        this.currencyThisPrestige = 0;
         this.activeShapeData = new ShapeData(1, 0);
         getUpgradeTree().reset();
         return true;
